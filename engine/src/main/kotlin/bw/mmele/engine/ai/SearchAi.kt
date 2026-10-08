@@ -38,6 +38,8 @@ class SearchAi(private val config: SearchConfig, private val random: Random) : A
     var lastNodes = 0L
         private set
 
+    /** Synchronized: the search keeps per-instance scratch state (TT, counters). */
+    @Synchronized
     override fun chooseAction(state: GameState, shouldStop: () -> Boolean): Action {
         val rootActions = Rules.legalActions(state)
         require(rootActions.isNotEmpty()) { "no legal actions" }
