@@ -7,6 +7,7 @@ import bw.mmele.engine.Player
 import bw.mmele.engine.Rules
 import bw.mmele.engine.Variant
 import bw.mmele.engine.ai.Difficulty
+import bw.mmele.ui.scenes.Scene
 
 enum class GameMode { PASS_AND_PLAY, SOLO }
 
@@ -19,6 +20,8 @@ data class GameConfig(
     val human: Player = Player.ONE,
     /** Chess-clock minutes per player; 0 = no clock. */
     val clockMinutes: Int = 0,
+    /** Botswana destination illustrated behind the board. */
+    val scene: Scene = Scene.OKAVANGO,
 )
 
 /** Everything the game screen renders. Produced only by [GameViewModel]. */

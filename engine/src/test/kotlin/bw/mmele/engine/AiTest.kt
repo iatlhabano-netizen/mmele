@@ -86,4 +86,24 @@ class AiTest {
         assertTrue(Rules.isLegal(s, a))
         assertTrue((System.nanoTime() - t0) / 1_000_000 < 2000)
     }
+
+    /** Sanity check on strength ordering (time-capped, so kept loose). */
+    @Test fun hardBeatsEasyAndMediumBeatsEasy() {
+        fun match(strong: Difficulty, games: Int): Int {
+            var wins = 0
+            repeat(games) { g ->
+                val strongSide = if (g % 2 == 0) Player.ONE else Player.TWO
+                val a = Ai.create(strong, seed = g.toLong(), timeLimitMs = 30)
+                val b = Ai.create(Difficulty.EASY, seed = 100L + g)
+                var s = Rules.newGame(RuleSet.CLASSIC)
+                while (!s.isGameOver) s = Rules.apply(s, (if (s.toMove == strongSide) a else b).chooseAction(s))
+                val r = s.result
+                if (r is GameResult.Win && r.winner == strongSide) wins++
+            }
+            println("$strong vs EASY: $wins/$games")
+            return wins
+        }
+        assertTrue(match(Difficulty.HARD, 6) >= 5)
+        assertTrue(match(Difficulty.MEDIUM, 6) >= 4)
+    }
 }

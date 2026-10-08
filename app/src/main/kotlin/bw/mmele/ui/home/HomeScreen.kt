@@ -39,7 +39,13 @@ import bw.mmele.engine.Player
 import bw.mmele.engine.Variant
 import bw.mmele.engine.ai.Difficulty
 import bw.mmele.ui.board.BoardCanvas
-import bw.mmele.ui.board.SandBackground
+import bw.mmele.ui.scenes.Scene
+import bw.mmele.ui.scenes.SceneBackdrop
+import bw.mmele.ui.scenes.SceneMode
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.geometry.Offset
 import bw.mmele.ui.game.GameConfig
 import bw.mmele.ui.game.GameMode
 import bw.mmele.ui.game.PebbleIcon
@@ -58,7 +64,18 @@ fun HomeScreen(
     animate: Boolean = true,
 ) {
     Box(Modifier.fillMaxSize()) {
-        SandBackground()
+        // Botswana scene at full strength, with a gradient that only darkens where controls sit.
+        SceneBackdrop(config.scene, SceneMode.FULL, animate = animate)
+        Box(
+            Modifier.fillMaxSize().background(
+                Brush.verticalGradient(
+                    0f to Color.Transparent,
+                    0.30f to MmeleColors.Slate.copy(alpha = 0.10f),
+                    0.55f to MmeleColors.Slate.copy(alpha = 0.72f),
+                    1f to MmeleColors.Slate.copy(alpha = 0.92f),
+                ),
+            ),
+        )
         Column(
             Modifier
                 .fillMaxSize()
@@ -71,7 +88,7 @@ fun HomeScreen(
                 Spacer(Modifier.height(12.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     PebbleIcon(Player.ONE, Modifier.height(34.dp).aspectRatio(1f))
-                    Text("Mmele", style = MaterialTheme.typography.displayLarge, color = MmeleColors.Bone, modifier = Modifier.padding(horizontal = 10.dp))
+                    Text("Mmele", style = MaterialTheme.typography.displayLarge.copy(shadow = Shadow(Color.Black.copy(alpha = 0.6f), Offset(0f, 4f), 16f)), color = MmeleColors.Bone, modifier = Modifier.padding(horizontal = 10.dp))
                     PebbleIcon(Player.TWO, Modifier.height(34.dp).aspectRatio(1f))
                 }
                 Text(
@@ -79,7 +96,9 @@ fun HomeScreen(
                     style = MaterialTheme.typography.labelSmall,
                     color = MmeleColors.Gold,
                 )
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(14.dp))
+                SceneCaption(config.scene)
+                Spacer(Modifier.height(18.dp))
 
                 SectionLabel("Board")
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -128,6 +147,10 @@ fun HomeScreen(
                     options = listOf("Off", "3 min", "5 min", "10 min"),
                     selectedIndex = clocks.indexOf(config.clockMinutes).coerceAtLeast(0),
                 ) { onConfigChange(config.copy(clockMinutes = clocks[it])) }
+
+                Spacer(Modifier.height(20.dp))
+                SectionLabel("Scene · Botswana")
+                ScenePicker(config.scene) { onConfigChange(config.copy(scene = it)) }
 
                 Spacer(Modifier.height(16.dp))
                 ToggleRow("Sound", soundOn, onSoundChange)
@@ -261,5 +284,58 @@ private fun ToggleRow(label: String, checked: Boolean, onChange: (Boolean) -> Un
             onCheckedChange = onChange,
             colors = SwitchDefaults.colors(checkedTrackColor = MmeleColors.Gold, checkedThumbColor = MmeleColors.Slate),
         )
+    }
+}
+
+@Composable
+private fun SceneCaption(scene: Scene) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .background(MmeleColors.Slate.copy(alpha = 0.55f), RoundedCornerShape(16.dp))
+            .border(1.dp, MmeleColors.Bone.copy(alpha = 0.12f), RoundedCornerShape(16.dp))
+            .padding(horizontal = 14.dp, vertical = 10.dp),
+    ) {
+        Text(scene.title.uppercase(), style = MaterialTheme.typography.labelSmall, color = MmeleColors.GoldBright)
+        Text(scene.fact, style = MaterialTheme.typography.labelMedium, color = MmeleColors.Bone)
+    }
+}
+
+@Composable
+private fun ScenePicker(selected: Scene, onSelect: (Scene) -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Scene.entries.forEach { scene ->
+            val sel = scene == selected
+            val shape = RoundedCornerShape(14.dp)
+            Column(
+                Modifier
+                    .clip(shape)
+                    .border(if (sel) 2.dp else 1.dp, if (sel) MmeleColors.Gold else MmeleColors.Bone.copy(alpha = 0.15f), shape)
+                    .clickable(role = Role.RadioButton) { onSelect(scene) },
+            ) {
+                SceneBackdrop(scene, SceneMode.FULL, Modifier.height(64.dp).aspectRatio(1.5f), animate = false)
+                Text(
+                    scene.title.substringBefore(" National").substringBefore(" Delta").substringBefore(" Pans").substringBefore(" Hills"),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = if (sel) MmeleColors.GoldBright else MmeleColors.Bone,
+                    modifier = Modifier.background(MmeleColors.SlateRaised).fillMaxWidth().padding(horizontal = 8.dp, vertical = 6.dp),
+                    maxLines = 1,
+                )
+            }
+        }
+        val shape = RoundedCornerShape(14.dp)
+        Box(
+            Modifier
+                .clip(shape)
+                .border(1.dp, MmeleColors.Bone.copy(alpha = 0.15f), shape)
+                .background(MmeleColors.SlateRaised)
+                .clickable { onSelect(Scene.entries.filter { it != selected }.random()) }
+                .height(64.dp + 30.dp)
+                .padding(horizontal = 14.dp),
+            contentAlignment = Alignment.Center,
+        ) { Text("Surprise\nme", style = MaterialTheme.typography.labelMedium, color = MmeleColors.Bone, textAlign = TextAlign.Center) }
     }
 }

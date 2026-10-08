@@ -21,6 +21,7 @@ import bw.mmele.ui.game.GameMode
 import bw.mmele.ui.game.GameRoute
 import bw.mmele.ui.game.GameViewModel
 import bw.mmele.ui.home.HomeScreen
+import bw.mmele.ui.scenes.Scene
 import bw.mmele.ui.theme.MmeleTheme
 
 /** Top-level app: a tiny two-destination navigator (Home <-> Game). */
@@ -32,13 +33,15 @@ fun MmeleApp(feedback: FeedbackController?) {
         var difficulty by rememberSaveable { mutableStateOf(Difficulty.MEDIUM) }
         var human by rememberSaveable { mutableStateOf(Player.ONE) }
         var clock by rememberSaveable { mutableIntStateOf(0) }
+        // A random Botswana destination by default; the player can pick another on the home screen.
+        var scene by rememberSaveable { mutableStateOf(Scene.entries.random()) }
         var sound by rememberSaveable { mutableStateOf(true) }
         var haptics by rememberSaveable { mutableStateOf(true) }
         var session by rememberSaveable { mutableIntStateOf(0) }
         var inGame by rememberSaveable { mutableStateOf(false) }
         feedback?.soundEnabled = sound
         feedback?.hapticsEnabled = haptics
-        val config = GameConfig(variant, mode, difficulty, human, clock)
+        val config = GameConfig(variant, mode, difficulty, human, clock, scene)
 
         AnimatedContent(targetState = inGame, transitionSpec = { fadeIn(tween(250)) togetherWith fadeOut(tween(200)) }, label = "nav") { game ->
             if (game) {
@@ -48,7 +51,7 @@ fun MmeleApp(feedback: FeedbackController?) {
                 HomeScreen(
                     config = config,
                     onConfigChange = {
-                        variant = it.variant; mode = it.mode; difficulty = it.difficulty; human = it.human; clock = it.clockMinutes
+                        variant = it.variant; mode = it.mode; difficulty = it.difficulty; human = it.human; clock = it.clockMinutes; scene = it.scene
                     },
                     soundOn = sound,
                     hapticsOn = haptics,

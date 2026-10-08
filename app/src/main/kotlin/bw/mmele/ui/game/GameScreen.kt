@@ -30,6 +30,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -44,7 +45,8 @@ import bw.mmele.engine.WinReason
 import bw.mmele.engine.DrawReason
 import bw.mmele.feedback.FeedbackController
 import bw.mmele.ui.board.BoardCanvas
-import bw.mmele.ui.board.SandBackground
+import bw.mmele.ui.scenes.SceneBackdrop
+import bw.mmele.ui.scenes.SceneMode
 import bw.mmele.ui.theme.MmeleColors
 
 /** Stateful entry point: wires the ViewModel and feedback to the stateless content. */
@@ -71,7 +73,7 @@ fun GameScreenContent(
     val game = ui.game
 
     Box(Modifier.fillMaxSize()) {
-        SandBackground()
+        SceneBackdrop(config.scene, SceneMode.DIMMED, animate = animate)
         BoxWithConstraints(Modifier.fillMaxSize().safeDrawingPadding()) {
             val landscape = maxWidth > maxHeight * 1.15f
             val board = @Composable { m: Modifier ->
@@ -217,14 +219,43 @@ fun resultReason(ui: GameUiState): String = when (val r = ui.game.result) {
 
 @Composable
 private fun GameOverDialog(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> Unit) {
-    Dialog(onDismissRequest = { onIntent(GameIntent.DismissGameOver) }) {
-        Column(
+    Dialog(onDismissRequest = { onIntent(GameIntent.DismissGameOver) }) { GameOverCard(ui, onIntent, onHome) }
+}
+
+/** Game-over card: the scene at full strength with its caption, result, and rematch. */
+@Composable
+fun GameOverCard(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> Unit, modifier: Modifier = Modifier) {
+        Column(modifier.then(
             Modifier
                 .background(MmeleColors.SlateRaised, RoundedCornerShape(24.dp))
                 .border(1.dp, MmeleColors.Gold.copy(alpha = 0.5f), RoundedCornerShape(24.dp))
-                .padding(24.dp),
+                .clip(RoundedCornerShape(24.dp))),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            SceneHeader(ui.config.scene)
+            GameOverBody(ui, onIntent, onHome)
+        }
+}
+
+@Composable
+private fun SceneHeader(scene: bw.mmele.ui.scenes.Scene) {
+    Box(Modifier.fillMaxWidth().height(170.dp)) {
+        SceneBackdrop(scene, SceneMode.FULL, Modifier.fillMaxSize())
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(androidx.compose.ui.graphics.Brush.verticalGradient(listOf(androidx.compose.ui.graphics.Color.Transparent, MmeleColors.SlateRaised.copy(alpha = 0.95f)))),
+        )
+        Column(Modifier.align(Alignment.BottomStart).padding(horizontal = 16.dp, vertical = 8.dp)) {
+            Text(scene.title.uppercase(), style = MaterialTheme.typography.labelSmall, color = MmeleColors.GoldBright)
+            Text(scene.fact, style = MaterialTheme.typography.labelMedium, color = MmeleColors.Bone)
+        }
+    }
+}
+
+@Composable
+private fun GameOverBody(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> Unit) {
+        Column(Modifier.padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             val r = ui.game.result
             if (r is GameResult.Win) PebbleIcon(r.winner, Modifier.width(64.dp).height(64.dp), elevation = 0.8f)
             Spacer(Modifier.height(8.dp))
@@ -245,4 +276,3 @@ private fun GameOverDialog(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHo
             }
         }
     }
-}
