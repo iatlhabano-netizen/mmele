@@ -1,0 +1,17 @@
+{
+  "name": "firebase",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test:rules": "firebase emulators:exec --only database,auth --project demo-mmele \"node rules.test.mjs\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "firebase": "^11.10.0"
+  },
+  "type": "module",
+  "private": true
+}

@@ -8,8 +8,9 @@ import bw.mmele.engine.Rules
 import bw.mmele.engine.Variant
 import bw.mmele.engine.ai.Difficulty
 import bw.mmele.ui.scenes.Scene
+import bw.mmele.ui.pieces.PieceStyle
 
-enum class GameMode { PASS_AND_PLAY, SOLO }
+enum class GameMode { PASS_AND_PLAY, SOLO, ONLINE }
 
 @Immutable
 data class GameConfig(
@@ -22,7 +23,12 @@ data class GameConfig(
     val clockMinutes: Int = 0,
     /** Botswana destination illustrated behind the board. */
     val scene: Scene = Scene.OKAVANGO,
-)
+    val styleOne: PieceStyle = PieceStyle.Obsidian,
+    val styleTwo: PieceStyle = PieceStyle.Quartz,
+) {
+    fun styleOf(player: bw.mmele.engine.Player) = if (player == bw.mmele.engine.Player.ONE) styleOne else styleTwo
+}
+
 
 /** Everything the game screen renders. Produced only by [GameViewModel]. */
 @Immutable
@@ -42,9 +48,12 @@ data class GameUiState(
     val clockMs2: Long = 0,
     val canUndo: Boolean = false,
     val showGameOver: Boolean = false,
+    /** Non-null only in online games. */
+    val online: OnlineUi? = null,
 ) {
     val isHumanTurn: Boolean
-        get() = !game.isGameOver && (config.mode == GameMode.PASS_AND_PLAY || game.toMove == config.human)
+        get() = !game.isGameOver && (config.mode == GameMode.PASS_AND_PLAY || game.toMove == config.human) &&
+            (online == null || !online.waitingForOpponent)
 
     fun clockOf(p: Player) = if (p == Player.ONE) clockMs1 else clockMs2
 }
@@ -57,7 +66,27 @@ sealed interface GameIntent {
     data object Undo : GameIntent
     data object Rematch : GameIntent
     data object DismissGameOver : GameIntent
+    data object Resign : GameIntent
+    data object OfferDraw : GameIntent
+    data object ClaimAbandoned : GameIntent
 }
+
+/** Online-only status shown around the board. */
+@Immutable
+data class OnlineUi(
+    val code: String,
+    val waitingForOpponent: Boolean,
+    val opponentConnected: Boolean,
+    val iOfferedDraw: Boolean = false,
+    val opponentOffersDraw: Boolean = false,
+    val iOfferedRematch: Boolean = false,
+    val opponentOffersRematch: Boolean = false,
+    /** Seconds until you may claim the win because the opponent left; null while they're here. */
+    val abandonSecondsLeft: Int? = null,
+    /** A move is on its way to the server. */
+    val syncing: Boolean = false,
+    val message: String? = null,
+)
 
 /** Derive the interaction masks for a state (pure, shared by ViewModel and previews/screenshots). */
 object Interaction {

@@ -30,18 +30,25 @@ import androidx.compose.ui.unit.dp
 import bw.mmele.engine.GameState
 import bw.mmele.engine.Phase
 import bw.mmele.engine.Player
-import bw.mmele.ui.board.drawPebble
+import bw.mmele.ui.pieces.PieceStyle
+import bw.mmele.ui.pieces.drawPiece
 import bw.mmele.ui.theme.MmeleColors
 
 /** Small pebble glyph for HUDs and buttons. */
 @Composable
-fun PebbleIcon(player: Player, modifier: Modifier = Modifier.size(28.dp), elevation: Float = 0f) {
-    Canvas(modifier) { drawPebble(Offset(size.width / 2, size.height / 2), size.minDimension * 0.36f, player, elevation) }
+fun PieceIcon(style: PieceStyle, modifier: Modifier = Modifier.size(28.dp), elevation: Float = 0f, pieceId: Int = 1) {
+    Canvas(modifier) { drawPiece(style, Offset(size.width / 2, size.height / 2), size.minDimension * 0.36f, pieceId = pieceId, elevation = elevation) }
+}
+
+@Composable
+fun PebbleIcon(player: Player, modifier: Modifier = Modifier.size(28.dp), elevation: Float = 0f, style: PieceStyle = PieceStyle.defaultFor(player)) {
+    PieceIcon(style, modifier, elevation)
 }
 
 fun playerName(p: Player, config: GameConfig): String = when (config.mode) {
-    GameMode.PASS_AND_PLAY -> if (p == Player.ONE) "Obsidian" else "Quartz"
+    GameMode.PASS_AND_PLAY -> config.styleOf(p).shortName
     GameMode.SOLO -> if (p == config.human) "You" else "Computer · ${config.difficulty.name.lowercase().replaceFirstChar { it.uppercase() }}"
+    GameMode.ONLINE -> if (p == config.human) "You · ${config.styleOf(p).shortName}" else "Opponent · ${config.styleOf(p).shortName}"
 }
 
 fun formatClock(ms: Long): String {
@@ -72,7 +79,7 @@ fun PlayerHud(
             .alpha(contentAlpha),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        PebbleIcon(player, Modifier.size(40.dp), elevation = if (active && phase == Phase.FLYING) 0.7f else 0f)
+        PieceIcon(config.styleOf(player), Modifier.size(40.dp), elevation = if (active && phase == Phase.FLYING) 0.7f else 0f)
         Spacer(Modifier.width(10.dp))
         Column(Modifier.weight(1f)) {
             Text(playerName(player, config), style = MaterialTheme.typography.titleMedium, color = MmeleColors.Bone)
@@ -94,7 +101,7 @@ fun PlayerHud(
             val hand = game.handOf(player)
             if (game.rules.cowsPerPlayer > 0 && (hand > 0 || phase == Phase.PLACEMENT)) {
                 Text("In hand $hand", style = MaterialTheme.typography.labelSmall, color = MmeleColors.BoneDim)
-                HandPips(player, hand, game.rules.cowsPerPlayer)
+                HandPips(config.styleOf(player), hand, game.rules.cowsPerPlayer)
             } else {
                 Text("On board ${game.onBoard(player)}", style = MaterialTheme.typography.labelSmall, color = MmeleColors.BoneDim)
             }
@@ -124,9 +131,9 @@ fun PlayerHud(
 }
 
 @Composable
-private fun HandPips(player: Player, hand: Int, total: Int) {
+private fun HandPips(style: PieceStyle, hand: Int, total: Int) {
     Row(horizontalArrangement = Arrangement.spacedBy(2.dp), modifier = Modifier.padding(top = 3.dp)) {
-        val fill = if (player == Player.ONE) MmeleColors.ObsidianLight else MmeleColors.QuartzMid
+        val fill = style.accent
         for (i in 0 until total) {
             Canvas(Modifier.size(6.dp)) {
                 if (i < hand) drawCircle(fill) else drawCircle(MmeleColors.Bone.copy(alpha = 0.15f), radius = size.minDimension * 0.3f)

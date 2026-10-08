@@ -22,6 +22,9 @@ enum class WinReason {
     TIMEOUT,
 
     RESIGNATION,
+
+    /** Online: opponent left and did not come back before the abandon timeout. */
+    ABANDONED,
 }
 
 enum class DrawReason {
@@ -30,6 +33,9 @@ enum class DrawReason {
 
     /** Safety net: [RuleSet.idleDrawPlies] plies without any placement or shot. */
     NO_PROGRESS,
+
+    /** Online: both players agreed to a draw. */
+    AGREEMENT,
 }
 
 sealed interface GameResult {

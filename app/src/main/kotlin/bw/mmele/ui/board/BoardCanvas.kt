@@ -43,6 +43,8 @@ import bw.mmele.ui.game.MillFlash
 import bw.mmele.ui.game.ShotFx
 import bw.mmele.ui.game.TokenUi
 import bw.mmele.ui.theme.MmeleColors
+import bw.mmele.ui.pieces.PieceStyle
+import bw.mmele.ui.pieces.drawPiece
 import kotlinx.coroutines.launch
 import kotlin.math.hypot
 import kotlin.math.max
@@ -104,6 +106,8 @@ private fun bit(mask: Int, i: Int) = mask and (1 shl i) != 0
 fun BoardCanvas(
     board: BoardGraph,
     tokens: List<TokenUi>,
+    styleOne: PieceStyle = PieceStyle.Obsidian,
+    styleTwo: PieceStyle = PieceStyle.Quartz,
     modifier: Modifier = Modifier,
     selected: Int? = null,
     targets: Int = 0,
@@ -276,7 +280,7 @@ fun BoardCanvas(
                 drawCircle(MmeleColors.GoldBright.copy(alpha = 0.85f), r * 1.28f, c, style = Stroke(geo.lineWidth * 1.4f))
             }
             if (bit(shootable, t.node)) drawShootRing(c, r, pulse, geo.lineWidth)
-            drawPebble(c, r, t.player, elevation = elev, scale = 0.6f + 0.4f * appear, alpha = appear.coerceIn(0f, 1f))
+            drawPiece(if (t.player == Player.ONE) styleOne else styleTwo, c, r, pieceId = t.id, elevation = elev, scale = 0.6f + 0.4f * appear, alpha = appear.coerceIn(0f, 1f))
         }
 
         // shot cow fading out
@@ -284,7 +288,7 @@ fun BoardCanvas(
             val p = shotProgress.value
             val c = geo.px(shotFx.node)
             drawCircle(MmeleColors.Ochre.copy(alpha = 0.6f * (1 - p)), r * (1f + 1.2f * p), c, style = Stroke(geo.lineWidth * 2f))
-            drawPebble(c, r, shotFx.player, alpha = 1f - p, scale = 1f + 0.25f * p)
+            drawPiece(if (shotFx.player == Player.ONE) styleOne else styleTwo, c, r, pieceId = shotFx.id, alpha = 1f - p, scale = 1f + 0.25f * p)
         }
 
         // gold mill trace
@@ -293,7 +297,7 @@ fun BoardCanvas(
         // dragged token on top, 35dp above the finger
         if (d != null && dragLifted != null) {
             val player = tokens.firstOrNull { it.node == d.from }?.player
-            if (player != null) drawPebble(dragLifted, r, player, elevation = 1f)
+            if (player != null) drawPiece(if (player == Player.ONE) styleOne else styleTwo, dragLifted, r, pieceId = tokens.firstOrNull { it.node == d.from }?.id ?: 0, elevation = 1f)
         }
     }
 }

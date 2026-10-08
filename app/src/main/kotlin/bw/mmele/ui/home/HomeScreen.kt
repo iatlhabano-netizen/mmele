@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
@@ -48,7 +50,9 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.geometry.Offset
 import bw.mmele.ui.game.GameConfig
 import bw.mmele.ui.game.GameMode
-import bw.mmele.ui.game.PebbleIcon
+import bw.mmele.ui.game.PieceIcon
+import bw.mmele.ui.pieces.PieceStyle
+import bw.mmele.ui.pieces.PieceFamily
 import bw.mmele.ui.game.TokenUi
 import bw.mmele.ui.theme.MmeleColors
 
@@ -61,6 +65,7 @@ fun HomeScreen(
     onSoundChange: (Boolean) -> Unit,
     onHapticsChange: (Boolean) -> Unit,
     onPlay: () -> Unit,
+    onPlayOnline: () -> Unit = {},
     animate: Boolean = true,
 ) {
     Box(Modifier.fillMaxSize()) {
@@ -87,9 +92,9 @@ fun HomeScreen(
             Column(Modifier.widthIn(max = 560.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 Spacer(Modifier.height(12.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    PebbleIcon(Player.ONE, Modifier.height(34.dp).aspectRatio(1f))
+                    PieceIcon(config.styleOne, Modifier.height(34.dp).aspectRatio(1f))
                     Text("Mmele", style = MaterialTheme.typography.displayLarge.copy(shadow = Shadow(Color.Black.copy(alpha = 0.6f), Offset(0f, 4f), 16f)), color = MmeleColors.Bone, modifier = Modifier.padding(horizontal = 10.dp))
-                    PebbleIcon(Player.TWO, Modifier.height(34.dp).aspectRatio(1f))
+                    PieceIcon(config.styleTwo, Modifier.height(34.dp).aspectRatio(1f), pieceId = 7)
                 }
                 Text(
                     "MORABARABA · THE CATTLE GAME",
@@ -108,6 +113,7 @@ fun HomeScreen(
                         variant = Variant.CLASSIC,
                         selected = config.variant == Variant.CLASSIC,
                         animate = animate,
+                        styleOne = config.styleOne, styleTwo = config.styleTwo,
                         modifier = Modifier.weight(1f),
                     ) { onConfigChange(config.copy(variant = Variant.CLASSIC)) }
                     VariantCard(
@@ -116,6 +122,7 @@ fun HomeScreen(
                         variant = Variant.TRIANGLE,
                         selected = config.variant == Variant.TRIANGLE,
                         animate = animate,
+                        styleOne = config.styleOne, styleTwo = config.styleTwo,
                         modifier = Modifier.weight(1f),
                     ) { onConfigChange(config.copy(variant = Variant.TRIANGLE)) }
                 }
@@ -135,7 +142,7 @@ fun HomeScreen(
                     ) { onConfigChange(config.copy(difficulty = Difficulty.entries[it])) }
                     Spacer(Modifier.height(12.dp))
                     Segmented(
-                        options = listOf("Play Obsidian (first)", "Play Quartz"),
+                        options = listOf("Play ${config.styleOne.shortName} (first)", "Play ${config.styleTwo.shortName}"),
                         selectedIndex = if (config.human == Player.ONE) 0 else 1,
                     ) { onConfigChange(config.copy(human = if (it == 0) Player.ONE else Player.TWO)) }
                 }
@@ -148,6 +155,9 @@ fun HomeScreen(
                     selectedIndex = clocks.indexOf(config.clockMinutes).coerceAtLeast(0),
                 ) { onConfigChange(config.copy(clockMinutes = clocks[it])) }
 
+                Spacer(Modifier.height(20.dp))
+                SectionLabel("Pieces")
+                PieceSetPicker(config) { onConfigChange(it) }
                 Spacer(Modifier.height(20.dp))
                 SectionLabel("Scene · Botswana")
                 ScenePicker(config.scene) { onConfigChange(config.copy(scene = it)) }
@@ -163,6 +173,14 @@ fun HomeScreen(
                     shape = RoundedCornerShape(18.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = MmeleColors.Gold, contentColor = MmeleColors.Slate),
                 ) { Text("Tshameka · Play", style = MaterialTheme.typography.titleMedium) }
+
+                Spacer(Modifier.height(10.dp))
+                androidx.compose.material3.OutlinedButton(
+                    onClick = onPlayOnline,
+                    modifier = Modifier.fillMaxWidth().height(52.dp),
+                    shape = RoundedCornerShape(18.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.5.dp, MmeleColors.Gold),
+                ) { Text("Play online · room code", style = MaterialTheme.typography.titleMedium, color = MmeleColors.GoldBright) }
 
                 Spacer(Modifier.height(14.dp))
                 // Academy is milestone 2.
@@ -209,6 +227,8 @@ private fun VariantCard(
     variant: Variant,
     selected: Boolean,
     animate: Boolean,
+    styleOne: PieceStyle,
+    styleTwo: PieceStyle,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
@@ -232,6 +252,8 @@ private fun VariantCard(
         BoardCanvas(
             board = board,
             tokens = demo,
+            styleOne = styleOne,
+            styleTwo = styleTwo,
             modifier = Modifier.fillMaxWidth().aspectRatio(1f),
             interactive = false,
             animate = animate,
@@ -337,5 +359,74 @@ private fun ScenePicker(selected: Scene, onSelect: (Scene) -> Unit) {
                 .padding(horizontal = 14.dp),
             contentAlignment = Alignment.Center,
         ) { Text("Surprise\nme", style = MaterialTheme.typography.labelMedium, color = MmeleColors.Bone, textAlign = TextAlign.Center) }
+    }
+}
+
+
+@Composable
+private fun PieceSetPicker(config: GameConfig, onChange: (GameConfig) -> Unit) {
+    val shape = RoundedCornerShape(14.dp)
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        PieceFamily.entries.forEach { family ->
+            val selected = config.styleOne.family == family
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(shape)
+                    .background(if (selected) MmeleColors.Gold.copy(alpha = 0.12f) else MmeleColors.SlateRaised.copy(alpha = 0.85f))
+                    .border(if (selected) 1.5.dp else 1.dp, if (selected) MmeleColors.Gold else MmeleColors.Bone.copy(alpha = 0.12f), shape)
+                    .clickable(role = Role.RadioButton) {
+                        val (one, two) = defaultPair(family)
+                        onChange(config.copy(styleOne = one, styleTwo = two))
+                    }
+                    .padding(horizontal = 12.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                val (one, two) = if (selected) config.styleOne to config.styleTwo else defaultPair(family)
+                PieceIcon(one, Modifier.size(36.dp))
+                Spacer(Modifier.width(6.dp))
+                PieceIcon(two, Modifier.size(36.dp), pieceId = 4)
+                Spacer(Modifier.width(12.dp))
+                Column(Modifier.weight(1f)) {
+                    Text(family.title, style = MaterialTheme.typography.titleMedium, color = MmeleColors.Bone)
+                    Text(family.blurb, style = MaterialTheme.typography.labelMedium, color = MmeleColors.BoneDim)
+                }
+            }
+            if (selected && family == PieceFamily.EGGS) {
+                EggSidePicker("Dark side", config.styleOne, dark = true) { onChange(config.copy(styleOne = it)) }
+                EggSidePicker("Light side", config.styleTwo, dark = false) { onChange(config.copy(styleTwo = it)) }
+            }
+        }
+    }
+}
+
+private fun defaultPair(family: PieceFamily): Pair<PieceStyle, PieceStyle> = when (family) {
+    PieceFamily.PEBBLES -> PieceStyle.Obsidian to PieceStyle.Quartz
+    PieceFamily.DIAMONDS -> PieceStyle.SmokyDiamond to PieceStyle.ClearDiamond
+    PieceFamily.EGGS -> PieceStyle.Egg(bw.mmele.ui.pieces.EggKind.KORI_BUSTARD) to PieceStyle.Egg(bw.mmele.ui.pieces.EggKind.OSTRICH)
+}
+
+@Composable
+private fun EggSidePicker(label: String, current: PieceStyle, dark: Boolean, onPick: (PieceStyle) -> Unit) {
+    val options = bw.mmele.ui.pieces.EggKind.entries.filter { (it.luminance < 0.55f) == dark }
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 8.dp)) {
+        Text(label, style = MaterialTheme.typography.labelMedium, color = MmeleColors.BoneDim, modifier = Modifier.width(72.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            options.forEach { kind ->
+                val style = PieceStyle.Egg(kind)
+                val sel = current == style
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(if (sel) MmeleColors.Gold.copy(alpha = 0.2f) else Color.Transparent)
+                        .clickable { onPick(style) }
+                        .padding(6.dp),
+                ) {
+                    PieceIcon(style, Modifier.size(32.dp), pieceId = kind.ordinal + 2)
+                    Text(kind.shortName, style = MaterialTheme.typography.labelSmall, color = if (sel) MmeleColors.GoldBright else MmeleColors.Bone)
+                }
+            }
+        }
     }
 }

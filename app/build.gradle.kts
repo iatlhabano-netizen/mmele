@@ -5,6 +5,12 @@ plugins {
     alias(libs.plugins.paparazzi)
 }
 
+// Online play is optional: the Google Services plugin only runs when the developer has dropped a
+// google-services.json from their own Firebase project into app/. Without it the app builds and
+// shows "Online play not configured yet". See docs/ONLINE_SETUP.md.
+val firebaseConfigured = file("google-services.json").exists()
+if (firebaseConfigured) apply(plugin = "com.google.gms.google-services")
+
 android {
     namespace = "bw.mmele"
     compileSdk = 35
@@ -13,8 +19,9 @@ android {
         applicationId = "bw.mmele"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0-m1"
+        versionCode = 2
+        versionName = "0.2.0"
+        buildConfigField("boolean", "FIREBASE_CONFIGURED", firebaseConfigured.toString())
     }
 
     buildTypes {
@@ -32,6 +39,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -40,6 +48,11 @@ android {
 
 dependencies {
     implementation(project(":engine"))
+    implementation(project(":online"))
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.database)
+    implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)

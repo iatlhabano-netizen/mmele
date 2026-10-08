@@ -19,6 +19,8 @@ object MmeleColors {
     val BoneDim = Color(0x99E2D9C8)
     val Gold = Color(0xFFD9A441)
     val GoldBright = Color(0xFFF2C76B)
+    val Danger = Color(0xFFE5735C)
+    val Online = Color(0xFF6BCB77)
     val Ochre = Color(0xFFC0563A)
     val Sage = Color(0xFF8FA58A)
 

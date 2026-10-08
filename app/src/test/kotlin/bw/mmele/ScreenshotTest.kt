@@ -31,6 +31,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import bw.mmele.ui.theme.MmeleTheme
 import org.junit.Rule
+import bw.mmele.ui.pieces.EggKind
+import bw.mmele.ui.pieces.PieceStyle
+import bw.mmele.ui.pieces.PieceFamily
+import bw.mmele.ui.game.OnlineUi
+import bw.mmele.ui.game.PieceIcon
+import bw.mmele.ui.online.OnlineLobbyScreen
+import bw.mmele.online.InMemoryOnlineGameRepository
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Text
+import bw.mmele.ui.theme.MmeleColors
 import org.junit.Test
 
 /** JVM screenshot renders (Paparazzi / layoutlib). Run `./gradlew :app:recordPaparazziDebug`. */
@@ -145,5 +159,89 @@ class ScreenshotTest {
                 SceneBackdrop(scene, SceneMode.FULL, Modifier.fillMaxSize(), animate = false)
             }
         }
+    }
+
+    // ------------------------------------------------------------------ piece sets
+
+    /** The same mid-game position drawn with each piece set, so the sets can be compared. */
+    private fun pieceSetBoard(name: String, one: PieceStyle, two: PieceStyle, scene: Scene) {
+        val p1 = listOf("a7", "d7", "b6", "f4", "e3", "c4", "d2", "g1", "b2").map(::c)
+        val p2 = listOf("g7", "f6", "e5", "d6", "e4", "c3", "a1", "g4").map(::c)
+        val g = Rules.position(RuleSet.CLASSIC, p1, p2).copy(shotBy1 = 4, shotBy2 = 3, ply = 41)
+        val config = GameConfig(Variant.CLASSIC, GameMode.PASS_AND_PLAY, scene = scene, styleOne = one, styleTwo = two)
+        paparazzi.snapshot(name = name) {
+            MmeleTheme { GameScreenContent(ui(config, g, selected = c("b6"), lastMove = LastMove(c("d5"), c("d6"))), {}, {}, animate = false) }
+        }
+    }
+
+    @Test fun piecesPebbles() = pieceSetBoard("pebbles", PieceStyle.Obsidian, PieceStyle.Quartz, Scene.CHOBE)
+    @Test fun piecesDiamonds() = pieceSetBoard("diamonds", PieceStyle.SmokyDiamond, PieceStyle.ClearDiamond, Scene.MAKGADIKGADI)
+    @Test fun piecesEggs() = pieceSetBoard("eggs", PieceStyle.Egg(EggKind.KORI_BUSTARD), PieceStyle.Egg(EggKind.OSTRICH), Scene.OKAVANGO)
+    @Test fun piecesEggsLapwingGuineafowl() = pieceSetBoard("eggs_lapwing_guineafowl", PieceStyle.Egg(EggKind.CROWNED_LAPWING), PieceStyle.Egg(EggKind.GUINEAFOWL), Scene.KALAHARI)
+
+    /** Every individual piece, large, with per-id variation visible. */
+    @Test fun pieceGallery() {
+        paparazzi.snapshot {
+            MmeleTheme {
+                Column(Modifier.fillMaxSize().background(MmeleColors.Slate).padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    for (style in PieceStyle.all) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            for (id in 1..5) PieceIcon(style, Modifier.size(52.dp), pieceId = id * 7 + 3)
+                            Text("  " + style.fullName, color = MmeleColors.Bone)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Test fun homeEggPicker() {
+        paparazzi.snapshot {
+            MmeleTheme {
+                HomeScreen(
+                    config = GameConfig(scene = Scene.OKAVANGO, styleOne = PieceStyle.Egg(EggKind.KORI_BUSTARD), styleTwo = PieceStyle.Egg(EggKind.OSTRICH)),
+                    onConfigChange = {}, soundOn = true, hapticsOn = true, onSoundChange = {}, onHapticsChange = {}, onPlay = {},
+                    animate = false,
+                )
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------ online
+
+    @Test fun onlineNotConfigured() {
+        paparazzi.snapshot {
+            MmeleTheme { OnlineLobbyScreen(GameConfig(scene = Scene.CHOBE), repo = null, onSession = {}, onBack = {}, animate = false) }
+        }
+    }
+
+    @Test fun onlineLobby() {
+        paparazzi.snapshot {
+            MmeleTheme {
+                OnlineLobbyScreen(
+                    GameConfig(scene = Scene.TSODILO, styleOne = PieceStyle.SmokyDiamond, styleTwo = PieceStyle.ClearDiamond),
+                    repo = InMemoryOnlineGameRepository(), onSession = {}, onBack = {}, animate = false, initialCode = "k7m3pq",
+                )
+            }
+        }
+    }
+
+    @Test fun onlineWaitingForOpponent() {
+        val g = Rules.newGame(RuleSet.CLASSIC)
+        val config = GameConfig(Variant.CLASSIC, GameMode.ONLINE, human = Player.ONE, scene = Scene.MAKGADIKGADI, styleOne = PieceStyle.SmokyDiamond, styleTwo = PieceStyle.ClearDiamond)
+        val state = ui(config, g).copy(canUndo = false, online = OnlineUi(code = "K7M3PQ", waitingForOpponent = true, opponentConnected = false))
+        paparazzi.snapshot { MmeleTheme { GameScreenContent(state, {}, {}, animate = false) } }
+    }
+
+    @Test fun onlineInGameOpponentAway() {
+        val p1 = listOf("a7", "d7", "b4", "f2").map(::c)
+        val p2 = listOf("a1", "g1", "e5", "c3").map(::c)
+        val g = Rules.position(RuleSet.CLASSIC, p1, p2, hand1 = 8, hand2 = 8, toMove = Player.TWO)
+        val config = GameConfig(Variant.CLASSIC, GameMode.ONLINE, human = Player.TWO, scene = Scene.OKAVANGO, styleOne = PieceStyle.Egg(EggKind.KORI_BUSTARD), styleTwo = PieceStyle.Egg(EggKind.OSTRICH))
+        val state = ui(config, g, lastMove = LastMove(null, c("f2"))).copy(
+            canUndo = false,
+            online = OnlineUi(code = "K7M3PQ", waitingForOpponent = false, opponentConnected = false, abandonSecondsLeft = 64, opponentOffersDraw = true),
+        )
+        paparazzi.snapshot { MmeleTheme { GameScreenContent(state, {}, {}, animate = false) } }
     }
 }

@@ -14,6 +14,22 @@ import bw.mmele.engine.WinReason
 import bw.mmele.engine.ai.Ai
 import bw.mmele.engine.ai.AiPlayer
 import bw.mmele.feedback.FeedbackEvent
+import bw.mmele.engine.DrawReason
+import bw.mmele.online.MoveRecord
+import bw.mmele.online.OfferKind
+import bw.mmele.online.OnlineSession
+import bw.mmele.online.RoomPhase
+import bw.mmele.online.RoomRules
+import bw.mmele.online.RoomSnapshot
+import bw.mmele.online.SubmitResult
+import bw.mmele.online.other
+import bw.mmele.online.toPlayer
+import bw.mmele.online.toSeat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -39,6 +55,9 @@ class GameViewModel(
     private val aiDispatcher: CoroutineDispatcher = Dispatchers.Default,
     private val aiFactory: (GameConfig) -> AiPlayer = { Ai.create(it.difficulty) },
     private val minAiDelayMs: Long = 450,
+    /** Set for online games: the room you're seated in. */
+    private val online: OnlineSession? = null,
+    private val now: () -> Long = System::currentTimeMillis,
 ) : ViewModel() {
 
     private data class Snapshot(val game: GameState, val tokens: List<TokenUi>, val lastMove: LastMove?, val nextId: Int)
@@ -52,6 +71,13 @@ class GameViewModel(
     private var gameOverJob: Job? = null
     private var ai: AiPlayer? = null
 
+    // Online bookkeeping: moves we have applied locally, in order, and the last room we saw.
+    private val localMoves = ArrayList<MoveRecord>()
+    private var room: RoomSnapshot? = online?.room
+    private var pendingSubmits = 0
+    private val submitLock = Mutex()
+    private var message: String? = null
+
     private val _state = MutableStateFlow(initialState())
     val state: StateFlow<GameUiState> = _state.asStateFlow()
 
@@ -61,12 +87,14 @@ class GameViewModel(
     init {
         startClock()
         maybeRunAi()
+        if (online != null) startOnline(online)
     }
 
     private fun initialState(): GameUiState {
         val game = Rules.newGame(rules)
         val clock = config.clockMinutes * 60_000L
-        return decorate(GameUiState(config = config, game = game, tokens = emptyList(), clockMs1 = clock, clockMs2 = clock))
+        val ui = GameUiState(config = config, game = game, tokens = emptyList(), clockMs1 = clock, clockMs2 = clock)
+        return decorate(if (online != null) ui.copy(online = onlineUi(online.room)) else ui)
     }
 
     fun onIntent(intent: GameIntent) {
@@ -77,6 +105,9 @@ class GameViewModel(
             GameIntent.Undo -> undo()
             GameIntent.Rematch -> rematch()
             GameIntent.DismissGameOver -> _state.update { it.copy(showGameOver = false) }
+            GameIntent.Resign -> onlineOp { repo, code, seat -> repo.resign(code, seat) }
+            GameIntent.OfferDraw -> onlineOp { repo, code, seat -> repo.offerDraw(code, seat) }
+            GameIntent.ClaimAbandoned -> onlineOp { repo, code, seat -> repo.claimAbandoned(code, seat) }
         }
     }
 
@@ -128,13 +159,17 @@ class GameViewModel(
 
     // ------------------------------------------------------------------ core transition
 
-    private fun commit(action: Action) {
+    private fun commit(action: Action, fromRoom: MoveRecord? = null) {
         val ui = _state.value
         val g = ui.game
         if (g.isGameOver || !Rules.isLegal(g, action)) { invalid(); return }
-        history += Snapshot(g, ui.tokens, ui.lastMove, nextTokenId)
+        if (online == null) history += Snapshot(g, ui.tokens, ui.lastMove, nextTokenId)
         val mover = g.toMove
         val next = Rules.apply(g, action)
+        if (online != null) {
+            localMoves += fromRoom ?: MoveRecord(localMoves.size, mover.toSeat(), action)
+            if (fromRoom == null) submit(action)
+        }
 
         var tokens = ui.tokens
         var lastMove = ui.lastMove
@@ -234,6 +269,7 @@ class GameViewModel(
     /** Index in [history] that undo would restore, or null. */
     private fun undoTarget(): Int? {
         if (history.isEmpty()) return null
+        if (config.mode == GameMode.ONLINE) return null
         if (config.mode == GameMode.PASS_AND_PLAY) return history.lastIndex
         // Solo: rewind to the start of the human's previous turn (skipping AI moves and shot sub-steps).
         for (i in history.indices.reversed()) {
@@ -264,6 +300,7 @@ class GameViewModel(
     }
 
     private fun rematch() {
+        if (online != null) { onlineOp { repo, code, seat -> repo.offerRematch(code, seat) }; return }
         aiJob?.cancel()
         gameOverJob?.cancel()
         history.clear()
@@ -304,6 +341,162 @@ class GameViewModel(
     override fun onCleared() {
         aiJob?.cancel()
         clockJob?.cancel()
+        online?.let { s ->
+            // Leaving the screen marks you away; the opponent sees it and the abandon timer starts.
+            CoroutineScope(Dispatchers.IO).launch(NonCancellable) {
+                runCatching { s.repo.disconnect(s.room.code, s.seat) }
+                s.repo.close()
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------ online
+
+    private fun startOnline(s: OnlineSession) {
+        if (s.room.moves.isNotEmpty()) rebuild(s.room) // reconnecting into a game in progress
+        viewModelScope.launch {
+            s.repo.observe(s.room.code)
+                .catch { e -> message = "Connection problem: ${e.message ?: "unknown"}"; refreshOnline() }
+                .collect { onRoom(it) }
+        }
+    }
+
+    private var countdownJob: Job? = null
+
+    private fun onlineOp(op: suspend (bw.mmele.online.OnlineGameRepository, String, bw.mmele.online.Seat) -> SubmitResult) {
+        val s = online ?: return
+        viewModelScope.launch {
+            val r = runCatching { submitLock.withLock { op(s.repo, s.room.code, s.seat) } }
+                .getOrElse { SubmitResult.Rejected(it.message ?: "network error") }
+            if (r is SubmitResult.Rejected) { message = "Not sent: ${r.reason}"; refreshOnline() }
+            else { message = null; refreshOnline() }
+        }
+    }
+
+    private fun submit(action: Action) {
+        val s = online ?: return
+        pendingSubmits++
+        viewModelScope.launch {
+            val r = runCatching { submitLock.withLock { s.repo.submitMove(s.room.code, s.seat, action) } }
+                .getOrElse { SubmitResult.Rejected(it.message ?: "network error") }
+            pendingSubmits--
+            if (r is SubmitResult.Rejected) {
+                message = "Move not accepted (${r.reason}) — board resynced"
+                room?.let { rebuild(it) }
+            }
+            refreshOnline()
+        }
+    }
+
+    /** Apply a room snapshot from the server. */
+    private fun onRoom(r: RoomSnapshot) {
+        val s = online ?: return
+        room = r
+        if (r.phase == RoomPhase.LOBBY) { refreshOnline(); return }
+        val common = minOf(r.moves.size, localMoves.size)
+        val diverged = (0 until common).any { r.moves[it] != localMoves[it] } ||
+            (r.moves.size < localMoves.size && pendingSubmits == 0)
+        if (diverged) {
+            rebuild(r)
+        } else {
+            for (i in localMoves.size until r.moves.size) {
+                val m = r.moves[i]
+                val g = _state.value.game
+                if (g.isGameOver || g.toMove != m.seat.toPlayer() || !Rules.isLegal(g, m.action)) { corrupt(); return }
+                commit(m.action, fromRoom = m)
+            }
+        }
+        applyRoomResult(r, s)
+        refreshOnline()
+    }
+
+    /** Resignation, abandonment and agreed draws end the game outside the move list. */
+    private fun applyRoomResult(r: RoomSnapshot, s: OnlineSession) {
+        val g = _state.value.game
+        if (g.result != null) return
+        val res = RoomRules.resultOf(r) ?: return
+        val outOfBand = r.resigned != null || (res as? GameResult.Draw)?.reason == DrawReason.AGREEMENT
+        if (!outOfBand) return
+        val over = g.copy(result = res)
+        _state.update { decorate(it.copy(game = over, selected = null)) }
+        onGameOver(over)
+    }
+
+    /** Rebuild the whole board from the room (rematch, rejection, or reconnect). */
+    private fun rebuild(r: RoomSnapshot) {
+        gameOverJob?.cancel()
+        var g = Rules.newGame(rules)
+        var tokens = emptyList<TokenUi>()
+        var last: LastMove? = null
+        nextTokenId = 1
+        for (m in r.moves) {
+            if (g.toMove != m.seat.toPlayer() || !Rules.isLegal(g, m.action)) { corrupt(); return }
+            val mover = g.toMove
+            when (val a = m.action) {
+                is Action.Place -> { tokens = tokens + TokenUi(nextTokenId++, mover, a.to); last = LastMove(null, a.to) }
+                is Action.Move -> { tokens = tokens.map { if (it.node == a.from) it.copy(node = a.to) else it }; last = LastMove(a.from, a.to) }
+                is Action.Shoot -> tokens = tokens.filterNot { it.node == a.target }
+            }
+            g = Rules.apply(g, m.action)
+        }
+        localMoves.clear(); localMoves.addAll(r.moves)
+        history.clear()
+        _state.update {
+            decorate(it.copy(game = g, tokens = tokens, lastMove = last, selected = null, millFlash = null, shotFx = null, showGameOver = false))
+        }
+        if (g.isGameOver) onGameOver(g)
+    }
+
+    private fun corrupt() {
+        val s = online ?: return
+        message = "The other phone sent a move the rules don't allow. Game stopped."
+        val g = _state.value.game
+        if (g.result == null) {
+            val over = Rules.forfeit(g, s.seat.other.toPlayer(), WinReason.RESIGNATION)
+            _state.update { decorate(it.copy(game = over, selected = null)) }
+            onGameOver(over)
+        }
+        refreshOnline()
+    }
+
+    private fun refreshOnline() {
+        val r = room ?: return
+        val ui = onlineUi(r)
+        _state.update { decorate(it.copy(online = ui)) }
+        // Tick the "opponent disconnected" countdown only while it matters.
+        if (ui.abandonSecondsLeft != null && ui.abandonSecondsLeft > 0 && countdownJob?.isActive != true) {
+            countdownJob = viewModelScope.launch {
+                while (isActive) {
+                    delay(1000)
+                    val left = room?.let { RoomRules.abandonCountdown(it, online!!.seat, now()) }
+                    refreshOnlineState()
+                    if (left == null || left <= 0) break
+                }
+            }
+        }
+    }
+
+    private fun refreshOnlineState() {
+        val r = room ?: return
+        _state.update { decorate(it.copy(online = onlineUi(r))) }
+    }
+
+    private fun onlineUi(r: RoomSnapshot): bw.mmele.ui.game.OnlineUi {
+        val seat = online!!.seat
+        val opp = seat.other
+        val left = RoomRules.abandonCountdown(r, seat, now())
+        return OnlineUi(
+            code = r.code,
+            waitingForOpponent = r.phase == RoomPhase.LOBBY,
+            opponentConnected = opp in r.connected,
+            iOfferedDraw = r.phase == RoomPhase.PLAYING && r.offers.any { it.seat == seat && it.kind == OfferKind.DRAW },
+            opponentOffersDraw = r.phase == RoomPhase.PLAYING && r.offers.any { it.seat == opp && it.kind == OfferKind.DRAW },
+            iOfferedRematch = r.offers.any { it.seat == seat && it.kind == OfferKind.REMATCH },
+            opponentOffersRematch = r.offers.any { it.seat == opp && it.kind == OfferKind.REMATCH },
+            abandonSecondsLeft = left?.let { ((it + 999) / 1000).toInt() },
+            syncing = pendingSubmits > 0,
+            message = message,
+        )
     }
 
     companion object {

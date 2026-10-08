@@ -6,3 +6,10 @@ local.properties
 .DS_Store
 captures/
 .kotlin/
+
+# Firebase project config (developer-specific)
+app/google-services.json
+
+# Node deps for the emulator tests
+firebase/node_modules/
+firebase/*-debug.log
