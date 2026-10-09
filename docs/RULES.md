@@ -60,30 +60,78 @@ documented decisions where the sources are silent or a computer game needs a har
 | Who loses first if both conditions hit | After every turn the engine checks, for the player now to move: ≤2 cows → loss; no legal move → loss; then the draw counters. | Deterministic ordering. |
 
 **No-deadlock guarantee.** The engine's invariant — *every non-terminal state has at least one legal action* —
-is asserted on every ply of 3,000 random classic games and 5,000 random triangle games (`FuzzTest`).
+is asserted on every ply of 3,000 random classic games, 5,000 random triangle games and 3,000 slide-only triangle games (`FuzzTest`).
 
-## Khutlotharo (triangle) — a reconstruction
+## Khutlotharo (triangle)
 
-**Please read this as a design, not as documented tradition.** I could not find any source for a
-Setswana triangle game called *Khutlotharo* (Setswana for "triangle"). The closest documented relative is
-**Tsoro Yematatu** ("three-stone game", Zimbabwe; recorded by Matthews 1964): an isosceles triangle with a
-central bisector and one crossbar (7 points), 3 pieces each, place then move (adjacent step, or a jump over one
-piece), first to line up three wins. Related small alignment games include Tapatan, Achi and Shisima.
+**The layout comes from the user, a Motswana who plays the game, so it is no longer a reconstruction.** The user
+sent a photo of a hand-drawn board. The photo is rotated with the apex pointing left; turned upright, it is a
+tall isosceles triangle with:
 
-To match the spec (triangle, central bisector, horizontal crossbars, ~10 nodes, 3–4 tokens, sudden death),
-Mmele uses this version:
+```
+            A
+           /|\
+          / | \
+        CL--C--CR
+        /   |   \
+       /    |    \
+     BL-----BM-----BR
+```
 
-* **Board**: an apex plus **three crossbars** of three points each (left side, centre, right side): **10 points**.
-  Lines: the two sides and the bisector (4 points each) and the three crossbars (3 points each).
-  15 links; **9 winning lines** (any three *consecutive* points on one line).
-* **4 cows each**, Dark first. Place alternately (8 of the 10 points get filled), then move one cow to an
-  adjacent empty point along a line. No jumping, no flying, no shooting.
-* **Win**: make three in a line (during placement *or* movement) — or leave the opponent with **no legal move**.
-* **Draw**: 20 moves each (40 plies) in the movement phase without a result.
+* **7 points**: apex `A`; crossbar `CL`, `C`, `CR` at half height; base `BL`, `BM`, `BR`.
+* **10 links**: A–CL, A–C, A–CR, CL–C, C–CR, CL–BL, C–BM, CR–BR, BL–BM, BM–BR.
+* **5 lines of three**: A–CL–BL and A–CR–BR (the sides), A–C–BM (the bisector), CL–C–CR (the crossbar),
+  BL–BM–BR (the base).
 
-Design check: an exhaustive retrograde analysis (`tools/solve_triangle.py`, ~16k reachable positions) shows this
-variant is a **draw with perfect play** — neither player has a forced win, so it is not a trivially solved
-first-player win. The same holds for 3 cows, and with Tsoro-style jumps.
+This is the same board as Zimbabwe's **Tsoro Yematatu** (sources 4 and 5). In the photo the centre point `C` is
+drawn as a filled dot rather than a ring. Following the user's description, it is treated as an ordinary playable
+point.
+
+### Play
+
+* **3 cows each**, Dark first. Three is the only count that works on this board: with 2 you can never make a
+  line, and with 4 each the 8 cows don't fit on 7 points.
+* **Placement**: take turns placing until all 6 cows are down (one point stays empty).
+* **Movement**: on your turn, move one cow to the empty point. You can either
+  * **slide** one step along a line to an adjacent empty point, or
+  * **jump**: from the end of a line, over the occupied middle point (either colour), to the empty end. Nothing
+    is captured.
+  There is no flying and no shooting.
+* **Win**: get three in a line on one of the 5 lines, during placement *or* movement. A player with **no legal
+  move** also loses.
+* **Draw**: 30 plies (15 moves each) in the movement phase without a result.
+
+### Why jumps are on
+
+The brief said to slide only unless the sources said otherwise. Both written Tsoro Yematatu sources (Wikipedia,
+and Ludii after Matthews 1964) allow the jump over one adjacent piece of either colour into an empty point, so
+Mmele follows them. I found no written source for Khutlotharo itself. Jumps are controlled by one flag,
+`RuleSet.TRIANGLE.jumpOverAdjacent`. Set it to `false` for slide-only, and the engine, AI and tests support
+both.
+
+One side effect: with jumps, a full 3-against-3 board always leaves the player to move at least one move into
+the empty point. So the *no legal move loses* rule never fires in this variant. It is kept for the slide-only
+setting, where blockades do happen. `FuzzTest` checks both.
+
+### Solved (`tools/solve_triangle.py`)
+
+Exhaustive retrograde analysis of every reachable position:
+
+| Setting | Reachable positions | Perfect play | Longest forced win | Notes |
+|---|---|---|---|---|
+| With jumps (as shipped) | 815 | **Draw** | 3 plies | Every first placement draws. |
+| Slide only (`--jumps` off) | 804 | **Draw** | 11 plies (7 in movement) | A first cow on CL, C or CR **loses** for Dark; A, BL, BM, BR draw. |
+
+So neither player can force a win. The 30-ply draw rule is longer than any forced win (11 plies), so it never
+cuts a won game short.
+
+### Still assumed (not from the user or a source)
+
+1. **Jumping** is taken from the Tsoro Yematatu sources, not from a Khutlotharo source.
+2. **Who starts**: Dark (player 1) always places first.
+3. **Draw rule**: 30 movement plies without a line. Tradition probably just stops the game by agreement.
+4. **Repetition**: the 30-ply rule is the only repetition rule.
+5. **No legal move loses** is kept from Morabaraba (it only matters when jumps are off).
 
 ## Phase state machine
 

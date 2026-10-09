@@ -118,7 +118,7 @@ fun HomeScreen(
                     ) { onConfigChange(config.copy(variant = Variant.CLASSIC)) }
                     VariantCard(
                         title = "Khutlotharo",
-                        subtitle = "Triangle · 4 cows · line wins",
+                        subtitle = "Triangle · 3 cows · line wins",
                         variant = Variant.TRIANGLE,
                         selected = config.variant == Variant.TRIANGLE,
                         animate = animate,
@@ -129,10 +129,18 @@ fun HomeScreen(
 
                 Spacer(Modifier.height(20.dp))
                 SectionLabel("Mode")
-                Segmented(
-                    options = listOf("Pass & Play", "Solo vs AI"),
-                    selectedIndex = if (config.mode == GameMode.PASS_AND_PLAY) 0 else 1,
-                ) { onConfigChange(config.copy(mode = if (it == 0) GameMode.PASS_AND_PLAY else GameMode.SOLO)) }
+                // Order matters: vs Computer (default), online with a friend, then same-phone.
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    ModeOption("Play vs Computer", "Solo against the AI", config.mode == GameMode.SOLO) {
+                        onConfigChange(config.copy(mode = GameMode.SOLO))
+                    }
+                    ModeOption("Play online", "A friend over the internet · room code", config.mode == GameMode.ONLINE) {
+                        onConfigChange(config.copy(mode = GameMode.ONLINE))
+                    }
+                    ModeOption("Pass & Play", "Two players on this phone", config.mode == GameMode.PASS_AND_PLAY) {
+                        onConfigChange(config.copy(mode = GameMode.PASS_AND_PLAY))
+                    }
+                }
 
                 if (config.mode == GameMode.SOLO) {
                     Spacer(Modifier.height(12.dp))
@@ -148,14 +156,15 @@ fun HomeScreen(
                 }
 
                 Spacer(Modifier.height(20.dp))
-                SectionLabel("Clock per player")
-                val clocks = listOf(0, 3, 5, 10)
-                Segmented(
-                    options = listOf("Off", "3 min", "5 min", "10 min"),
-                    selectedIndex = clocks.indexOf(config.clockMinutes).coerceAtLeast(0),
-                ) { onConfigChange(config.copy(clockMinutes = clocks[it])) }
-
-                Spacer(Modifier.height(20.dp))
+                if (config.mode != GameMode.ONLINE) {
+                    SectionLabel("Clock per player")
+                    val clocks = listOf(0, 3, 5, 10)
+                    Segmented(
+                        options = listOf("Off", "3 min", "5 min", "10 min"),
+                        selectedIndex = clocks.indexOf(config.clockMinutes).coerceAtLeast(0),
+                    ) { onConfigChange(config.copy(clockMinutes = clocks[it])) }
+                    Spacer(Modifier.height(20.dp))
+                }
                 SectionLabel("Pieces")
                 PieceSetPicker(config) { onConfigChange(it) }
                 Spacer(Modifier.height(20.dp))
@@ -167,20 +176,13 @@ fun HomeScreen(
                 ToggleRow("Haptics", hapticsOn, onHapticsChange)
 
                 Spacer(Modifier.height(20.dp))
+                val online = config.mode == GameMode.ONLINE
                 Button(
-                    onClick = onPlay,
+                    onClick = if (online) onPlayOnline else onPlay,
                     modifier = Modifier.fillMaxWidth().height(56.dp),
                     shape = RoundedCornerShape(18.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = MmeleColors.Gold, contentColor = MmeleColors.Slate),
-                ) { Text("Tshameka · Play", style = MaterialTheme.typography.titleMedium) }
-
-                Spacer(Modifier.height(10.dp))
-                androidx.compose.material3.OutlinedButton(
-                    onClick = onPlayOnline,
-                    modifier = Modifier.fillMaxWidth().height(52.dp),
-                    shape = RoundedCornerShape(18.dp),
-                    border = androidx.compose.foundation.BorderStroke(1.5.dp, MmeleColors.Gold),
-                ) { Text("Play online · room code", style = MaterialTheme.typography.titleMedium, color = MmeleColors.GoldBright) }
+                ) { Text(if (online) "Tshameka · Find a room" else "Tshameka · Play", style = MaterialTheme.typography.titleMedium) }
 
                 Spacer(Modifier.height(14.dp))
                 // Academy is milestone 2.
@@ -238,7 +240,8 @@ private fun VariantCard(
         if (variant == Variant.CLASSIC) {
             listOf(TokenUi(1, Player.ONE, 0), TokenUi(2, Player.ONE, 9), TokenUi(3, Player.TWO, 12), TokenUi(4, Player.TWO, 20), TokenUi(5, Player.ONE, 18))
         } else {
-            listOf(TokenUi(1, Player.ONE, 0), TokenUi(2, Player.TWO, 5), TokenUi(3, Player.ONE, 7), TokenUi(4, Player.TWO, 3))
+            // 7-point board: A, CL, C, CR, BL, BM, BR.
+            listOf(TokenUi(1, Player.ONE, 0), TokenUi(2, Player.TWO, 2), TokenUi(3, Player.ONE, 4), TokenUi(4, Player.TWO, 6))
         }
     }
     Column(
@@ -290,6 +293,35 @@ private fun Segmented(options: List<String>, selectedIndex: Int, onSelect: (Int)
             ) {
                 Text(label, style = MaterialTheme.typography.labelLarge, color = if (sel) MmeleColors.GoldBright else MmeleColors.Bone, textAlign = TextAlign.Center)
             }
+        }
+    }
+}
+
+@Composable
+private fun ModeOption(title: String, subtitle: String, selected: Boolean, onClick: () -> Unit) {
+    val shape = RoundedCornerShape(16.dp)
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(if (selected) MmeleColors.Gold.copy(alpha = 0.18f) else MmeleColors.SlateRaised.copy(alpha = 0.85f))
+            .border(if (selected) 1.5.dp else 1.dp, if (selected) MmeleColors.Gold.copy(alpha = 0.8f) else MmeleColors.Bone.copy(alpha = 0.12f), shape)
+            .clickable(role = Role.RadioButton, onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            Modifier
+                .size(18.dp)
+                .border(2.dp, if (selected) MmeleColors.GoldBright else MmeleColors.BoneDim, RoundedCornerShape(50))
+                .padding(4.dp)
+                .clip(RoundedCornerShape(50))
+                .background(if (selected) MmeleColors.GoldBright else Color.Transparent),
+        )
+        Spacer(Modifier.width(14.dp))
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.titleMedium, color = if (selected) MmeleColors.GoldBright else MmeleColors.Bone)
+            Text(subtitle, style = MaterialTheme.typography.labelMedium, color = MmeleColors.BoneDim)
         }
     }
 }

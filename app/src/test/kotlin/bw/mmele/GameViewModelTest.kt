@@ -94,7 +94,7 @@ class GameViewModelTest {
         assertEquals(1, vm.state.value.tokens.size)
         assertEquals(Player.TWO, vm.state.value.game.toMove)
         // Human input is ignored while it's the AI's turn, accepted on our turn.
-        val empty = (0 until 10).first { vm.state.value.game.ownerAt(it) == null }
+        val empty = (0 until vm.state.value.game.board.size).first { vm.state.value.game.ownerAt(it) == null }
         vm.onIntent(GameIntent.NodeTapped(empty))
         assertNull(vm.state.value.game.result)
         assertTrue(Rules.legalActions(vm.state.value.game).isNotEmpty() || vm.state.value.game.isGameOver)
@@ -102,9 +102,9 @@ class GameViewModelTest {
 
     @Test fun dragAndDropMoves() = runTest(dispatcher) {
         val vm = GameViewModel(GameConfig(Variant.TRIANGLE, GameMode.PASS_AND_PLAY), aiDispatcher = dispatcher)
-        // Fill placement without lines: P1 T? use a known line-free fill.
+        // Line-free placement: P1 A, CL, BM; P2 C, CR, BR; BL stays empty.
         val t = Boards.TRIANGLE.labels
-        val seq = listOf("L1", "M1", "R2", "R1", "L3", "M2", "M3", "L2").map { t.indexOf(it) }
+        val seq = listOf("A", "C", "CL", "CR", "BM", "BR").map { t.indexOf(it) }
         for (n in seq) vm.onIntent(GameIntent.NodeTapped(n))
         val g = vm.state.value.game
         if (g.isGameOver) return@runTest

@@ -25,6 +25,21 @@ class BoardGraph(
     val mills: List<IntArray> = mills.map { it.toIntArray() }
     val millMasks: IntArray = this.mills.map { m -> m.fold(0) { acc, n -> acc or (1 shl n) } }.toIntArray()
 
+    /**
+     * Straight-line jumps (Tsoro Yematatu style): for each node, packed `over * 32 + to` entries
+     * meaning "from here over the adjacent node `over` to `to` beyond it on the same line".
+     * Derived from the mills, whose nodes are listed in line order (middle node in the middle).
+     */
+    val jumps: Array<IntArray> = Array(size) { n ->
+        this.mills.flatMap { m ->
+            when (n) {
+                m[0] -> listOf(m[1] * 32 + m[2])
+                m[2] -> listOf(m[1] * 32 + m[0])
+                else -> emptyList()
+            }
+        }.distinct().toIntArray()
+    }
+
     /** For each node, the indices (into [mills]) of every mill passing through it. */
     val millsAt: Array<IntArray>
     val fullMask: Int = (1 shl size) - 1
@@ -90,35 +105,33 @@ object Boards {
     }
 
     /**
-     * Khutlotharo - a reconstructed small triangle board (see docs/RULES.md).
-     * An apex plus three crossbars of three nodes each, joined by the two sides and a central
-     * bisector: 10 nodes. Index 0 = apex, then row r (1..3) left/centre/right = 1 + 3(r-1) + c.
-     * Lines of three are any three consecutive nodes on a side, the bisector or a crossbar (9 lines).
+     * Khutlotharo: the 7-point triangle as drawn by a Motswana player (same layout as Zimbabwe's
+     * Tsoro Yematatu). Apex at the top, a crossbar halfway down, a base of three, and a centre
+     * line from the apex to the base midpoint. Indices / labels:
+     * ```
+     *            0 A
+     *     1 CL   2 C   3 CR
+     *  4 BL      5 BM      6 BR
+     * ```
+     * Lines of three (each listed in line order): A-CL-BL, A-CR-BR, A-C-BM, CL-C-CR, BL-BM-BR.
+     * Positions are normalised to a tall isosceles triangle (height : base about 1.19 : 1, as in
+     * the hand drawing); the canvas fits them uniformly.
      */
     val TRIANGLE: BoardGraph by lazy {
-        fun n(r: Int, c: Int) = if (r == 0) 0 else 1 + 3 * (r - 1) + c
-        val pos = ArrayList<Pos>()
-        val labels = ArrayList<String>()
-        pos += Pos(0.5f, 0f); labels += "T"
-        for (r in 1..3) for (c in 0..2) {
-            val half = r / 6f
-            pos += Pos(0.5f + (c - 1) * half, r / 3f)
-            labels += "${"LMR"[c]}$r"
-        }
-        val lines = listOf(
-            listOf(0, n(1, 0), n(2, 0), n(3, 0)),
-            listOf(0, n(1, 2), n(2, 2), n(3, 2)),
-            listOf(0, n(1, 1), n(2, 1), n(3, 1)),
-            listOf(n(1, 0), n(1, 1), n(1, 2)),
-            listOf(n(2, 0), n(2, 1), n(2, 2)),
-            listOf(n(3, 0), n(3, 1), n(3, 2)),
+        val left = 0.08f
+        val right = 0.92f
+        val pos = listOf(
+            Pos(0.5f, 0f),                                   // A
+            Pos((0.5f + left) / 2, 0.5f),                    // CL - midpoint of the left side
+            Pos(0.5f, 0.5f),                                 // C
+            Pos((0.5f + right) / 2, 0.5f),                   // CR - midpoint of the right side
+            Pos(left, 1f),                                   // BL
+            Pos(0.5f, 1f),                                   // BM
+            Pos(right, 1f),                                  // BR
         )
-        val edges = ArrayList<Pair<Int, Int>>()
-        val mills = ArrayList<List<Int>>()
-        for (line in lines) {
-            for (i in 0 until line.size - 1) edges += line[i] to line[i + 1]
-            for (i in 0 until line.size - 2) mills += line.subList(i, i + 3)
-        }
-        BoardGraph("Khutlotharo (triangle)", pos, edges, mills, labels)
+        val labels = listOf("A", "CL", "C", "CR", "BL", "BM", "BR")
+        val lines = listOf(listOf(0, 1, 4), listOf(0, 3, 6), listOf(0, 2, 5), listOf(1, 2, 3), listOf(4, 5, 6))
+        val edges = lines.flatMap { listOf(it[0] to it[1], it[1] to it[2]) }
+        BoardGraph("Khutlotharo (triangle)", pos, edges, lines, labels)
     }
 }

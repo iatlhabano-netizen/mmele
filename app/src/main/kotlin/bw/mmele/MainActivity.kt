@@ -10,6 +10,9 @@ import bw.mmele.feedback.SoundFx
 import bw.mmele.ui.MmeleApp
 import android.content.Intent
 import bw.mmele.online.FirebaseOnlineGameRepository
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
     private var feedback: FeedbackController? = null
@@ -22,11 +25,17 @@ class MainActivity : ComponentActivity() {
             haptics = runCatching { Haptics(applicationContext) }.getOrNull(),
         )
         feedback = fb
+        // One tiny preferences file; reading it before the first frame avoids a flash of the wrong mode.
+        val prefs = ModePrefs(applicationContext)
+        val saved = runBlocking { prefs.load() }
         setContent {
             MmeleApp(
                 feedback = fb,
                 onlineRepo = { FirebaseOnlineGameRepository.createOrNull(applicationContext) },
                 onShareCode = ::shareRoomCode,
+                initialMode = saved.mode,
+                initialDifficulty = saved.difficulty,
+                onModeChoice = { mode, difficulty -> lifecycleScope.launch { prefs.save(ModePrefs.Choice(mode, difficulty)) } },
             )
         }
     }

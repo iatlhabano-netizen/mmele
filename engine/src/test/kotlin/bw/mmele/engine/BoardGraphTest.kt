@@ -4,6 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.math.abs
+import kotlin.math.hypot
 
 class BoardGraphTest {
     private val b = Boards.CLASSIC
@@ -78,16 +79,29 @@ class BoardGraphTest {
         }
     }
 
-    @Test fun triangleShape() {
+    @Test fun triangleShapeMatchesTheHandDrawnBoard() {
         val t = Boards.TRIANGLE
-        assertEquals(10, t.size)
-        assertEquals(15, t.edges.size)
-        assertEquals(9, t.mills.size)
-        assertEquals(3, t.neighbors[0].size)
+        assertEquals(listOf("A", "CL", "C", "CR", "BL", "BM", "BR"), t.labels)
+        val expectedEdges = listOf("A-CL", "A-C", "A-CR", "CL-C", "C-CR", "CL-BL", "C-BM", "CR-BR", "BL-BM", "BM-BR")
+            .map { e -> e.split("-").map { t.labels.indexOf(it) }.sorted().let { it[0] to it[1] } }.toSet()
+        assertEquals(expectedEdges, t.edges.toSet())
+        val expectedLines = listOf("A-CL-BL", "A-CR-BR", "A-C-BM", "CL-C-CR", "BL-BM-BR")
+            .map { l -> l.split("-").map { t.labels.indexOf(it) }.toSet() }.toSet()
+        assertEquals(expectedLines, t.mills.map { it.toSet() }.toSet())
         for (m in t.mills) {
             val (x, y, z) = m.map { t.positions[it] }
             val cross = (y.x - x.x) * (z.y - x.y) - (y.y - x.y) * (z.x - x.x)
-            assertTrue(abs(cross) < 1e-6)
+            assertTrue("line ${m.map(t::label)} must be straight", abs(cross) < 1e-6)
+            // the middle node lies between the ends (needed for jumps)
+            assertTrue(abs(hypot(x.x - y.x, x.y - y.y) + hypot(y.x - z.x, y.y - z.y) - hypot(x.x - z.x, x.y - z.y)) < 1e-5)
         }
+        // Isosceles and taller than wide, apex centred over the base midpoint.
+        val p = t.positions
+        assertEquals(p[0].x, p[5].x, 1e-6f)
+        assertEquals(p[0].x - p[4].x, p[6].x - p[0].x, 1e-6f)
+        assertTrue(p[5].y - p[0].y > p[6].x - p[4].x)
+        // Jumps: only along lines, from an end over the middle.
+        assertEquals(setOf(t.labels.indexOf("CL") * 32 + t.labels.indexOf("BL")), t.jumps[0].filter { it % 32 == t.labels.indexOf("BL") }.toSet())
+        assertEquals(0, t.jumps[t.labels.indexOf("C")].size)
     }
 }

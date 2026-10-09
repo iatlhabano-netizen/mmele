@@ -15,7 +15,7 @@ enum class GameMode { PASS_AND_PLAY, SOLO, ONLINE }
 @Immutable
 data class GameConfig(
     val variant: Variant = Variant.CLASSIC,
-    val mode: GameMode = GameMode.PASS_AND_PLAY,
+    val mode: GameMode = GameMode.SOLO,
     val difficulty: Difficulty = Difficulty.MEDIUM,
     /** In solo mode, which side the human plays (ONE = dark, moves first). */
     val human: Player = Player.ONE,

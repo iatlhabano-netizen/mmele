@@ -109,7 +109,7 @@ object Rules {
         val own = state.maskOf(p)
         val flying = state.isFlying(p)
         forEachBit(own) { from ->
-            val dests = if (flying) empty else state.board.neighborMask[from] and empty
+            val dests = if (flying) empty else (state.board.neighborMask[from] and empty) or jumpDests(state, from, empty)
             forEachBit(dests) { to -> out += Action.Move(from, to) }
         }
         val ban = state.banOf(p)
@@ -135,8 +135,24 @@ object Rules {
         if (own == 0) return false
         if (state.isFlying(p)) return true
         var reach = 0
-        forEachBit(own) { reach = reach or state.board.neighborMask[it] }
+        forEachBit(own) { reach = reach or state.board.neighborMask[it] or jumpDests(state, it, empty) }
         return reach and empty != 0
+    }
+
+    /** Non-flying destinations from [from]: adjacent empty nodes plus jump landings (if allowed). */
+    fun stepDests(state: GameState, from: Int, empty: Int = state.empty): Int =
+        (state.board.neighborMask[from] and empty) or jumpDests(state, from, empty)
+
+    /** Empty nodes reachable from [from] by jumping over one adjacent occupied node (if the rules allow). */
+    private fun jumpDests(state: GameState, from: Int, empty: Int): Int {
+        if (!state.rules.jumpOverAdjacent) return 0
+        var m = 0
+        for (j in state.board.jumps[from]) {
+            val over = j / 32
+            val to = j % 32
+            if (empty and (1 shl over) == 0 && empty and (1 shl to) != 0) m = m or (1 shl to)
+        }
+        return m
     }
 
     // ---------------------------------------------------------------- transitions

@@ -1,10 +1,10 @@
 # Mmele — Morabaraba for Android
 
 A premium Kotlin + Jetpack Compose implementation of **Mmele / Morabaraba**, the Southern African
-twelve-cow mill game, plus **Khutlotharo**, a small sudden-death triangle variant. Backdrops celebrate
+twelve-cow mill game, plus **Khutlotharo**, the 7-point Setswana triangle game (3 cows, three in a line wins). Backdrops celebrate
 Botswana destinations (Okavango, Chobe, Makgadikgadi, Central Kalahari, Tsodilo), all drawn in code.
 
-**Status: milestone 1 + piece sets + online.** Pass & Play, Solo vs AI (Easy / Medium / Hard), both variants,
+**Status: milestone 1 + piece sets + online.** Play vs Computer (Easy / Medium / Hard; the default), Play online, Pass & Play, both variants,
 haptics, sound, undo, optional chess clock, scenes, three procedurally drawn **piece sets** (classic pebbles,
 rough diamonds, Botswana bird eggs) and optional **online play by room code** (Firebase; offline modes never
 need the internet). The Academy (tutorial puzzles) is milestone 2 and shows as "coming soon".
@@ -23,8 +23,8 @@ Key files: `engine/.../Rules.kt` (state machine), `engine/.../ai/SearchAi.kt`, `
 ## Rules
 
 See **[docs/RULES.md](docs/RULES.md)** — MSSA "Generally Accepted Rules" with sources, every edge-case
-decision (double mill = one shot, full board, re-mill ban, draw rules) and the triangle-variant
-reconstruction (verified a draw with perfect play by `tools/solve_triangle.py`).
+decision (double mill = one shot, full board, re-mill ban, draw rules) and the Khutlotharo board as drawn by a
+Motswana player (solved as a draw with perfect play by `tools/solve_triangle.py`, with or without jumps).
 Scene facts and sources: **[docs/SCENES.md](docs/SCENES.md)**.
 Piece sets and egg sources: **[docs/PIECES.md](docs/PIECES.md)**.
 Online play (Firebase setup for beginners, security model, emulator tests): **[docs/ONLINE_SETUP.md](docs/ONLINE_SETUP.md)**.
@@ -41,7 +41,7 @@ AGP 8.7.3, Kotlin 2.0.21. `minSdk 26`, `targetSdk 35`.
 ./gradlew assembleDebug           # app/build/outputs/apk/debug/app-debug.apk
 ./gradlew :app:recordPaparazziDebug   # re-render screenshots into app/src/test/snapshots/images
 python3 tools/gen_sounds.py       # regenerate the procedural sounds (numpy + ffmpeg)
-python3 tools/solve_triangle.py 4 # exhaustive solve of the triangle variant
+python3 tools/solve_triangle.py 3 --jumps # exhaustive solve of Khutlotharo (drop --jumps for slide-only)
 # security rules on the Firebase emulator (Node 18+, Java 21+), see docs/ONLINE_SETUP.md
 (cd firebase && npm install && npx firebase-tools emulators:exec --only database,auth --project demo-mmele "node rules.test.mjs && node payloads.test.mjs")
 ```
@@ -74,22 +74,24 @@ without it the app shows "Online play not configured yet".
   of truth. Moves are applied optimistically and reconciled with the server echo; rejected or divergent
   states rebuild from the move list. Presence via `onDisconnect()`; 90 s abandon timer; resign, draw offers,
   rematch in the same room; Android share sheet for the code.
+* **Modes** — the home screen lists *Play vs Computer* (default, Medium), *Play online*, *Pass & Play*. The last
+  mode and difficulty are remembered across launches (DataStore, `ModePrefs.kt`).
 * **Scenes** — random at launch, selectable on the home screen; full strength with ambient motion on
   home and game-over; static, blurred (Android 12+) and scrimmed to `#121417` behind the board.
 
 ## Tests
 
-* `:engine` — 43 JUnit tests: adjacency symmetry/degrees, the exact 20 mills (exhaustive collinear
+* `:engine` — 48 JUnit tests: adjacency symmetry/degrees, the exact 20 mills (exhaustive collinear
   enumeration), protected-mill rule + all-in-mills exception, double mill = one shot, phase transitions,
   flying, win by 2 cows, blockade, full board at end of placement, both draw rules, MSSA re-mill ban,
-  triangle win conditions, 8,000 random self-play games (termination + "never zero legal actions"),
+  7-point triangle shape, lines, slides/jumps, line wins, blockade (slide-only), 11,000 random self-play games (termination + "never zero legal actions"),
   AI legality on sampled positions for all levels, AI time cap / cancellation, strength sanity.
 * `:online` — 15 tests: room codes (6 chars, no 0/O/1/I/L), create/join/full/unknown, turn and legality
   rejection, 5 random complete games kept in sync between two clients, resign, draw offer/withdraw/accept,
   rematch, disconnect → reconnect → abandon timeout, corrupt move lists, wire round-trip, fixture export.
 * `:app` — 13 ViewModel tests (5 offline + 8 online: two ViewModels on a shared in-memory store — sync,
   turn enforcement, mill/shot propagation, resign → rematch, draw, disconnect indicator + abandon claim,
-  rebuild after restart, room-code input, piece-style ids/contrast) and 17 Paparazzi screenshot tests.
+  rebuild after restart, room-code input, piece-style ids/contrast) and 19 Paparazzi screenshot tests.
 * `firebase/` — 40 security-rule checks + replay of 19 real client writes on the Firebase emulator.
 
 ## Known limitations

@@ -37,7 +37,7 @@ class Evaluator(
 
         if (mobility != 0 && s.handOf(p) == 0 && !s.isFlying(p)) {
             var mob = 0
-            Rules.forEachBit(own) { mob += Integer.bitCount(b.neighborMask[it] and empty) }
+            Rules.forEachBit(own) { mob += Integer.bitCount(Rules.stepDests(s, it, empty)) }
             score += mob * mobility
         }
         if (positional != 0) {
@@ -49,7 +49,7 @@ class Evaluator(
             // shooting every move; or an open mill that can be closed next move.
             Rules.forEachBit(own) { from ->
                 val inMill = Rules.formsMill(b, own, from)
-                val dests = if (s.isFlying(p)) empty else b.neighborMask[from] and empty
+                val dests = if (s.isFlying(p)) empty else Rules.stepDests(s, from, empty)
                 Rules.forEachBit(dests) { to ->
                     val moved = (own and (1 shl from).inv()) or (1 shl to)
                     if (Rules.formsMill(b, moved, to)) score += if (inMill) runningMill else runningMill / 3

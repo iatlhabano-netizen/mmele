@@ -40,11 +40,14 @@ fun MmeleApp(
     feedback: FeedbackController?,
     onlineRepo: () -> OnlineGameRepository? = { null },
     onShareCode: (String) -> Unit = {},
+    initialMode: GameMode = GameMode.SOLO,
+    initialDifficulty: Difficulty = Difficulty.MEDIUM,
+    onModeChoice: (GameMode, Difficulty) -> Unit = { _, _ -> },
 ) {
     MmeleTheme {
         var variant by rememberSaveable { mutableStateOf(Variant.CLASSIC) }
-        var mode by rememberSaveable { mutableStateOf(GameMode.PASS_AND_PLAY) }
-        var difficulty by rememberSaveable { mutableStateOf(Difficulty.MEDIUM) }
+        var mode by rememberSaveable { mutableStateOf(initialMode) }
+        var difficulty by rememberSaveable { mutableStateOf(initialDifficulty) }
         var human by rememberSaveable { mutableStateOf(Player.ONE) }
         var clock by rememberSaveable { mutableIntStateOf(0) }
         // A random Botswana destination by default; the player can pick another on the home screen.
@@ -85,6 +88,7 @@ fun MmeleApp(
                 HomeScreen(
                     config = config,
                     onConfigChange = {
+                        if (it.mode != mode || it.difficulty != difficulty) onModeChoice(it.mode, it.difficulty)
                         variant = it.variant; mode = it.mode; difficulty = it.difficulty; human = it.human; clock = it.clockMinutes; scene = it.scene
                         styleOneId = it.styleOne.id; styleTwoId = it.styleTwo.id
                     },

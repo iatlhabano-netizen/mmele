@@ -63,9 +63,12 @@ class AiTest {
     }
 
     @Test fun hardTakesImmediateTriangleWin() {
-        val s = Rules.position(RuleSet.TRIANGLE, listOf(t("L1"), t("M1"), t("L3"), t("R2")), listOf(t("T"), t("M2"), t("M3"), t("R3")))
-        val ai = Ai.create(Difficulty.HARD, seed = 1, timeLimitMs = 300)
-        assertEquals(Action.Move(t("R2"), t("R1")), ai.chooseAction(s))
+        // P1 A, CL, BM; P2 C, CR, BR; empty BL. BM -> BL completes A-CL-BL.
+        val s = Rules.position(RuleSet.TRIANGLE, listOf(t("A"), t("CL"), t("BM")), listOf(t("C"), t("CR"), t("BR")))
+        for (d in listOf(Difficulty.MEDIUM, Difficulty.HARD)) {
+            val ai = Ai.create(d, seed = 1, timeLimitMs = 300)
+            assertEquals("$d", Action.Move(t("BM"), t("BL")), ai.chooseAction(s))
+        }
     }
 
     @Test fun aiRespectsTimeCap() {

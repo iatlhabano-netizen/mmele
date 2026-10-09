@@ -6,66 +6,103 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
+/** Khutlotharo: 7 points, 3 cows each, line of three wins, slides plus Tsoro-Yematatu jumps. */
 class TriangleTest {
     private val R = RuleSet.TRIANGLE
+    private val SLIDE_ONLY = R.copy(jumpOverAdjacent = false)
     private fun p(l: String) = Action.Place(t(l))
     private fun m(a: String, b: String) = Action.Move(t(a), t(b))
+    private fun moves(s: GameState) = Rules.legalActions(s).map { (it as Action.Move).let { mv -> Boards.TRIANGLE.label(mv.from) + ">" + Boards.TRIANGLE.label(mv.to) } }.toSet()
 
-    @Test fun fourCowsEachTenNodes() {
+    // P1: A, CL, BM   P2: C, CR, BR   empty: BL   (no line for either side)
+    private fun oneEmptyAtBL(rules: RuleSet, toMove: Player = Player.ONE) =
+        Rules.position(rules, listOf(t("A"), t("CL"), t("BM")), listOf(t("C"), t("CR"), t("BR")), toMove = toMove)
+
+    @Test fun threeCowsEachSevenPoints() {
         val s = Rules.newGame(R)
-        assertEquals(4, s.hand1)
-        assertEquals(10, Rules.legalActions(s).size)
+        assertEquals(3, s.hand1)
+        assertEquals(3, s.hand2)
+        assertEquals(7, Rules.legalActions(s).size)
     }
 
-    @Test fun lineInPlacementWinsImmediately() {
-        var s = Rules.newGame(R).play(p("L1"), p("L3"), p("M1"), p("M3"))
+    @Test fun everyLineWinsInPlacement() {
+        for (line in Boards.TRIANGLE.mills) {
+            val others = (0 until 7).filter { it !in line.toList() }
+            val s = Rules.newGame(R).play(
+                Action.Place(line[0]), Action.Place(others[0]),
+                Action.Place(line[1]), Action.Place(others[1]),
+                Action.Place(line[2]),
+            )
+            assertEquals("line ${line.map(Boards.TRIANGLE::label)}", GameResult.Win(Player.ONE, WinReason.LINE_OF_THREE), s.result)
+        }
+    }
+
+    @Test fun lineOfThreeOnlyOnDrawnLines() {
+        // CL, C, BM are three P1 cows but not one drawn line: no win.
+        val s = Rules.newGame(R).play(p("CL"), p("A"), p("C"), p("CR"), p("BM"))
         assertNull(s.result)
-        s = s.play(p("R1"))
-        assertEquals(GameResult.Win(Player.ONE, WinReason.LINE_OF_THREE), s.result)
     }
 
-    @Test fun lineAlongBisectorWins() {
-        val s = Rules.newGame(R).play(p("T"), p("L3"), p("M1"), p("R3"), p("M2"))
-        assertEquals(GameResult.Win(Player.ONE, WinReason.LINE_OF_THREE), s.result)
+    @Test fun movementAfterAllSixPlaced() {
+        val s = Rules.newGame(R).play(p("A"), p("C"), p("CL"), p("CR"), p("BM"), p("BR"))
+        assertNull(s.result)
+        assertEquals(Phase.MOVEMENT, s.phase)
+        assertEquals(Integer.bitCount(s.empty), 1)
+    }
+
+    @Test fun slidesAndJumpsIntoTheEmptyPoint() {
+        val s = oneEmptyAtBL(R)
+        // Slides: CL>BL, BM>BL. Jump: A over CL to BL (A-CL-BL line). BR could jump over BM too, but it is P2's.
+        assertEquals(setOf("CL>BL", "BM>BL", "A>BL"), moves(s))
+        assertEquals(setOf("CL>BL", "BM>BL"), moves(oneEmptyAtBL(SLIDE_ONLY)))
+    }
+
+    @Test fun jumpOverOpponentWithoutCapture() {
+        val s = oneEmptyAtBL(R, toMove = Player.TWO)
+        assertTrue("BR>BL" in moves(s)) // BR jumps over P1's BM
+        val after = s.play(m("BR", "BL"))
+        assertEquals(Player.ONE, after.ownerAt(t("BM"))) // nothing captured
+        assertNull(after.ownerAt(t("BR")))
+    }
+
+    @Test fun noJumpOverAnEmptyPointOrAroundACorner() {
+        // P1: A, BL, C   P2: CL, BM, BR? P2 lines none. Empties: CR. A->CR slide ok; BL cannot reach CR.
+        val s = Rules.position(R, listOf(t("A"), t("BL"), t("C")), listOf(t("CL"), t("BM"), t("BR")))
+        val ms = moves(s)
+        assertTrue("A>CR" in ms)
+        assertTrue("CL>CR" !in ms) // not P1's
+        assertTrue(ms.none { it.startsWith("BL>") }) // BL-BM-BR: BR occupied, BL-CL-A: A occupied
+        // C jumps? C is a middle point: it can only slide (to CR).
+        assertTrue("C>CR" in ms)
     }
 
     @Test fun lineInMovementWins() {
-        // P1: L1, M1, L3, R2 ; P2: T, M2, M3, R3  -> empties R1, L2. P1 moves R2 -> R1: L1-M1-R1.
-        val s = Rules.position(R, listOf(t("L1"), t("M1"), t("L3"), t("R2")), listOf(t("T"), t("M2"), t("M3"), t("R3")))
-        assertNull(s.result)
-        assertFalse(s.mustShoot)
-        val end = s.play(m("R2", "R1"))
+        val end = oneEmptyAtBL(R).play(m("BM", "BL")) // A-CL-BL
         assertEquals(GameResult.Win(Player.ONE, WinReason.LINE_OF_THREE), end.result)
     }
 
-    @Test fun constructedBlockade() {
-        // P1: L1, R1, M2, R2 ; P2: T, M1, L3, L2? Check lines: P2 T-M1-M2? M2 is P1. ok.
-        // Empties: M3, R3. P2's cows: T(L1,R1,M1) blocked, M1(T,L1,R1,M2) blocked, L2(L1,M2,L3) blocked,
-        // L3(L2,M3) -> M3 empty. So P1 plays R2 -> R3?? R3 neighbours: R2, M3. Then empties M3, R2.
-        // Instead: P1 has a cow that moves into M3: R3? Use P1: L1, R1, M2, R3; empties M3?, R2.
-        val s = Rules.position(R, listOf(t("L1"), t("R1"), t("M2"), t("R3")), listOf(t("T"), t("M1"), t("L2"), t("L3")))
-        assertNull(s.result)
-        // P1 moves R3 -> M3 sealing L3 (L3: L2, M3). Empties become R3, R2. P2 cows: none adjacent to R2/R3.
-        val end = s.play(m("R3", "M3"))
-        assertEquals(GameResult.Win(Player.ONE, WinReason.BLOCKADE), end.result)
+    @Test fun noLegalMoveLosesWhenSlidingOnly() {
+        // P2 to move with sliding only: C, CR, BR all cut off from the empty BL -> P1 wins.
+        val s = oneEmptyAtBL(SLIDE_ONLY, toMove = Player.TWO)
+        assertEquals(GameResult.Win(Player.ONE, WinReason.BLOCKADE), s.result)
+        // With jumps BR escapes over BM, so the game continues.
+        assertNull(oneEmptyAtBL(R, toMove = Player.TWO).result)
     }
 
-    @Test fun triangleDrawAfterFortyIdlePlies() {
-        val s0 = Rules.position(R, listOf(t("L1"), t("R3"), t("M2"), t("L3")), listOf(t("T"), t("R1"), t("L2"), t("M3")))
-        var s = s0
+    @Test fun drawAfterThirtyIdlePlies() {
+        var s = Rules.newGame(R).play(p("A"), p("C"), p("CL"), p("CR"), p("BM"), p("BR"))
         var guard = 0
         while (!s.isGameOver && guard++ < 1000) {
-            // Pick the first move that doesn't win (we want to reach the draw).
             val acts = Rules.legalActions(s)
-            val next = acts.map { Rules.apply(s, it) }.firstOrNull { it.result == null || it.result is GameResult.Draw } ?: Rules.apply(s, acts[0])
-            s = next
+            s = acts.map { Rules.apply(s, it) }.firstOrNull { it.result == null || it.result is GameResult.Draw } ?: Rules.apply(s, acts[0])
         }
-        assertTrue(s.result is GameResult.Draw || s.result is GameResult.Win)
-        if (s.result is GameResult.Draw) assertEquals(40, s.idlePlies)
+        assertTrue(s.isGameOver)
+        if (s.result is GameResult.Draw) assertEquals(30, s.idlePlies)
     }
 
-    @Test fun noShootingOrFlyingInTriangle() {
-        val s = Rules.position(R, listOf(t("L1"), t("R3"), t("M2")), listOf(t("T"), t("R1"), t("L2")))
+    @Test fun noShootingOrFlying() {
+        val s = Rules.position(R, listOf(t("A"), t("BL"), t("C")), listOf(t("CL"), t("BM"), t("BR")))
         assertEquals(Phase.MOVEMENT, s.phase)
+        assertFalse(s.mustShoot)
     }
 }

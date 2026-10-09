@@ -75,6 +75,23 @@ class FuzzTest {
         }
         println("triangle fuzz outcomes: $reasons")
         assertTrue(reasons.containsKey(WinReason.LINE_OF_THREE))
+        assertTrue(reasons.containsKey(DrawReason.NO_PROGRESS))
+        // With jumps a full 3-v-3 board always leaves the mover a move (every empty point is
+        // reachable from all but two points), so blockades cannot happen.
+        assertTrue(!reasons.containsKey(WinReason.BLOCKADE))
+    }
+
+    @Test fun slideOnlyTriangleGamesTerminateAndCanBlockade() {
+        val rules = RuleSet.TRIANGLE.copy(jumpOverAdjacent = false)
+        val rnd = Random(11)
+        val reasons = HashMap<Any, Int>()
+        repeat(3000) { i ->
+            val end = playRandomGame(rules, rnd, greedy = i % 3 == 0)
+            val key: Any = when (val r = end.result!!) { is GameResult.Win -> r.reason; is GameResult.Draw -> r.reason }
+            reasons[key] = (reasons[key] ?: 0) + 1
+        }
+        println("slide-only triangle fuzz outcomes: $reasons")
+        assertTrue(reasons.containsKey(WinReason.LINE_OF_THREE))
         assertTrue(reasons.containsKey(WinReason.BLOCKADE))
     }
 }

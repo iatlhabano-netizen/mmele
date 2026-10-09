@@ -119,10 +119,23 @@ class ScreenshotTest {
     }
 
     @Test fun triangleGame() {
-        val g = Rules.position(RuleSet.TRIANGLE, listOf(t("L1"), t("M2"), t("R3")), listOf(t("T"), t("L2"), t("M3")), hand1 = 1, hand2 = 1)
+        // Placement: two cows each on the board, one each still in hand.
+        val g = Rules.position(RuleSet.TRIANGLE, listOf(t("CL"), t("BR")), listOf(t("C"), t("BM")), hand1 = 1, hand2 = 1)
         val config = GameConfig(Variant.TRIANGLE, GameMode.PASS_AND_PLAY, scene = Scene.TSODILO)
         paparazzi.snapshot {
-            MmeleTheme { GameScreenContent(ui(config, g, lastMove = LastMove(null, t("M3"))), {}, {}, animate = false) }
+            MmeleTheme { GameScreenContent(ui(config, g, lastMove = LastMove(null, t("BM"))), {}, {}, animate = false) }
+        }
+    }
+
+    /** Movement phase with bird eggs: A is selected and can jump over CL into the empty BL. */
+    @Test fun triangleMidGameEggs() {
+        val g = Rules.position(RuleSet.TRIANGLE, listOf(t("A"), t("CL"), t("BM")), listOf(t("C"), t("CR"), t("BR"))).copy(ply = 9)
+        val config = GameConfig(
+            Variant.TRIANGLE, GameMode.SOLO, Difficulty.MEDIUM, scene = Scene.KALAHARI,
+            styleOne = PieceStyle.Egg(EggKind.KORI_BUSTARD), styleTwo = PieceStyle.Egg(EggKind.OSTRICH),
+        )
+        paparazzi.snapshot {
+            MmeleTheme { GameScreenContent(ui(config, g, selected = t("A"), lastMove = LastMove(t("BL"), t("BR"))), {}, {}, animate = false) }
         }
     }
 
