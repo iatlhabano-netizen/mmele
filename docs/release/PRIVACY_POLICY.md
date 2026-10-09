@@ -58,10 +58,13 @@ Google Play itself (downloads, updates, reviews) is run by Google under
 
 ## 5. How long we keep it
 
-- Game rooms: deleted **[RETENTION, e.g. within 30 days]** after the last move or when the game ends.
-  [NOTE TO DEVELOPER: automatic clean-up is not implemented yet — see RELEASE_CHECKLIST.md. Do not publish a
-  period you do not actually enforce.]
-- Anonymous user IDs: deleted **[RETENTION, e.g. after 30 days without use]**, or when you ask.
+- Finished game rooms: deleted by the host's app as soon as the host leaves the finished game.
+- Unfinished or abandoned rooms: kept so players can reconnect, then deleted within **60 days** of the last
+  activity (rooms idle for 30 days are removed by a clean-up we run at least monthly).
+- Anonymous user IDs: deleted within **60 days** of last use (same monthly clean-up), or immediately when you use
+  "Delete my online data".
+- [NOTE TO DEVELOPER: these periods depend on you running `firebase/purge.mjs` monthly (docs/ONLINE_SETUP.md).
+  Do not publish them if you won't.]
 - Firebase/Google technical logs: kept by Google for its standard periods under the terms above.
 
 ## 6. Your choices and rights
@@ -69,10 +72,11 @@ Google Play itself (downloads, updates, reviews) is run by Google under
 - You can use Mmele without ever going online. Simply don't choose "Play online".
 - Uninstalling the app (or clearing its storage) removes the anonymous ID from your phone; your old rooms can no
   longer be linked to you.
-- To ask us to **delete your online data**, email **[CONTACT EMAIL]** with the subject "Mmele data deletion" and,
-  if you can, the room code(s) you used. Because we hold no name or email, we may ask you to tell us the room code so
-  we can find the data. We will reply within **[30] days**. [OPTIONAL: or use the "Delete my online data" button in
-  the app's About screen.]
+- <a id="delete"></a>**Delete your online data in the app:** Home → *About · privacy · licences* → **Delete my online
+  data**. This deletes every room you created or joined from that phone and then your anonymous ID, straight away.
+- Or email **[CONTACT EMAIL]** with the subject "Mmele data deletion" and, if you can, the room code(s) you used.
+  Because we hold no name or email, we may ask for the room code so we can find the data. We will reply within
+  **30 days**.
 - Depending on where you live, you may have rights to access, correct, delete, restrict or object to processing of
   your data, and to data portability:
   - **EU / EEA and UK (GDPR / UK GDPR):** you can also complain to your local data protection authority (in the UK,

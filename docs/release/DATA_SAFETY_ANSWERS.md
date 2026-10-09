@@ -21,6 +21,9 @@ never initialises and **nothing leaves the device**. Use answer set A. With onli
 
 ---
 
+> **Decision (2026-10-09): v1 ships with online play, so submit answer set B** (once `google-services.json` is in
+> the build). Set A is kept only for a hypothetical offline-only build.
+
 ## Answer set A: build without Firebase configured
 
 - Does your app collect or share any of the required user data types? → **No**
@@ -35,7 +38,7 @@ never initialises and **nothing leaves the device**. Use answer set A. With onli
 | Does your app collect or share any of the required user data types? | **Yes** |
 | Is all of the user data collected by your app encrypted in transit? | **Yes** (Firebase uses HTTPS/TLS) |
 | Which methods of account creation does your app support? | **My app does not allow users to create an account.** Anonymous Firebase sign-in is invisible: no username, password, email or OTP, no cross-device identity. See "Account deletion" below. |
-| Do you provide a way for users to request that their data is deleted? | **Yes**. Via email/web page (the privacy-policy section "Your choices"), and optionally an in-app button |
+| Do you provide a way for users to request that their data is deleted? | **Yes**. In-app (About → Delete my online data: deletes the user's rooms, then the anonymous Firebase user) and by email/web (privacy policy `#delete`). Delete-data URL: `https://www.tshipiworks.com/mmele/privacy#delete` (`AppInfo.DELETE_DATA_URL`) |
 
 ### Data types: tick ONLY these
 
@@ -76,6 +79,13 @@ the in-app plus web account-deletion requirement **does not apply**. **This is a
 ruling.** The cheap, safe course is still to provide:
 1. a web deletion path: the privacy policy section 6, an anchor link such as `…/privacy#delete`, naming "Mmele" and
    the developer name exactly as on the Play listing; and
-2. (recommended app change) an in-app **About → "Delete my online data"** action that deletes the user's rooms and
-   calls `FirebaseAuth.currentUser.delete()`.
+2. an in-app **About → "Delete my online data"** action that deletes the user's rooms and calls
+   `FirebaseAuth.currentUser.delete()` (**implemented in 1.0.0**).
+
+### Retention (as implemented in 1.0.0)
+- Finished rooms: the host's app deletes the room when the host leaves the finished game.
+- Any room idle > 30 days: deletable by any signed-in client (security rules) and deleted by `firebase/purge.mjs`.
+- Anonymous users inactive > 30 days: deleted by `firebase/purge.mjs`.
+- Run the script monthly → the published bound is **60 days** after last activity. The Data safety form has no
+  retention field; it only needs "data can be deleted: Yes".
 If Play review disagrees, both are already in place.

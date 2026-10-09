@@ -31,23 +31,28 @@ Online play (Firebase setup for beginners, security model, emulator tests): **[d
 
 ## Build
 
-Requirements: JDK 17, Android SDK (platform 35, build-tools 35). Toolchain: Gradle 8.11.1 (wrapper),
-AGP 8.7.3, Kotlin 2.0.21. `minSdk 26`, `targetSdk 35`.
+Requirements: **JDK 21** to run Gradle (Paparazzi 2 needs it; `gradle/gradle-daemon-jvm.properties` asks for 21)
+plus JDK 17 for the module toolchains, Android SDK platform 36 + build-tools 36. Toolchain: Gradle 8.13 (wrapper),
+AGP 8.11.1, Kotlin 2.3.21, Paparazzi 2.0.0-alpha05.1. `applicationId com.tshipiworks.mmele`, `minSdk 26`,
+`targetSdk 36`, version 1.0.0 (1). Kotlin sources stay in the `bw.mmele` package; only the namespace/app ID changed.
+Android Lint currently crashes with Kotlin 2.3 metadata on AGP 8.11 (a lint bug), so `lint` isn't part of the checks.
 
 ```bash
 ./gradlew :engine:test            # engine unit + fuzz + AI tests
 ./gradlew :online:test            # room protocol, two-client sync, wire codec (+ writes the emulator fixture)
 ./gradlew :app:testDebugUnitTest  # ViewModel tests + Paparazzi screenshot verification
 ./gradlew assembleDebug           # app/build/outputs/apk/debug/app-debug.apk
-./gradlew :app:recordPaparazziDebug   # re-render screenshots into app/src/test/snapshots/images
+./gradlew :app:recordPaparazziDebug   # re-render screenshots + Play store assets into app/src/test/snapshots/images
+python3 tools/export_store_assets.py  # copy icon, feature graphic, 6 phone screenshots to /workspace/mmele-store
+./gradlew :app:bundleRelease :app:assembleRelease  # signed, R8-minified AAB/APK (needs MMELE_UPLOAD_* in ~/.gradle/gradle.properties)
 python3 tools/gen_sounds.py       # regenerate the procedural sounds (numpy + ffmpeg)
 python3 tools/solve_triangle.py 3 --jumps # exhaustive solve of Khutlotharo (drop --jumps for slide-only)
 # security rules on the Firebase emulator (Node 18+, Java 21+), see docs/ONLINE_SETUP.md
-(cd firebase && npm install && npx firebase-tools emulators:exec --only database,auth --project demo-mmele "node rules.test.mjs && node payloads.test.mjs")
+(cd firebase && npm install && npx firebase-tools emulators:exec --only database,auth --project demo-mmele "node rules.test.mjs && node payloads.test.mjs && node purge.test.mjs")
 ```
 
 Online play is compiled in but only activates when `app/google-services.json` exists (not committed);
-without it the app shows "Online play not configured yet".
+without it the app shows "Online play is coming soon". Release prep: [docs/release/RELEASE_CHECKLIST.md](docs/release/RELEASE_CHECKLIST.md).
 
 ## Design notes
 

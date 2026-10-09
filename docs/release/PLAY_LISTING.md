@@ -7,7 +7,7 @@
 > or any government body.
 
 ## App name (title)
-Recommended: **`Mmele: Morabaraba of Botswana`** (29 chars)
+**Chosen: `Mmele: Morabaraba of Botswana`** (29 of 30 chars, verified with `len()`). The launcher label stays `Mmele`.
 Alternatives: `Mmele – Morabaraba Board Game` (29), `Mmele: Morabaraba & Triangle` (28).
 Name-clash note: Play already has **"MHELE: Morabaraba & 12 Morris"** (`com.kemlow.mhele`) and several "Morabaraba" apps,
 and a separate web game was promoted as "mmele" at www.mmele.app (March 2025). Keeping "of Botswana" in the
@@ -60,13 +60,13 @@ Learn a game your grandparents played, or teach it to someone new. Tshameka!
 ## Graphic assets needed ([specs](https://support.google.com/googleplay/android-developer/answer/9866151), [icon spec](https://developer.android.com/distribute/google-play/resources/icon-design-specifications))
 | Asset | Spec | Status |
 |---|---|---|
-| App icon | 512×512 PNG, 32-bit with alpha, ≤1 MB, full square (Play rounds the corners), no added shadow | To make: render from the adaptive icon vectors |
-| Feature graphic | 1024×500, JPEG or 24-bit PNG (no alpha) | To make: board plus Okavango scene and the "Mmele" wordmark |
-| Phone screenshots | 2–8; JPEG or 24-bit PNG; 320–3840 px per side; long side ≤ 2× short side. For promotion eligibility: ≥4 at ≥1080 px (e.g. 1080×1920) | Paparazzi frames exist (`/workspace/mmele-screens/`), but they're 450 px wide and 1:2.22, so re-render at 1080×1920 |
+| App icon | 512×512 PNG, 32-bit with alpha, ≤1 MB, full square (Play rounds the corners), no added shadow | **Done**: `/workspace/mmele-store/icon-512.png` (30 KB), rendered from the adaptive launcher icon layers |
+| Feature graphic | 1024×500, JPEG or 24-bit PNG (no alpha) | **Done**: `feature-graphic-1024x500.png` (24-bit, Okavango sunset + board + wordmark) |
+| Phone screenshots | 2–8; JPEG or 24-bit PNG; 320–3840 px per side; long side ≤ 2× short side. For promotion eligibility: ≥4 at ≥1080 px (e.g. 1080×1920) | **Done**: 6 × 1080×1920 24-bit PNG in `/workspace/mmele-store/` (`phone-1-home` … `phone-6-online-room-code`), rendered from the real screens by `StoreAssetsTest`; re-export with `python3 tools/export_store_assets.py` |
 | 7" / 10" tablet screenshots | Optional, but recommended because the app runs on tablets | Optional |
 
-Suggested screenshot order: (1) Home with Okavango, (2) Classic mid-game, (3) Khutlotharo with bird eggs,
-(4) vs Computer "must shoot", (5) online room code, (6) piece sets, (7) the scenes collage.
+Upload order: (1) home, (2) classic board vs Computer (Chobe), (3) Khutlotharo triangle (Kalahari), (4) bird-egg
+piece set, Pass & Play "must shoot" (Okavango), (5) Tsodilo Hills scene + fact on the win card, (6) online room code.
 
 ## App access (Play Console → App content → App access)
 Choose **"All or some functionality is restricted"** only if online play is enabled. Suggested text:

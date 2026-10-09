@@ -19,6 +19,16 @@ by the bot.
 5. **[YOU] Contact email** to publish (e.g. mmele@tshipiworks.com) and a postal address for the privacy policy.
 
 ## Phase 1: app changes (BOT, after you approve)
+
+> **Status 2026-10-09: done (commits a5feed2…), except on-device testing.** targetSdk/compileSdk 36; app ID
+> `com.tshipiworks.mmele` 1.0.0 (1); upload key `~/mmele-keys/mmele-upload.jks` (SHA-256
+> `F4:8F:43:11:19:4B:32:33:8C:3D:01:F1:6E:C5:1A:8B:DC:92:94:7E:AF:BA:16:8B:53:81:BA:5D:AD:79:39:17`); signed R8
+> AAB/APK at `/workspace/mmele-release-1.0.0.{aab,apk}` (built **without** `google-services.json`, so online is
+> off in these two files: rebuild after Firebase setup); About screen; delete-my-data + 30-day rules + purge script;
+> leave-game dialog, TalkBack board, contrast, no backup; store assets in `/workspace/mmele-store/`.
+> **Not verified:** running the release APK on a device/emulator (the box's emulator never started its VM), and
+> the Firebase path against a real project. Item 12 is moot (online ships). Item 15 waits for your details.
+> **Before upload:** set `AppInfo.CONTACT_EMAIL` (currently a TODO placeholder) and the policy placeholders.
 6. **[BOT]** Raise `compileSdk`/`targetSdk` to **36**. Since 31 Aug 2026 this is **required for new apps**.
    Needs an AGP/Kotlin bump. Then re-test edge-to-edge and predictive back.
 7. **[BOT]** Change `applicationId` (and namespace) to your choice; set `versionCode = 1`/`versionName = "1.0.0"`.

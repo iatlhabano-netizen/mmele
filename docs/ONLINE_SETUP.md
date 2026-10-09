@@ -17,8 +17,13 @@ This takes about 15 minutes. You don't need a credit card: the free **Spark** pl
 ## 2. Add the Android app
 
 1. On the project overview page, click the **Android** icon ("Add app").
-2. **Android package name**: `bw.mmele`. This must match exactly.
-3. App nickname: `Mmele`. Leave the SHA-1 field empty (Anonymous sign-in doesn't need it).
+2. **Android package name**: `com.tshipiworks.mmele`. This must match exactly (it is the app's permanent Play ID).
+3. App nickname: `Mmele`. The SHA-1 field is optional: Anonymous sign-in and Realtime Database don't need it.
+   If you add it anyway (or later add Google sign-in / App Check), register **both** certificates:
+   - upload key (this box): SHA-1 `54:2D:D7:52:09:E6:B3:B8:A3:A5:47:31:C2:AC:43:C0:EE:B4:8C:AB`,
+     SHA-256 `F4:8F:43:11:19:4B:32:33:8C:3D:01:F1:6E:C5:1A:8B:DC:92:94:7E:AF:BA:16:8B:53:81:BA:5D:AD:79:39:17`
+   - Play's **app signing key**: copy it from Play Console → *Test and release → App integrity* after the first upload.
+     Phones that install from Play see that key, not the upload key.
 4. Click **Register app**, then **Download google-services.json**.
 5. Put that file at **`mmele/app/google-services.json`**, next to `app/build.gradle.kts`.
    - It identifies your project. It is not a password, but don't post it publicly.
@@ -58,6 +63,10 @@ What the rules enforce:
 
 - You must be signed in (anonymously) to read or write anything.
 - A room can only be **created** once, by its host, as an empty lobby with a valid 6-character code.
+- A room can be **deleted** by its host or guest at any time, and by any signed-in player once it has been idle
+  (`updatedAt`) for more than **30 days**. The host's app deletes a finished room when the host leaves it.
+- `users/{uid}/rooms/{code}` is a private index of your own rooms (only you can read/write it). The in-app
+  **About → Delete my online data** uses it to delete your rooms, then deletes your anonymous user.
 - Only one guest can join, and only while the room is in the lobby.
 - Moves are **append-only**, at exactly the next index, only while playing, and only for **your
   own seat**. Turn order is checked too: no two placements or moves in a row, and a shot must
@@ -133,3 +142,27 @@ clients against an in-memory room store, with no network at all.
   rejoin a game in progress as the same seat.
 - Rooms are not deleted automatically. For housekeeping, you can delete old `rooms/*` in the
   console, or add a scheduled Cloud Function later (Blaze plan).
+
+## Monthly clean-up (no Cloud Functions, free plan)
+
+Rooms whose players never came back, and anonymous users nobody uses any more, are removed by
+`firebase/purge.mjs`. Run it about **once a month** from any computer with Node 18+:
+
+1. Firebase console → ⚙ **Project settings → Service accounts → Generate new private key**. Save the JSON
+   **outside** the repo, e.g. `~/mmele-keys/firebase-admin.json`. It is a full-admin credential: never commit,
+   email or upload it.
+2. ```
+   cd mmele/firebase && npm install
+   export GOOGLE_APPLICATION_CREDENTIALS=~/mmele-keys/firebase-admin.json
+   node purge.mjs --project YOUR_PROJECT_ID --database-url https://YOUR-DB.europe-west1.firebasedatabase.app --dry-run
+   node purge.mjs --project YOUR_PROJECT_ID --database-url https://YOUR-DB.europe-west1.firebasedatabase.app
+   ```
+   It deletes rooms idle > 30 days, index entries pointing at deleted rooms, and **anonymous** users inactive
+   > 30 days (users with an email/phone/provider are never touched). `--days N` changes the cut-off.
+
+The privacy policy promises: finished rooms deleted when the host leaves; everything else within **60 days** of
+last activity (30 days idle + up to a month until the next run). If you stop running the script, change the policy.
+
+Tests: `cd firebase && npm run test:rules` runs the rule tests, the Kotlin-payload replay and the purge test
+against the emulator (needs JDK 21 and firebase-tools).
+
