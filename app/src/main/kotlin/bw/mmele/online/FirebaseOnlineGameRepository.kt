@@ -1,7 +1,7 @@
 package bw.mmele.online
 
 import android.content.Context
-import bw.mmele.BuildConfig
+import com.tshipiworks.mmele.BuildConfig
 import bw.mmele.engine.Action
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
@@ -42,6 +42,7 @@ class FirebaseOnlineGameRepository(
             val room = RoomRules.create(code, config, System.currentTimeMillis())
             val ok = runCatching { rooms.child(code).setValue(server(RtdbPayloads.create(room, me))).await() }.isSuccess // denied if code taken
             if (ok) {
+                index(me, code)
                 watchPresence(code, Seat.ONE)
                 return room
             }
@@ -61,6 +62,7 @@ class FirebaseOnlineGameRepository(
         if (guestUid != null) throw RoomFullException(key)
         runCatching { rooms.child(key).updateChildren(server(RtdbPayloads.join(me))).await() }
             .onFailure { throw RoomFullException(key) }
+        index(me, key)
         watchPresence(key, Seat.TWO)
         return read(key)
     }
@@ -144,6 +146,34 @@ class FirebaseOnlineGameRepository(
 
     override suspend fun disconnect(code: String, seat: Seat) {
         runCatching { rooms.child(code).updateChildren(server(RtdbPayloads.disconnect(seat))).await() }
+    }
+
+    /** users/{uid}/rooms/{code}: lets "Delete my online data" find your rooms (rules: owner only). */
+    private suspend fun index(uid: String, code: String) {
+        runCatching { db.getReference("users").child(uid).child("rooms").child(code).setValue(true).await() }
+    }
+
+    override suspend fun deleteRoom(code: String) {
+        runCatching { rooms.child(code).removeValue().await() }
+        auth.currentUser?.uid?.let { uid ->
+            runCatching { db.getReference("users").child(uid).child("rooms").child(code).removeValue().await() }
+        }
+    }
+
+    override suspend fun deleteMyData(): DeleteResult {
+        close()
+        val user = auth.currentUser ?: return DeleteResult(0, identityDeleted = true) // never went online
+        val mine = db.getReference("users").child(user.uid)
+        val codes = runCatching { mine.child("rooms").get().await().children.mapNotNull { it.key } }.getOrDefault(emptyList())
+        var deleted = 0
+        for (code in codes) {
+            // Denied only if the room is already gone or we're not in it any more; either way it's not ours.
+            if (runCatching { rooms.child(code).removeValue().await() }.isSuccess) deleted++
+        }
+        runCatching { mine.removeValue().await() }
+        val identity = runCatching { user.delete().await() }.isSuccess
+        if (!identity) auth.signOut() // e.g. needs a fresh sign-in; the purge script removes it later
+        return DeleteResult(deleted, identity)
     }
 
     override fun close() {

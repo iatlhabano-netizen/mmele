@@ -170,4 +170,40 @@ class OnlineRoomTest {
         assertTrue(runCatching { bad.replay() }.isFailure)
         assertTrue(RoomRules.submit(bad, Seat.ONE, Action.Place(1), 0) is SubmitResult.Rejected)
     }
+
+    @Test fun hostLeavingAFinishedRoomDeletesIt() = runTest {
+        val code = host.createRoom(RoomConfig(Variant.CLASSIC)).code
+        guest.joinRoom(code)
+        // Unfinished: leaving only marks the seat away, so the player can come back.
+        host.leaveRoom(code, Seat.ONE, RoomPhase.PLAYING)
+        assertNotNull(store.peek(code))
+        assertFalse(Seat.ONE in store.peek(code)!!.connected)
+        guest.resign(code, Seat.TWO)
+        // The guest leaving a finished room doesn't delete it (the host may still be looking).
+        guest.leaveRoom(code, Seat.TWO, RoomPhase.FINISHED)
+        assertNotNull(store.peek(code))
+        host.leaveRoom(code, Seat.ONE, RoomPhase.FINISHED)
+        assertNull(store.peek(code))
+    }
+
+    @Test fun deleteMyDataRemovesOnlyMyRooms() = runTest {
+        val a = host.createRoom(RoomConfig(Variant.CLASSIC)).code
+        val b = guest.createRoom(RoomConfig(Variant.TRIANGLE)).code
+        host.joinRoom(b)
+        val other = InMemoryOnlineGameRepository(store, { now }, Random(3))
+        val c = other.createRoom(RoomConfig(Variant.CLASSIC)).code
+        val r = host.deleteMyData()
+        assertEquals(2, r.roomsDeleted)
+        assertTrue(r.identityDeleted)
+        assertNull(store.peek(a))
+        assertNull(store.peek(b))
+        assertNotNull(store.peek(c))
+        assertEquals(0, host.deleteMyData().roomsDeleted) // idempotent
+    }
+
+    @Test fun securityRulesUseTheSameRetention() {
+        val rules = java.io.File("../firebase/database.rules.json").readText()
+        assertTrue(rules.contains("now - ${RoomRules.RETENTION_DAYS * 86_400_000L}"))
+        assertTrue(java.io.File("../firebase/purge.mjs").readText().contains("--days N (default ${RoomRules.RETENTION_DAYS})"))
+    }
 }

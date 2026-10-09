@@ -18,11 +18,15 @@ class InMemoryOnlineGameRepository(
     private val rng: Random = Random.Default,
 ) : OnlineGameRepository {
 
+    /** Rooms this client created or joined: the in-memory stand-in for `users/{uid}/rooms`. */
+    private val mine = LinkedHashSet<String>()
+
     override suspend fun createRoom(config: RoomConfig): RoomSnapshot = store.mutate { rooms ->
         var code = randomRoomCode(rng)
         repeat(8) { if (code in rooms) code = randomRoomCode(rng) }
         val room = RoomRules.create(code, config, clock())
         rooms[code] = room
+        mine += code
         room
     }
 
@@ -31,7 +35,7 @@ class InMemoryOnlineGameRepository(
         return store.mutate { rooms ->
             val room = rooms[key] ?: throw RoomNotFoundException(key)
             when (val r = RoomRules.join(room, clock())) {
-                is SubmitResult.Accepted -> { rooms[key] = r.room; r.room }
+                is SubmitResult.Accepted -> { rooms[key] = r.room; mine += key; r.room }
                 is SubmitResult.Rejected -> throw if (r.reason.contains("full")) RoomFullException(key) else IllegalStateException(r.reason)
             }
         }
@@ -60,6 +64,18 @@ class InMemoryOnlineGameRepository(
     }
 
     override fun close() {}
+
+    override suspend fun deleteRoom(code: String) {
+        store.delete(code)
+        mine -= code
+    }
+
+    override suspend fun deleteMyData(): DeleteResult {
+        val codes = mine.toList()
+        codes.forEach { store.delete(it) }
+        mine.clear()
+        return DeleteResult(codes.size, identityDeleted = true)
+    }
 
     private suspend fun apply(code: String, op: (RoomSnapshot) -> SubmitResult): SubmitResult = store.mutate {
         val room = it[code] ?: return@mutate SubmitResult.Rejected("no such room")
@@ -90,4 +106,9 @@ class RoomStore {
     }
 
     fun peek(code: String): RoomSnapshot? = rooms[code]
+
+    suspend fun delete(code: String) = mutex.withLock {
+        rooms.remove(code)
+        synchronized(flows) { flows[code]?.value = null }
+    }
 }

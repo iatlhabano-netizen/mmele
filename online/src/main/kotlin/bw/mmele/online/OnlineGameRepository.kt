@@ -39,7 +39,29 @@ interface OnlineGameRepository {
 
     /** Drop the local subscription. Does not by itself resign. */
     fun close()
+
+    /**
+     * Called when you leave a room for good. The host deletes a room whose game is over, so
+     * finished games don't linger on the server. Unfinished rooms stay so players can reconnect;
+     * they're purged after [RoomRules.RETENTION_DAYS] idle days.
+     */
+    suspend fun leaveRoom(code: String, seat: Seat, phase: RoomPhase) {
+        if (seat == Seat.ONE && (phase == RoomPhase.FINISHED || phase == RoomPhase.ABANDONED)) deleteRoom(code)
+        else disconnect(code, seat)
+    }
+
+    /** Delete a room you sit in (host or guest). */
+    suspend fun deleteRoom(code: String)
+
+    /**
+     * "Delete my online data": removes every room this install created or joined, then its
+     * anonymous identity. Safe to call when online play was never used.
+     */
+    suspend fun deleteMyData(): DeleteResult
 }
+
+/** [identityDeleted] false means the server copy of the anonymous ID goes at the next clean-up. */
+data class DeleteResult(val roomsDeleted: Int, val identityDeleted: Boolean)
 
 class RoomNotFoundException(code: String) : Exception("No room with code $code")
 class RoomFullException(code: String) : Exception("Room $code is full")

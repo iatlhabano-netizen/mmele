@@ -79,6 +79,9 @@ object RoomRules {
     /** A room with nobody connected for this long is abandoned. */
     const val ABANDON_AFTER_MS = 90_000L
 
+    /** Rooms idle this long may be deleted by anyone (security rules) and by firebase/purge.mjs. */
+    const val RETENTION_DAYS = 30
+
     fun create(code: String, config: RoomConfig, now: Long) = RoomSnapshot(
         code = code, config = config, phase = RoomPhase.LOBBY, connected = setOf(Seat.ONE), updatedAtMs = now,
     )

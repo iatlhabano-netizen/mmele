@@ -1,16 +1,18 @@
 {
   "name": "firebase",
   "version": "1.0.0",
-  "description": "",
+  "description": "Mmele security rules, emulator tests and the clean-up script",
   "main": "index.js",
   "scripts": {
-    "test:rules": "firebase emulators:exec --only database,auth --project demo-mmele \"node rules.test.mjs\""
+    "test:rules": "firebase emulators:exec --only database,auth --project demo-mmele \"node rules.test.mjs && node payloads.test.mjs && node purge.test.mjs\"",
+    "purge": "node purge.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "firebase": "^11.10.0"
+    "firebase": "^11.10.0",
+    "firebase-admin": "^13.10.0"
   },
   "type": "module",
   "private": true

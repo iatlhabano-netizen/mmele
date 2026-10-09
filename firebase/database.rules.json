@@ -3,7 +3,7 @@
     "rooms": {
       "$code": {
         ".read": "auth != null",
-        ".write": "auth != null && !data.exists() && newData.child('hostUid').val() == auth.uid && newData.child('phase').val() == 'lobby' && newData.child('moveCount').val() == 0 && !newData.child('moves').exists() && !newData.child('guestUid').exists() && $code.matches(/^[ABCDEFGHJKMNPQRSTUVWXYZ23456789]{6}$/)",
+        ".write": "auth != null && ((!data.exists() && newData.child('hostUid').val() == auth.uid && newData.child('phase').val() == 'lobby' && newData.child('moveCount').val() == 0 && !newData.child('moves').exists() && !newData.child('guestUid').exists() && $code.matches(/^[ABCDEFGHJKMNPQRSTUVWXYZ23456789]{6}$/)) || (data.exists() && !newData.exists() && ((data.child('hostUid').val() == auth.uid || data.child('guestUid').val() == auth.uid) || data.child('updatedAt').val() < now - 2592000000)))",
         ".validate": "newData.hasChildren(['hostUid', 'phase', 'variant', 'moveCount'])",
         "hostUid": {
           ".validate": "newData.isString() && (!data.exists() || data.val() == newData.val())"
@@ -104,6 +104,20 @@
             "m": {
               ".validate": "newData.isString() && newData.val().matches(/^(P[|][0-9]{1,2}|M[|][0-9]{1,2}[|][0-9]{1,2}|S[|][0-9]{1,2})$/) && (!data.exists() || data.val() == newData.val())"
             }
+          }
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid",
+        "rooms": {
+          "$code": {
+            ".validate": "newData.isBoolean() && $code.matches(/^[ABCDEFGHJKMNPQRSTUVWXYZ23456789]{6}$/)"
           }
         },
         "$other": {

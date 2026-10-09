@@ -344,7 +344,8 @@ class GameViewModel(
         online?.let { s ->
             // Leaving the screen marks you away; the opponent sees it and the abandon timer starts.
             CoroutineScope(Dispatchers.IO).launch(NonCancellable) {
-                runCatching { s.repo.disconnect(s.room.code, s.seat) }
+                // The host removes a finished room; otherwise just mark this seat away.
+                runCatching { s.repo.leaveRoom(s.room.code, s.seat, room?.phase ?: s.room.phase) }
                 s.repo.close()
             }
         }

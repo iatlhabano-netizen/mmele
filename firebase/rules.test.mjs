@@ -88,6 +88,38 @@ async function main() {
   // a fresh game in the same room works, and resigning yourself is allowed
   await expect("host first move after rematch", true, update(room("ABC234"), { "moves/0": { by: "one", m: "P|7" }, moveCount: 1 }));
   await expect("guest resigns", true, update(groom(), { resigned: "two", phase: "finished" }));
+  // ---- per-user room index (used by "Delete my online data") ----
+  const uref = (d, uid, path) => ref(d, `users/${uid}${path ? "/" + path : ""}`);
+  await expect("host indexes own room", true, set(uref(db, hostUid, "rooms/ABC234"), true));
+  await expect("host cannot write the guest's index", false, set(uref(db, guest.uid, "rooms/ABC234"), true));
+  await expect("index keys must be room codes", false, set(uref(db, hostUid, "rooms/abc"), true));
+  await expect("index holds nothing else", false, set(uref(db, hostUid, "name"), "Neo"));
+  await expect("guest cannot read the host's index", false, get(uref(gdb, hostUid)));
+  await expect("guest indexes own room", true, set(uref(gdb, guest.uid, "rooms/ABC234"), true));
+
+  // ---- deletion and clean-up ----
+  const strangerApp = initializeApp({ apiKey: "demo", authDomain: "demo-mmele.firebaseapp.com", databaseURL: "http://127.0.0.1:9000/?ns=demo-mmele-default-rtdb", projectId: "demo-mmele" }, "s");
+  const sauth = getAuth(strangerApp);
+  connectAuthEmulator(sauth, "http://127.0.0.1:9099", { disableWarnings: true });
+  const sdb = getDatabase(strangerApp);
+  connectDatabaseEmulator(sdb, "127.0.0.1", 9000);
+  await signInAnonymously(sauth);
+  const sroom = (code) => ref(sdb, `rooms/${code}`);
+  await expect("stranger cannot delete an active room", false, set(sroom("ABC234"), null));
+  await expect("host deletes the finished room", true, set(room("ABC234"), null));
+  await expect("host clears own index", true, set(uref(db, hostUid), null));
+
+  const DAY = 24 * 3600 * 1000;
+  await expect("host creates a room (later stale)", true, set(room("ABC237"), { ...base(hostUid), createdAt: Date.now() - 40 * DAY, updatedAt: Date.now() - 31 * DAY }));
+  await expect("anyone signed in may delete a room idle > 30 days", true, set(sroom("ABC237"), null));
+  await expect("host creates a fresh room", true, set(room("ABC238"), base(hostUid)));
+  await expect("stranger cannot delete a fresh room", false, set(sroom("ABC238"), null));
+  await expect("room idle 29 days is not yet purgeable", true, set(room("ABC239"), { ...base(hostUid), updatedAt: Date.now() - 29 * DAY }));
+  await expect("stranger cannot delete a 29-day room", false, set(sroom("ABC239"), null));
+  await expect("guest joins ABC238", true, update(ref(gdb, "rooms/ABC238"), { guestUid: guest.uid, "connected/two": true, phase: "playing", updatedAt: Date.now() }));
+  await expect("guest may delete a room it plays in", true, set(ref(gdb, "rooms/ABC238"), null));
+  await expect("delete is not a back door to overwrite", false, set(sroom("ABC239"), { ...base("x"), phase: "finished" }));
+
   await expect("unauthenticated write denied", false, (async () => { await auth.signOut(); await update(room("ABC234"), { phase: "playing" }); })());
 
   console.log(`rules: ${passed} passed, ${fails.length} failed`);
