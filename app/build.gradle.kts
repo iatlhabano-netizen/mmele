@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.paparazzi)
+    alias(libs.plugins.aboutlibraries)
 }
 
 // Online play is optional: the Google Services plugin only runs when the developer has dropped a
@@ -12,30 +13,43 @@ val firebaseConfigured = file("google-services.json").exists()
 if (firebaseConfigured) apply(plugin = "com.google.gms.google-services")
 
 android {
-    namespace = "bw.mmele"
-    compileSdk = 35
+    namespace = "com.tshipiworks.mmele"
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "bw.mmele"
+        applicationId = "com.tshipiworks.mmele"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 2
-        versionName = "0.2.0"
+        targetSdk = 36
+        versionCode = 1
+        versionName = "1.0.0"
         buildConfigField("boolean", "FIREBASE_CONFIGURED", firebaseConfigured.toString())
+    }
+
+    // Upload key lives outside the repo; its path and passwords come from ~/.gradle/gradle.properties
+    // (MMELE_UPLOAD_*). Without them the release build is simply unsigned.
+    val uploadStore = providers.gradleProperty("MMELE_UPLOAD_STORE_FILE").orNull
+    signingConfigs {
+        if (uploadStore != null) {
+            create("release") {
+                storeFile = file(uploadStore)
+                storePassword = providers.gradleProperty("MMELE_UPLOAD_STORE_PASSWORD").get()
+                keyAlias = providers.gradleProperty("MMELE_UPLOAD_KEY_ALIAS").get()
+                keyPassword = providers.gradleProperty("MMELE_UPLOAD_KEY_PASSWORD").get()
+            }
+        }
     }
 
     buildTypes {
         release {
+            if (uploadStore != null) signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -55,6 +69,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.aboutlibraries.core)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -69,4 +84,14 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+}
+
+// Open-source licence list for the About screen (generated from the dependency graph at build time).
+aboutLibraries {
+    registerAndroidTasks = true
+    excludeFields = arrayOf("generated")
+}
+
+kotlin {
+    compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17) }
 }

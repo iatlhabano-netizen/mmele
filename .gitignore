@@ -13,3 +13,7 @@ app/google-services.json
 # Node deps for the emulator tests
 firebase/node_modules/
 firebase/*-debug.log
+
+# Signing keys never belong in the repo
+*.jks
+*.keystore

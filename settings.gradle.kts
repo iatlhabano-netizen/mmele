@@ -16,6 +16,11 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        // Paparazzi's native layoutlib runtime: some Google Maven mirrors lack the -linux classifier.
+        exclusiveContent {
+            forRepository { maven("https://dl.google.com/android/maven2/") }
+            filter { includeGroup("com.android.tools.layoutlib") }
+        }
         google()
         mavenCentral()
     }

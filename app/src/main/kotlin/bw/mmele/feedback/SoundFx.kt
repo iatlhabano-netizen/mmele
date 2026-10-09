@@ -3,7 +3,7 @@ package bw.mmele.feedback
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.SoundPool
-import bw.mmele.R
+import com.tshipiworks.mmele.R
 
 /** Low-latency SoundPool playback of the procedurally generated effects in res/raw. */
 class SoundFx(context: Context) {
