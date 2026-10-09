@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Themed-icon layer (Android 13+): board and the mill, one colour. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="1.8" android:fillColor="#00000000" android:strokeLineCap="round"
+        android:pathData="M36,36h36v36h-36z M42,42h24v24h-24z M48,48h12v12h-12z M54,36v12 M54,60v12 M36,54h12 M60,54h12 M36,36l12,12 M72,36l-12,12 M36,72l12,-12 M72,72l-12,-12" />
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M36,36m-4.5,0a4.5,4.5 0,1 1,9 0a4.5,4.5 0,1 1,-9 0 M54,36m-4.5,0a4.5,4.5 0,1 1,9 0a4.5,4.5 0,1 1,-9 0 M72,36m-4.5,0a4.5,4.5 0,1 1,9 0a4.5,4.5 0,1 1,-9 0 M42,66m-3.5,0a3.5,3.5 0,1 1,7 0a3.5,3.5 0,1 1,-7 0 M66,54m-3.5,0a3.5,3.5 0,1 1,7 0a3.5,3.5 0,1 1,-7 0 M54,60m-3.5,0a3.5,3.5 0,1 1,7 0a3.5,3.5 0,1 1,-7 0" />
+</vector>

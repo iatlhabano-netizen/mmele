@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Kalahari dusk: night sky fading to an ochre horizon, dunes and a camelthorn acacia. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
-    <path android:fillColor="#121417" android:pathData="M0,0h108v108h-108z" />
+    <path android:pathData="M0,0h108v108h-108z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear" android:startX="54" android:startY="0" android:endX="54" android:endY="92">
+                <item android:offset="0" android:color="#FF101216" />
+                <item android:offset="0.45" android:color="#FF2A1E2A" />
+                <item android:offset="0.74" android:color="#FF8E3B2E" />
+                <item android:offset="0.9" android:color="#FFE39A3F" />
+                <item android:offset="1" android:color="#FFF2C76B" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- a few stars -->
+    <path android:fillColor="#B3E2D9C8" android:pathData="M24,22m-0.8,0a0.8,0.8 0,1 1,1.6 0a0.8,0.8 0,1 1,-1.6 0 M84,18m-0.7,0a0.7,0.7 0,1 1,1.4 0a0.7,0.7 0,1 1,-1.4 0 M70,26m-0.5,0a0.5,0.5 0,1 1,1 0a0.5,0.5 0,1 1,-1 0 M36,14m-0.5,0a0.5,0.5 0,1 1,1 0a0.5,0.5 0,1 1,-1 0 M16,34m-0.5,0a0.5,0.5 0,1 1,1 0a0.5,0.5 0,1 1,-1 0" />
+    <!-- setting sun -->
+    <path android:fillColor="#E6F2C76B" android:pathData="M54,90m-13,0a13,13 0,1 1,26 0a13,13 0,1 1,-26 0" />
+    <!-- dunes -->
+    <path android:fillColor="#FF5A2A22" android:pathData="M0,86 C18,82 34,85 50,87 C68,89 88,83 108,85 L108,108 L0,108 Z" />
+    <path android:fillColor="#FF121417" android:pathData="M0,90 C20,87 40,89 56,90 C72,91 90,88 108,89 L108,108 L0,108 Z" />
+    <!-- camelthorn acacia: flat crown, forked trunk -->
+    <path android:fillColor="#FF121417" android:pathData="M76,82.5 C79,79.5 92,79 96,82 C93,84 80,84.5 76,82.5 Z" />
+    <path android:strokeColor="#FF121417" android:strokeWidth="1.1" android:strokeLineCap="round"
+        android:pathData="M86,90 L86,86 L82,83 M86,86 L90,83 M86,87 L87.5,83.5" />
 </vector>
