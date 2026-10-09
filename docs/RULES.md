@@ -105,7 +105,7 @@ point.
 
 The brief said to slide only unless the sources said otherwise. Both written Tsoro Yematatu sources (Wikipedia,
 and Ludii after Matthews 1964) allow the jump over one adjacent piece of either colour into an empty point, so
-Mmele follows them. I found no written source for Khutlotharo itself. Jumps are controlled by one flag,
+Mmele follows them. I found no written source for Khutlotharo itself, but the user (a Motswana who plays the game) confirmed on 2026-10-09 that jumps are part of Khutlotharo. Jumps are controlled by one flag,
 `RuleSet.TRIANGLE.jumpOverAdjacent`. Set it to `false` for slide-only, and the engine, AI and tests support
 both.
 
@@ -127,7 +127,7 @@ cuts a won game short.
 
 ### Still assumed (not from the user or a source)
 
-1. **Jumping** is taken from the Tsoro Yematatu sources, not from a Khutlotharo source.
+1. **Jumping** is confirmed by the user (2026-10-09) and matches the Tsoro Yematatu sources.
 2. **Who starts**: Dark (player 1) always places first.
 3. **Draw rule**: 30 movement plies without a line. Tradition probably just stops the game by agreement.
 4. **Repetition**: the 30-ply rule is the only repetition rule.
