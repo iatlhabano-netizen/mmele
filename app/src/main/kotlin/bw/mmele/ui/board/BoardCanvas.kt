@@ -12,6 +12,19 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.traversalIndex
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
+import kotlin.math.roundToInt
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.runtime.Composable
@@ -49,6 +62,17 @@ import kotlinx.coroutines.launch
 import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.min
+
+/** Spoken label for one board point, e.g. "Point A, empty, valid move". */
+fun pointDescription(label: String, ownerName: String?, selected: Boolean, target: Boolean, shootable: Boolean, movable: Boolean): String =
+    buildString {
+        append("Point ").append(label).append(", ")
+        append(if (ownerName == null) "empty" else "$ownerName cow")
+        if (selected) append(", selected")
+        if (target) append(", valid move")
+        if (shootable) append(", can be shot")
+        if (movable) append(", can move")
+    }
 
 /** Maps normalised board coordinates to pixels for a given canvas size (any aspect ratio). */
 class BoardGeometry(width: Float, height: Float, private val board: BoardGraph) {
@@ -230,10 +254,13 @@ fun BoardCanvas(
         }
     }
 
+    var canvasSize by remember { mutableStateOf(IntSize.Zero) }
+    Box(modifier.onSizeChanged { canvasSize = it }) {
     Canvas(
-        modifier
+        Modifier
+            .matchParentSize()
             .then(input)
-            .semantics { contentDescription = "${board.name} board" },
+            .semantics { contentDescription = "${board.name} board"; traversalIndex = -1f },
     ) {
         val geo = BoardGeometry(size.width, size.height, board)
         val r = geo.tokenRadius
@@ -300,6 +327,35 @@ fun BoardCanvas(
             if (player != null) drawPiece(if (player == Player.ONE) styleOne else styleTwo, dragLifted, r, pieceId = tokens.firstOrNull { it.node == d.from }?.id ?: 0, elevation = 1f)
         }
     }
+    // TalkBack: one focusable, labelled node per point, activated like a tap. Purely semantic,
+    // so touches still go to the canvas above.
+    if (canvasSize != IntSize.Zero) {
+        val geo = BoardGeometry(canvasSize.width.toFloat(), canvasSize.height.toFloat(), board)
+        val r = geo.tokenRadius * 1.25f
+        val sizeDp = with(density) { (r * 2).toDp() }
+        for (i in 0 until board.size) {
+            val c = geo.px(i)
+            val owner = tokens.firstOrNull { it.node == i }?.player
+            val label = pointDescription(
+                board.labels[i], owner?.let { if (it == Player.ONE) styleOne.shortName else styleTwo.shortName },
+                selected = selected == i, target = bit(targets, i), shootable = bit(shootable, i),
+                movable = bit(draggable, i) && selected != i,
+            )
+            Box(
+                Modifier
+                    .offset { IntOffset((c.x - r).roundToInt(), (c.y - r).roundToInt()) }
+                    .size(sizeDp)
+                    .semantics {
+                        contentDescription = label
+                        role = Role.Button
+                        this.selected = selected == i
+                        if (interactive) onClick(label = "Choose") { tapCb(i); true } else disabled()
+                    },
+            )
+        }
+    }
+    }
+
 }
 
 private fun DrawScope.drawBoardLines(board: BoardGraph, geo: BoardGeometry) {

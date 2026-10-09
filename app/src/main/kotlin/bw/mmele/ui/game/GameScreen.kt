@@ -29,6 +29,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.material3.AlertDialog
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,8 +62,28 @@ import bw.mmele.ui.theme.MmeleColors
 fun GameRoute(viewModel: GameViewModel, feedback: FeedbackController?, onHome: () -> Unit, onShareCode: (String) -> Unit = {}) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(viewModel) { viewModel.events.collect { feedback?.play(it) } }
-    BackHandler(onBack = onHome)
-    GameScreenContent(ui, viewModel::onIntent, onHome, onShareCode = onShareCode)
+    var confirmLeave by remember { mutableStateOf(false) }
+    // Ask before abandoning a game that has started; finished or empty games leave straight away.
+    val leave = { if (ui.game.isGameOver || ui.game.ply == 0 || ui.online?.waitingForOpponent == true) onHome() else confirmLeave = true }
+    BackHandler(onBack = leave)
+    GameScreenContent(ui, viewModel::onIntent, leave, onShareCode = onShareCode)
+    if (confirmLeave) {
+        AlertDialog(
+            onDismissRequest = { confirmLeave = false },
+            title = { Text("Leave this game?") },
+            text = {
+                Text(
+                    if (ui.online != null) "Your opponent can claim the win if you don't come back within 90 seconds."
+                    else "This game isn't saved, so it will be lost.",
+                )
+            },
+            confirmButton = { TextButton(onClick = { confirmLeave = false; onHome() }) { Text("Leave") } },
+            dismissButton = { TextButton(onClick = { confirmLeave = false }) { Text("Keep playing") } },
+            containerColor = MmeleColors.SlateHigh,
+            titleContentColor = MmeleColors.Bone,
+            textContentColor = MmeleColors.Bone,
+        )
+    }
 }
 
 /** Stateless game screen (also used for screenshot tests). */
@@ -146,7 +172,8 @@ private fun PromptPill(ui: GameUiState, flipped: Boolean, slot: Player?, modifie
     val game = ui.game
     val show = !game.isGameOver && (slot == null || game.toMove == slot) && (ui.isHumanTurn || ui.aiThinking || ui.online != null)
     val text = promptText(ui)
-    Box(modifier.height(40.dp), contentAlignment = Alignment.Center) {
+    // Spoken by TalkBack whenever it changes (only one pill is shown at a time).
+    Box(modifier.height(40.dp).semantics { liveRegion = LiveRegionMode.Polite }, contentAlignment = Alignment.Center) {
         AnimatedContent(targetState = if (show) text else "", transitionSpec = { fadeIn() togetherWith fadeOut() }, label = "prompt") { t ->
             if (t.isNotEmpty()) {
                 val shoot = game.mustShoot && ui.isHumanTurn
@@ -341,7 +368,7 @@ private fun OnlineBar(o: OnlineUi, onShareCode: (String) -> Unit, modifier: Modi
                 o.code,
                 style = MaterialTheme.typography.labelLarge.copy(letterSpacing = androidx.compose.ui.unit.TextUnit(2f, androidx.compose.ui.unit.TextUnitType.Sp)),
                 color = MmeleColors.GoldBright,
-                modifier = Modifier.clip(RoundedCornerShape(8.dp)).clickable { onShareCode(o.code) }.padding(horizontal = 6.dp, vertical = 2.dp),
+                modifier = Modifier.clip(RoundedCornerShape(8.dp)).clickable(onClickLabel = "share room code") { onShareCode(o.code) }.padding(horizontal = 6.dp, vertical = 2.dp),
             )
         }
         if (o.abandonSecondsLeft == 0) {

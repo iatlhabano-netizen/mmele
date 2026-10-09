@@ -3,6 +3,7 @@ package bw.mmele.ui.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -66,6 +67,8 @@ fun HomeScreen(
     onHapticsChange: (Boolean) -> Unit,
     onPlay: () -> Unit,
     onPlayOnline: () -> Unit = {},
+    onAbout: () -> Unit = {},
+    onlineConfigured: Boolean = true,
     animate: Boolean = true,
 ) {
     Box(Modifier.fillMaxSize()) {
@@ -134,7 +137,11 @@ fun HomeScreen(
                     ModeOption("Play vs Computer", "Solo against the AI", config.mode == GameMode.SOLO) {
                         onConfigChange(config.copy(mode = GameMode.SOLO))
                     }
-                    ModeOption("Play online", "A friend over the internet · room code", config.mode == GameMode.ONLINE) {
+                    ModeOption(
+                        "Play online",
+                        if (onlineConfigured) "A friend over the internet · room code" else "Coming soon in this version",
+                        config.mode == GameMode.ONLINE,
+                    ) {
                         onConfigChange(config.copy(mode = GameMode.ONLINE))
                     }
                     ModeOption("Pass & Play", "Two players on this phone", config.mode == GameMode.PASS_AND_PLAY) {
@@ -201,6 +208,10 @@ fun HomeScreen(
                     Text("SOON", style = MaterialTheme.typography.labelSmall, color = MmeleColors.Gold)
                 }
                 Spacer(Modifier.height(16.dp))
+                androidx.compose.material3.TextButton(onClick = onAbout, modifier = Modifier.fillMaxWidth()) {
+                    Text("About · privacy · licences", style = MaterialTheme.typography.labelLarge, color = MmeleColors.GoldBright)
+                }
+                Spacer(Modifier.height(8.dp))
                 Text(
                     "Mmele (Setswana) is the Morabaraba family of mill games played across Botswana and Southern Africa.",
                     style = MaterialTheme.typography.labelMedium,
@@ -249,7 +260,7 @@ private fun VariantCard(
             .clip(shape)
             .background(if (selected) MmeleColors.SlateHigh else MmeleColors.SlateRaised.copy(alpha = 0.7f))
             .border(if (selected) 2.dp else 1.dp, if (selected) MmeleColors.Gold else MmeleColors.Bone.copy(alpha = 0.15f), shape)
-            .clickable(role = Role.RadioButton, onClick = onClick)
+            .selectable(selected = selected, role = Role.RadioButton, onClick = onClick)
             .padding(12.dp),
     ) {
         BoardCanvas(
@@ -287,7 +298,7 @@ private fun Segmented(options: List<String>, selectedIndex: Int, onSelect: (Int)
                     .clip(RoundedCornerShape(10.dp))
                     .background(if (sel) MmeleColors.Gold.copy(alpha = 0.18f) else Color.Transparent)
                     .border(if (sel) 1.dp else 0.dp, if (sel) MmeleColors.Gold.copy(alpha = 0.7f) else Color.Transparent, RoundedCornerShape(10.dp))
-                    .clickable(role = Role.RadioButton) { onSelect(i) }
+                    .selectable(selected = sel, role = Role.RadioButton) { onSelect(i) }
                     .padding(vertical = 11.dp),
                 contentAlignment = Alignment.Center,
             ) {
@@ -306,7 +317,7 @@ private fun ModeOption(title: String, subtitle: String, selected: Boolean, onCli
             .clip(shape)
             .background(if (selected) MmeleColors.Gold.copy(alpha = 0.18f) else MmeleColors.SlateRaised.copy(alpha = 0.85f))
             .border(if (selected) 1.5.dp else 1.dp, if (selected) MmeleColors.Gold.copy(alpha = 0.8f) else MmeleColors.Bone.copy(alpha = 0.12f), shape)
-            .clickable(role = Role.RadioButton, onClick = onClick)
+            .selectable(selected = selected, role = Role.RadioButton, onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -368,7 +379,7 @@ private fun ScenePicker(selected: Scene, onSelect: (Scene) -> Unit) {
                 Modifier
                     .clip(shape)
                     .border(if (sel) 2.dp else 1.dp, if (sel) MmeleColors.Gold else MmeleColors.Bone.copy(alpha = 0.15f), shape)
-                    .clickable(role = Role.RadioButton) { onSelect(scene) },
+                    .selectable(selected = sel, role = Role.RadioButton) { onSelect(scene) },
             ) {
                 SceneBackdrop(scene, SceneMode.FULL, Modifier.height(64.dp).aspectRatio(1.5f), animate = false)
                 Text(
@@ -386,7 +397,7 @@ private fun ScenePicker(selected: Scene, onSelect: (Scene) -> Unit) {
                 .clip(shape)
                 .border(1.dp, MmeleColors.Bone.copy(alpha = 0.15f), shape)
                 .background(MmeleColors.SlateRaised)
-                .clickable { onSelect(Scene.entries.filter { it != selected }.random()) }
+                .clickable(role = Role.Button, onClickLabel = "pick a random scene") { onSelect(Scene.entries.filter { it != selected }.random()) }
                 .height(64.dp + 30.dp)
                 .padding(horizontal = 14.dp),
             contentAlignment = Alignment.Center,
@@ -407,7 +418,7 @@ private fun PieceSetPicker(config: GameConfig, onChange: (GameConfig) -> Unit) {
                     .clip(shape)
                     .background(if (selected) MmeleColors.Gold.copy(alpha = 0.12f) else MmeleColors.SlateRaised.copy(alpha = 0.85f))
                     .border(if (selected) 1.5.dp else 1.dp, if (selected) MmeleColors.Gold else MmeleColors.Bone.copy(alpha = 0.12f), shape)
-                    .clickable(role = Role.RadioButton) {
+                    .selectable(selected = selected, role = Role.RadioButton) {
                         val (one, two) = defaultPair(family)
                         onChange(config.copy(styleOne = one, styleTwo = two))
                     }
@@ -452,7 +463,7 @@ private fun EggSidePicker(label: String, current: PieceStyle, dark: Boolean, onP
                     modifier = Modifier
                         .clip(RoundedCornerShape(10.dp))
                         .background(if (sel) MmeleColors.Gold.copy(alpha = 0.2f) else Color.Transparent)
-                        .clickable { onPick(style) }
+                        .selectable(selected = sel, role = Role.RadioButton) { onPick(style) }
                         .padding(6.dp),
                 ) {
                     PieceIcon(style, Modifier.size(32.dp), pieceId = kind.ordinal + 2)

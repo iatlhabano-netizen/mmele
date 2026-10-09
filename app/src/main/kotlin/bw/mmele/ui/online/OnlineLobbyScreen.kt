@@ -104,22 +104,27 @@ fun OnlineLobbyScreen(
 @Composable
 private fun NotConfiguredCard(onBack: () -> Unit) {
     Panel {
-        Text("Online play not configured yet", style = MaterialTheme.typography.titleLarge, color = MmeleColors.Bone)
+        Text("Online play is coming soon", style = MaterialTheme.typography.titleLarge, color = MmeleColors.Bone)
         Spacer(Modifier.height(8.dp))
         Text(
-            "This copy of Mmele was built without a Firebase project, so it can't reach the internet for games. " +
-                "Pass & Play and Solo vs AI work fully offline.",
+            "Online games aren't switched on in this version of Mmele yet. You can still play the computer, " +
+                "or a friend on this phone with Pass & Play. Both work without the internet.",
             style = MaterialTheme.typography.bodyMedium,
             color = MmeleColors.BoneDim,
         )
-        Spacer(Modifier.height(8.dp))
-        Text(
-            "Developer: add app/google-services.json and rebuild — see docs/ONLINE_SETUP.md.",
-            style = MaterialTheme.typography.labelMedium,
-            color = MmeleColors.GoldBright,
-        )
+        if (com.tshipiworks.mmele.BuildConfig.DEBUG) {
+            Spacer(Modifier.height(8.dp))
+            Text(
+                "Developer build: add app/google-services.json and rebuild (docs/ONLINE_SETUP.md).",
+                style = MaterialTheme.typography.labelMedium,
+                color = MmeleColors.GoldBright,
+            )
+        }
         Spacer(Modifier.height(16.dp))
-        OutlinedButton(onClick = onBack) { Text("Back to offline play") }
+        Button(
+            onClick = onBack,
+            colors = ButtonDefaults.buttonColors(containerColor = MmeleColors.Gold, contentColor = MmeleColors.Slate),
+        ) { Text("Back to offline play") }
     }
 }
 
@@ -189,7 +194,7 @@ private fun LobbyBody(config: GameConfig, repo: OnlineGameRepository, onSession:
         OutlinedTextField(
             value = code,
             onValueChange = { code = sanitizeRoomCode(it) },
-            placeholder = { Text("ABC234", color = MmeleColors.BoneDim.copy(alpha = 0.5f), style = codeStyle) },
+            placeholder = { Text("ABC234", color = MmeleColors.BoneDim, style = codeStyle) },
             singleLine = true,
             textStyle = codeStyle.copy(color = MmeleColors.GoldBright),
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters, autoCorrectEnabled = false, imeAction = ImeAction.Go),

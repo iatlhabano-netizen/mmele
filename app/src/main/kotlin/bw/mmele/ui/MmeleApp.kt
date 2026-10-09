@@ -21,6 +21,7 @@ import bw.mmele.ui.game.GameMode
 import bw.mmele.ui.game.GameRoute
 import bw.mmele.ui.game.GameViewModel
 import bw.mmele.ui.home.HomeScreen
+import bw.mmele.ui.about.AboutScreen
 import bw.mmele.ui.scenes.Scene
 import bw.mmele.ui.pieces.PieceStyle
 import bw.mmele.online.OnlineGameRepository
@@ -29,7 +30,7 @@ import bw.mmele.ui.online.OnlineLobbyScreen
 import androidx.compose.runtime.remember
 import bw.mmele.ui.theme.MmeleTheme
 
-private enum class Screen { HOME, GAME, LOBBY }
+private enum class Screen { HOME, GAME, LOBBY, ABOUT }
 
 /**
  * Top-level app: a tiny navigator (Home, Game, Online lobby). [onlineRepo] makes a fresh
@@ -43,6 +44,9 @@ fun MmeleApp(
     initialMode: GameMode = GameMode.SOLO,
     initialDifficulty: Difficulty = Difficulty.MEDIUM,
     onModeChoice: (GameMode, Difficulty) -> Unit = { _, _ -> },
+    onlineConfigured: Boolean = false,
+    versionName: String = "",
+    versionCode: Int = 0,
 ) {
     MmeleTheme {
         var variant by rememberSaveable { mutableStateOf(Variant.CLASSIC) }
@@ -84,6 +88,15 @@ fun MmeleApp(
                 onSession = { onlineSession = it; session++; screen = Screen.GAME },
                 onBack = { screen = Screen.HOME },
             )
+            Screen.ABOUT -> {
+                val repo = remember { onlineRepo() }
+                AboutScreen(
+                    versionName = versionName,
+                    versionCode = versionCode,
+                    onBack = { screen = Screen.HOME },
+                    onDeleteOnlineData = repo?.let { r -> { r.deleteMyData() } },
+                )
+            }
             Screen.HOME -> {
                 HomeScreen(
                     config = config,
@@ -98,6 +111,8 @@ fun MmeleApp(
                     onHapticsChange = { haptics = it },
                     onPlay = { onlineSession = null; session++; screen = Screen.GAME },
                     onPlayOnline = { lobbyRepo = onlineRepo(); screen = Screen.LOBBY },
+                    onAbout = { screen = Screen.ABOUT },
+                    onlineConfigured = onlineConfigured,
                 )
             }
             }

@@ -8,6 +8,7 @@ import bw.mmele.feedback.FeedbackController
 import bw.mmele.feedback.Haptics
 import bw.mmele.feedback.SoundFx
 import bw.mmele.ui.MmeleApp
+import com.tshipiworks.mmele.BuildConfig
 import android.content.Intent
 import bw.mmele.online.FirebaseOnlineGameRepository
 import androidx.lifecycle.lifecycleScope
@@ -35,6 +36,9 @@ class MainActivity : ComponentActivity() {
                 onShareCode = ::shareRoomCode,
                 initialMode = saved.mode,
                 initialDifficulty = saved.difficulty,
+                onlineConfigured = BuildConfig.FIREBASE_CONFIGURED,
+                versionName = BuildConfig.VERSION_NAME,
+                versionCode = BuildConfig.VERSION_CODE,
                 onModeChoice = { mode, difficulty -> lifecycleScope.launch { prefs.save(ModePrefs.Choice(mode, difficulty)) } },
             )
         }

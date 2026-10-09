@@ -16,7 +16,8 @@ object MmeleColors {
     val SlateRaised = Color(0xFF1A1D21)
     val SlateHigh = Color(0xFF23272C)
     val Bone = Color(0xFFE2D9C8)
-    val BoneDim = Color(0x99E2D9C8)
+    // Opaque (was 60% Bone): ≥6:1 on every panel colour, and it stays readable over translucent scrims.
+    val BoneDim = Color(0xFFB0A797)
     val Gold = Color(0xFFD9A441)
     val GoldBright = Color(0xFFF2C76B)
     val Danger = Color(0xFFE5735C)
