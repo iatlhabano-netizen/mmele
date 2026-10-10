@@ -1,13 +1,14 @@
 # Mmele — Privacy Policy
 
-> **DRAFT. Not legal advice.** Fill in every `[PLACEHOLDER]` before publishing. Host this at a public URL (see
-> RELEASE_CHECKLIST.md) and paste that URL into Play Console *and* into the app's About screen.
+> **Source for the website page `site/privacy.html`** (regenerate with `python3 site/build_pages.py`; lines
+> starting with `>` and `[NOTE TO DEVELOPER …]` items are left out of the web page). Not legal advice.
+> `CONTACT_EMAIL_PLACEHOLDER` / `POSTAL_ADDRESS_PLACEHOLDER` are filled by `site/set-contact.sh`.
 > Keep it accurate: if the app changes (new SDK, analytics, ads, chat), update this page **before** releasing.
 
-**Effective date:** [DATE]
-**App:** Mmele (Android), package `[APPLICATION ID, e.g. com.tshipiworks.mmele]`
-**Who we are (the "controller"):** [LEGAL NAME], trading as [Tshipiworks / DEVELOPER NAME ON GOOGLE PLAY],
-[POSTAL ADDRESS], Gabane, Botswana. Contact: **[CONTACT EMAIL]**.
+**Effective date:** 10 October 2026
+**App:** Mmele (Android), package `com.tshipiworks.mmele`
+**Who we are (the "controller"):** Artful Tenant, trading as Tshipiworks,
+POSTAL_ADDRESS_PLACEHOLDER, Gabane, Botswana. Contact: **CONTACT_EMAIL_PLACEHOLDER**.
 
 ## 1. The short version
 
@@ -25,9 +26,8 @@
 | Your last chosen mode and difficulty, sound/haptics settings | To remember your choices | App storage on your device |
 | Games in progress | So you can continue playing | Device memory |
 
-This data stays on your device. If you have turned on Android's own device backup, Android may include the app's
-settings in your Google backup; that is controlled by you in Android settings and covered by Google's privacy
-policy. Uninstalling the app deletes this data.
+This data stays on your device. The app opts out of Android cloud backup and device-to-device transfer, so these
+settings are not copied to Google's servers or to a new phone. Uninstalling the app deletes this data.
 
 ## 3. What is processed when you use "Play online"
 
@@ -49,7 +49,7 @@ code while it exists (there is no public list of rooms). Rooms contain no names 
 Online play is hosted on **Google Firebase** (Firebase Authentication and Firebase Realtime Database), provided by
 Google LLC / Google Ireland Limited, which processes this data on our behalf under the
 [Firebase Data Processing and Security Terms](https://firebase.google.com/terms/data-processing-terms).
-Game data is stored in the **[DATABASE REGION, e.g. europe-west1 (Belgium)]** region. Google may process data in
+Game data is stored in the **europe-west1 (Belgium)** region [NOTE TO DEVELOPER: confirm this matches the region you pick when creating the database]. Google may process data in
 other countries where it or its sub-processors operate, using the safeguards in those terms (including the EU
 Standard Contractual Clauses). See also [Privacy and Security in Firebase](https://firebase.google.com/support/privacy).
 
@@ -72,11 +72,18 @@ Google Play itself (downloads, updates, reviews) is run by Google under
 - You can use Mmele without ever going online. Simply don't choose "Play online".
 - Uninstalling the app (or clearing its storage) removes the anonymous ID from your phone; your old rooms can no
   longer be linked to you.
-- <a id="delete"></a>**Delete your online data in the app:** Home → *About · privacy · licences* → **Delete my online
-  data**. This deletes every room you created or joined from that phone and then your anonymous ID, straight away.
-- Or email **[CONTACT EMAIL]** with the subject "Mmele data deletion" and, if you can, the room code(s) you used.
-  Because we hold no name or email, we may ask for the room code so we can find the data. We will reply within
-  **30 days**.
+
+### Delete your online data {#delete}
+
+- **In the app:** Home → *About · privacy · licences* → **Delete my online data**. This deletes every room you
+  created or joined from that phone and then your anonymous ID, straight away.
+- **By email:** write to **CONTACT_EMAIL_PLACEHOLDER** with the subject "Mmele data deletion" and, if you can, the room
+  code(s) you used. Because we hold no name or email, we may ask for the room code so we can find the data. We will
+  reply within **30 days**.
+- If you never used "Play online", there is no online data to delete.
+
+### Your rights
+
 - Depending on where you live, you may have rights to access, correct, delete, restrict or object to processing of
   your data, and to data portability:
   - **EU / EEA and UK (GDPR / UK GDPR):** you can also complain to your local data protection authority (in the UK,
@@ -90,7 +97,7 @@ Google Play itself (downloads, updates, reviews) is run by Google under
 ## 7. Children
 
 Mmele is a family-friendly board game, but it is **not directed at children under 13**, and online play is meant
-for people aged **13 and over** [ADJUST to the target age you choose in Play Console]. Online play collects no
+for people aged **13 and over**. Online play collects no
 names, no chat and no contact details, only the anonymous technical data above. If you believe a child under 13 has
 used online play, contact us and we will delete the related data.
 
@@ -107,4 +114,5 @@ effective date before releasing that version. Significant changes will also be n
 
 ## 10. Contact
 
-[LEGAL NAME], [POSTAL ADDRESS], Gabane, Botswana. Email: **[CONTACT EMAIL]**.
+Artful Tenant, trading as Tshipiworks, POSTAL_ADDRESS_PLACEHOLDER, Gabane, Botswana.
+Email: **CONTACT_EMAIL_PLACEHOLDER**.

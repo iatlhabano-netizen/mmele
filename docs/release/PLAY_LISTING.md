@@ -53,9 +53,9 @@ Learn a game your grandparents played, or teach it to someone new. Tshameka!
 - App or game: **Game** · Category: **Board**
 - Tags (choose up to 5 from Play's list in Store settings → Manage tags): *Board*, *Abstract strategy*, *Classic*,
   *Offline*, *Strategy* (pick whatever exact labels Play offers that match)
-- Email (shown publicly): **[SUPPORT EMAIL]** (use a dedicated address, e.g. mmele@tshipiworks.com)
-- Website (optional): **[e.g. https://www.tshipiworks.com/mmele]**
-- Privacy policy URL (required): **[PUBLIC URL]**
+- Email (shown publicly): **CONTACT_EMAIL_PLACEHOLDER** (use a dedicated address; set it everywhere with `site/set-contact.sh`)
+- Website (optional): **https://YOUR-VERCEL-DOMAIN** (the `site/` landing page)
+- Privacy policy URL (required): **https://YOUR-VERCEL-DOMAIN/privacy** (from `site/`; set with `site/set-domain.sh`)
 
 ## Graphic assets needed ([specs](https://support.google.com/googleplay/android-developer/answer/9866151), [icon spec](https://developer.android.com/distribute/google-play/resources/icon-design-specifications))
 | Asset | Spec | Status |

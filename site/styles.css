@@ -1,0 +1,103 @@
+/* Mmele legal site. No web fonts, no external requests. Palette from the app (Theme.kt). */
+:root {
+  --slate: #121417;
+  --slate-raised: #1a1d21;
+  --slate-high: #23272c;
+  --bone: #e2d9c8;
+  --bone-dim: #b0a797;   /* >= 6:1 on all slates */
+  --gold: #d9a441;
+  --gold-bright: #f2c76b;
+  --line: rgba(226, 217, 200, 0.14);
+  --serif: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Helvetica, Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--slate);
+  color: var(--bone);
+  font: 1.0625rem/1.65 var(--sans);
+}
+
+a { color: var(--gold-bright); }
+a:hover { color: #fff1cf; }
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+  outline: 3px solid var(--gold-bright);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute; left: 1rem; top: -4rem;
+  background: var(--gold); color: var(--slate);
+  padding: 0.5rem 1rem; border-radius: 0 0 8px 8px; font-weight: 600; text-decoration: none;
+}
+.skip-link:focus { top: 0; }
+
+.wrap { width: 100%; max-width: 46rem; margin: 0 auto; padding: 0 1.25rem; }
+
+/* header */
+.site-header { border-bottom: 1px solid var(--line); background: var(--slate-raised); }
+.site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding-top: 0.75rem; padding-bottom: 0.75rem; }
+.brand { display: inline-flex; align-items: center; gap: 0.6rem; color: var(--bone); text-decoration: none; font: 600 1.25rem/1 var(--serif); }
+.brand img { border-radius: 10px; }
+.site-nav ul { list-style: none; display: flex; gap: 1.25rem; margin: 0; padding: 0; }
+.site-nav a { color: var(--bone); text-decoration: none; padding: 0.35rem 0; border-bottom: 2px solid transparent; }
+.site-nav a:hover, .site-nav a[aria-current="page"] { color: var(--gold-bright); border-bottom-color: var(--gold); }
+
+/* content */
+main { padding: 2rem 0 3rem; }
+h1, h2, h3 { font-family: var(--serif); line-height: 1.25; color: var(--bone); }
+h1 { font-size: clamp(1.9rem, 5vw, 2.6rem); margin: 0 0 0.4rem; }
+h2 { font-size: 1.45rem; margin: 2.4rem 0 0.6rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+h3 { font-size: 1.15rem; margin: 1.8rem 0 0.4rem; color: var(--gold-bright); }
+p, ul, ol { margin: 0 0 1rem; }
+li { margin: 0.3rem 0; }
+strong { color: #f3ecdf; }
+code { font: 0.92em/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--slate-high); padding: 0.1em 0.35em; border-radius: 4px; }
+
+.meta { color: var(--bone-dim); margin: 0 0 1.5rem; }
+.meta time { color: var(--bone); }
+
+.table-wrap { overflow-x: auto; margin: 0 0 1.25rem; border: 1px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; min-width: 34rem; font-size: 0.95rem; }
+th, td { text-align: left; vertical-align: top; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--line); }
+th { background: var(--slate-high); color: var(--gold-bright); font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+
+/* the #delete target is easy to spot when linked from the app / Play */
+#delete { scroll-margin-top: 1rem; }
+#delete:target { outline: 2px solid var(--gold); outline-offset: 6px; border-radius: 4px; }
+
+/* landing */
+.hero { text-align: center; padding: 1rem 0 0.5rem; }
+.hero .icon { width: 128px; height: 128px; border-radius: 28px; box-shadow: 0 8px 28px rgba(0,0,0,0.45); }
+.hero h1 { margin-top: 1rem; }
+.tagline { color: var(--gold); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.85rem; margin-bottom: 1.5rem; }
+.feature { display: block; width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--line); margin: 0.5rem 0 1.75rem; }
+.badge {
+  display: inline-block; margin: 0.5rem 0 1.5rem; padding: 0.6rem 1.25rem; border-radius: 999px;
+  background: var(--gold); color: var(--slate); font-weight: 700;
+}
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.9rem; margin: 1.5rem 0; padding: 0; list-style: none; }
+.cards li { margin: 0; background: var(--slate-raised); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; }
+.cards h2 { font-size: 1.1rem; margin: 0 0 0.35rem; padding: 0; border: 0; color: var(--gold-bright); }
+.cards p { margin: 0; color: var(--bone-dim); font-size: 0.97rem; }
+.center { text-align: center; }
+
+/* footer */
+.site-footer { border-top: 1px solid var(--line); color: var(--bone-dim); font-size: 0.92rem; padding: 1.5rem 0 2.5rem; }
+.site-footer p { margin: 0.25rem 0; }
+.site-footer a { color: var(--bone); }
+
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+@media print {
+  body { background: #fff; color: #000; }
+  .site-header, .site-footer, .skip-link { display: none; }
+  a { color: #000; }
+  h3, th, strong, .meta time { color: #000; }
+}

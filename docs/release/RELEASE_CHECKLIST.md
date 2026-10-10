@@ -28,7 +28,8 @@ by the bot.
 > leave-game dialog, TalkBack board, contrast, no backup; store assets in `/workspace/mmele-store/`.
 > **Not verified:** running the release APK on a device/emulator (the box's emulator never started its VM), and
 > the Firebase path against a real project. Item 12 is moot (online ships). Item 15 waits for your details.
-> **Before upload:** set `AppInfo.CONTACT_EMAIL` (currently a TODO placeholder) and the policy placeholders.
+> **Before upload:** set the contact email and postal address with `site/set-contact.sh`, deploy `site/` to
+> Vercel (see `site/README.md`), then run `site/set-domain.sh <domain>` and rebuild the AAB.
 6. **[BOT]** Raise `compileSdk`/`targetSdk` to **36**. Since 31 Aug 2026 this is **required for new apps**.
    Needs an AGP/Kotlin bump. Then re-test edge-to-edge and predictive back.
 7. **[BOT]** Change `applicationId` (and namespace) to your choice; set `versionCode = 1`/`versionName = "1.0.0"`.
