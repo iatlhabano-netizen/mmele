@@ -234,6 +234,7 @@
     <string name="stats_drawn">Drawn</string>
     <string name="stats_row_computer">Computer · %1$s</string>
     <string name="stats_row_spoken">%1$s: %2$d won, %3$d lost, %4$d drawn</string>
+    <string name="stats_streak">Win streak %1$d · best %2$d</string>
     <string name="stats_pass_and_play_note">In Pass &amp; Play, won means Dark won and lost means Light won.</string>
     <string name="stats_reset">Reset stats</string>
     <string name="stats_reset_title">Reset all stats?</string>

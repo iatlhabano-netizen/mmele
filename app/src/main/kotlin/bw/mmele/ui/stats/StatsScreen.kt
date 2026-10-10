@@ -2,6 +2,7 @@ package bw.mmele.ui.stats
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -83,13 +84,17 @@ private fun StatRow(key: StatKey, t: Tally) {
         GameMode.PASS_AND_PLAY -> stringResource(R.string.mode_pass_and_play)
         GameMode.ONLINE -> stringResource(R.string.mode_online)
     }
-    val spoken = stringResource(R.string.stats_row_spoken, name, t.wins, t.losses, t.draws)
-    Row(
+    val streak = if (t.bestStreak > 0) stringResource(R.string.stats_streak, t.streak, t.bestStreak) else null
+    val spoken = stringResource(R.string.stats_row_spoken, name, t.wins, t.losses, t.draws) + (streak?.let { ". $it" } ?: "")
+    Column(
         Modifier
             .fillMaxWidth()
             .background(MmeleColors.SlateRaised, RoundedCornerShape(10.dp))
             .padding(horizontal = 8.dp, vertical = 10.dp)
             .clearAndSetSemantics { contentDescription = spoken },
+    ) {
+    Row(
+        Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
     ) {
@@ -97,5 +102,7 @@ private fun StatRow(key: StatKey, t: Tally) {
         for ((v, c) in listOf(t.wins to MmeleColors.GoldBright, t.losses to MmeleColors.Bone, t.draws to MmeleColors.Bone)) {
             Text(v.toString(), Modifier.width(56.dp), style = MaterialTheme.typography.titleMedium, color = if (v > 0) c else MmeleColors.BoneDim, textAlign = TextAlign.End)
         }
+    }
+    streak?.let { Text(it, style = MaterialTheme.typography.labelSmall, color = MmeleColors.Gold, modifier = Modifier.padding(top = 2.dp)) }
     }
 }

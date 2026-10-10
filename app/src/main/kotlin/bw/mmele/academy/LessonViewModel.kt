@@ -31,6 +31,9 @@ import kotlinx.coroutines.launch
 /** Coach line under the board. */
 enum class Coach { INTRO, YOUR_TURN, SHOOT_NOW, GOOD, WRONG, WRONG_PUNISHED, SOLVED }
 
+/** A lesson is its taught position, then a practice position; only finishing both counts. */
+enum class Stage { LESSON, PRACTICE }
+
 @Immutable
 data class LessonUiState(
     val game: GameState,
@@ -48,7 +51,11 @@ data class LessonUiState(
     /** Opponent animation / reset in progress: input is ignored. */
     val busy: Boolean = false,
     val solved: Boolean = false,
+    val stage: Stage = Stage.LESSON,
 ) {
+    /** Lesson position solved, practice still to do. */
+    val readyForPractice: Boolean get() = solved && stage == Stage.LESSON
+    val lessonComplete: Boolean get() = solved && stage == Stage.PRACTICE
     val interactive: Boolean get() = !busy && !solved && coach != Coach.INTRO
 }
 
@@ -59,7 +66,7 @@ class LessonViewModel(
     private val stepDelayMs: Long = 700,
 ) : ViewModel() {
 
-    private val session = PuzzleSession(lesson.puzzle)
+    private var session = PuzzleSession(lesson.puzzle)
     private var nextId = 1
     private var flashId = 0
     private var job: Job? = null
@@ -70,10 +77,20 @@ class LessonViewModel(
     private val _events = MutableSharedFlow<FeedbackEvent>(extraBufferCapacity = 16, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val events: SharedFlow<FeedbackEvent> = _events
 
-    private fun fresh(g: GameState, coach: Coach, hints: Int = 0): LessonUiState {
+    private fun fresh(g: GameState, coach: Coach, hints: Int = 0, stage: Stage = currentStage): LessonUiState {
         nextId = 1
         val tokens = (0 until g.board.size).mapNotNull { n -> g.ownerAt(n)?.let { TokenUi(nextId++, it, n) } }
-        return decorate(LessonUiState(game = g, tokens = tokens, coach = coach, hintsShown = hints))
+        return decorate(LessonUiState(game = g, tokens = tokens, coach = coach, hintsShown = hints, stage = stage))
+    }
+
+    private var currentStage = Stage.LESSON
+
+    /** After the taught position: load the practice position (no hints there). */
+    fun startPractice() {
+        job?.cancel()
+        currentStage = Stage.PRACTICE
+        session = PuzzleSession(lesson.practice)
+        _state.value = fresh(lesson.practice.start, Coach.YOUR_TURN, 0, Stage.PRACTICE)
     }
 
     private fun decorate(s: LessonUiState): LessonUiState {
@@ -90,12 +107,14 @@ class LessonViewModel(
 
     fun begin() = _state.update { decorate(it.copy(coach = Coach.YOUR_TURN)) }
 
-    fun showHint() = _state.update { it.copy(hintsShown = (it.hintsShown + 1).coerceAtMost(lesson.hints.size)) }
+    fun showHint() = _state.update {
+        if (it.stage == Stage.PRACTICE) it else it.copy(hintsShown = (it.hintsShown + 1).coerceAtMost(lesson.hints.size))
+    }
 
     fun restart() {
         job?.cancel()
         session.restart()
-        _state.value = fresh(lesson.puzzle.start, Coach.YOUR_TURN, _state.value.hintsShown)
+        _state.value = fresh(session.puzzle.start, Coach.YOUR_TURN, _state.value.hintsShown)
     }
 
     fun onTap(node: Int?) {
@@ -185,7 +204,7 @@ class LessonViewModel(
             is StepResult.Solved -> animate(r.reply) {
                 emit(FeedbackEvent.WIN)
                 _state.update { decorate(it.copy(coach = Coach.SOLVED, solved = true, busy = false)) }
-                onSolved()
+                if (currentStage == Stage.PRACTICE) onSolved()
             }
         }
     }

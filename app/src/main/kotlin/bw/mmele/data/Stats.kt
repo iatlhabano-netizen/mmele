@@ -29,12 +29,13 @@ data class StatKey(val mode: GameMode, val difficulty: Difficulty?, val variant:
     }
 }
 
-data class Tally(val wins: Int = 0, val losses: Int = 0, val draws: Int = 0) {
+/** Counts for one row, plus the current and best run of consecutive wins (a loss or draw ends a run). */
+data class Tally(val wins: Int = 0, val losses: Int = 0, val draws: Int = 0, val streak: Int = 0, val bestStreak: Int = 0) {
     val games get() = wins + losses + draws
     fun plus(o: Outcome) = when (o) {
-        Outcome.WIN -> copy(wins = wins + 1)
-        Outcome.LOSS -> copy(losses = losses + 1)
-        Outcome.DRAW -> copy(draws = draws + 1)
+        Outcome.WIN -> copy(wins = wins + 1, streak = streak + 1, bestStreak = maxOf(bestStreak, streak + 1))
+        Outcome.LOSS -> copy(losses = losses + 1, streak = 0)
+        Outcome.DRAW -> copy(draws = draws + 1, streak = 0)
     }
 }
 

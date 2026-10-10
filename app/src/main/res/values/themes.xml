@@ -1,6 +1,13 @@
 <resources>
-    <style name="Theme.Mmele" parent="android:Theme.Material.NoActionBar">
+    <!-- AppCompat parent: required by AppCompatActivity (per-app language on Android 12 and older). -->
+    <style name="Theme.Mmele" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@color/slate</item>
+    </style>
+    <!-- Launch theme: the system splash (Android 12+ style on every version) until data is loaded. -->
+    <style name="Theme.Mmele.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/slate</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.Mmele</item>
     </style>
     <color name="slate">#FF121417</color>
     <color name="bone">#FFE2D9C8</color>

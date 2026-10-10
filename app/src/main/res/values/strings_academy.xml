@@ -24,6 +24,10 @@
     <string name="lesson_solved_title">Well done!</string>
     <string name="lesson_next">Next lesson</string>
     <string name="lesson_back_to_academy">Back to the Academy</string>
+    <string name="lesson_practice">Practice</string>
+    <string name="lesson_practice_intro">A fresh position, the same idea. No hints this time.</string>
+    <string name="lesson_practice_cta">Now try it yourself</string>
+    <string name="lesson_practice_done">Practice done. The next lesson is unlocked.</string>
     <string name="lesson_all_done">You have finished the Academy. Go and beat the computer!</string>
 
     <!-- Lesson 1 -->

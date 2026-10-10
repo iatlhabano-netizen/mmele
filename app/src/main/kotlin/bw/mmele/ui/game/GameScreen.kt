@@ -68,6 +68,9 @@ import bw.mmele.ui.theme.MmeleColors
 fun GameRoute(viewModel: GameViewModel, feedback: FeedbackController?, onHome: () -> Unit, onShareCode: (String) -> Unit = {}) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(viewModel) { viewModel.events.collect { feedback?.play(it) } }
+    // Clocks stop while the app is in the background, and the game is saved.
+    androidx.lifecycle.compose.LifecycleEventEffect(androidx.lifecycle.Lifecycle.Event.ON_STOP) { viewModel.onHidden() }
+    androidx.lifecycle.compose.LifecycleEventEffect(androidx.lifecycle.Lifecycle.Event.ON_START) { viewModel.onShown() }
     var confirmLeave by remember { mutableStateOf(false) }
     // Ask before abandoning a game that has started; finished or empty games leave straight away.
     val leave = { if (ui.game.isGameOver || ui.game.ply == 0 || ui.online?.waitingForOpponent == true) onHome() else confirmLeave = true }

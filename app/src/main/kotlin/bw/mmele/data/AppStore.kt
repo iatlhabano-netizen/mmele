@@ -39,6 +39,8 @@ class AppStore(private val context: Context) {
                 "w" -> t.copy(wins = v)
                 "l" -> t.copy(losses = v)
                 "d" -> t.copy(draws = v)
+                "s" -> t.copy(streak = v)
+                "b" -> t.copy(bestStreak = v)
                 else -> t
             }
         }
@@ -49,10 +51,17 @@ class AppStore(private val context: Context) {
         context.appData.edit { if (encoded == null) it.remove(SAVED_GAME) else it[SAVED_GAME] = encoded }
     }
 
-    suspend fun addResult(key: StatKey, outcome: Outcome) {
-        val suffix = when (outcome) { Outcome.WIN -> "w"; Outcome.LOSS -> "l"; Outcome.DRAW -> "d" }
-        val pk = intPreferencesKey("$STAT_PREFIX${key.encode()}.$suffix")
-        context.appData.edit { it[pk] = (it[pk] ?: 0) + 1 }
+    /** Adds one result; returns the updated tally (wins/losses/draws and the win streak). */
+    suspend fun addResult(key: StatKey, outcome: Outcome): Tally {
+        var out = Tally()
+        context.appData.edit { p ->
+            fun k(x: String) = intPreferencesKey("$STAT_PREFIX${key.encode()}.$x")
+            val before = Tally(p[k("w")] ?: 0, p[k("l")] ?: 0, p[k("d")] ?: 0, p[k("s")] ?: 0, p[k("b")] ?: 0)
+            out = before.plus(outcome)
+            p[k("w")] = out.wins; p[k("l")] = out.losses; p[k("d")] = out.draws
+            p[k("s")] = out.streak; p[k("b")] = out.bestStreak
+        }
+        return out
     }
 
     suspend fun resetStats() {
