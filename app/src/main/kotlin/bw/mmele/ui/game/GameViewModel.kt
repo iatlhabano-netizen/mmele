@@ -183,6 +183,7 @@ class GameViewModel(
     // ------------------------------------------------------------------ core transition
 
     private fun commit(action: Action, fromRoom: MoveRecord? = null) {
+        chargeClock()
         val ui = _state.value
         val g = ui.game
         if (g.isGameOver || !Rules.isLegal(g, action)) { invalid(); return }
@@ -347,18 +348,14 @@ class GameViewModel(
     private fun startClock() {
         clockJob?.cancel()
         if (config.clockMinutes <= 0 || clockPaused || _state.value.game.isGameOver) return
+        clockMark = now()
         clockJob = viewModelScope.launch {
-            var last = System.currentTimeMillis()
             while (isActive) {
                 delay(100)
-                val now = System.currentTimeMillis()
-                val dt = now - last
-                last = now
                 val ui = _state.value
                 if (ui.game.isGameOver) break
                 val p = ui.game.toMove
-                val remaining = (ui.clockOf(p) - dt).coerceAtLeast(0)
-                _state.update { if (p == Player.ONE) it.copy(clockMs1 = remaining) else it.copy(clockMs2 = remaining) }
+                val remaining = chargeClock()
                 if (remaining == 0L) {
                     aiJob?.cancel()
                     timedOut = p
@@ -371,9 +368,28 @@ class GameViewModel(
         }
     }
 
+    private var clockMark = 0L
+
+    /**
+     * Charge the time since the last tick to the player to move, and return what they have left.
+     * Also called on every move so the mover pays for their own thinking time to the millisecond.
+     */
+    private fun chargeClock(): Long {
+        val ui = _state.value
+        if (config.clockMinutes <= 0 || clockJob?.isActive != true || ui.game.isGameOver) return ui.clockOf(ui.game.toMove)
+        val t = now()
+        val dt = t - clockMark
+        clockMark = t
+        val p = ui.game.toMove
+        val remaining = (ui.clockOf(p) - dt).coerceAtLeast(0)
+        _state.update { if (p == Player.ONE) it.copy(clockMs1 = remaining) else it.copy(clockMs2 = remaining) }
+        return remaining
+    }
+
     /** The app went to the background: stop the clocks (no one is looking) and save. */
     fun onHidden() {
         if (online != null) return
+        chargeClock()
         clockPaused = true
         clockJob?.cancel()
         persist()
