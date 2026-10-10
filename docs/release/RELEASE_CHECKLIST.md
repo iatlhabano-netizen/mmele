@@ -54,6 +54,20 @@ by the bot.
 15. **[BOT]** Fill in placeholders in `PRIVACY_POLICY.md`/`TERMS.md` once you give the details, and export them as
     simple HTML pages.
 
+## Phase 1b: version 1.1.0 (BOT, done 10 Oct 2026)
+
+> `versionCode 2` / `versionName 1.1.0`, signed AAB/APK at `/workspace/mmele-release-1.1.0.{aab,apk}`, pushed
+> to `github.com/iatlhabano-netizen/mmele` (main). Built without `google-services.json` (online off).
+
+- [x] Academy: 5 lessons, each with a practice position, unlocking in order; first-run How to play.
+- [x] Saved games (Continue game), process-death safe; clock-aware undo.
+- [x] English + Setswana draft with in-app language picker. **[YOU]** review `docs/SETSWANA_REVIEW.md`.
+- [x] Stats with win streaks; hint button; replay viewer; illegal-move explanations.
+- [x] AI: node budgets (same strength on every phone), Expert level, solved Khutlotharo, TT draw-counter fix.
+- [x] Review fixes: monotonic clock paused in background; no `runBlocking` at start-up (SplashScreen);
+      online idle claim (5 min) in the rules with emulator tests.
+- [ ] **[YOU]** Try 1.1.0 on a real phone (the box emulator still can't boot), especially TalkBack and Setswana.
+
 ## Phase 2: accounts and hosting (YOU)
 16. **[YOU]** Create the Play Console developer account (play.google.com/console), pay the **US$25** one-time fee,
     and verify identity (government ID; for organisations, the D-U-N-S number). Verify your email and phone.

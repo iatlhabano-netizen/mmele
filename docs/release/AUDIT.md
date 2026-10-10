@@ -1,3 +1,14 @@
+> **SUPERSEDED (10 Oct 2026).** This is the original 9 Oct audit, kept for the record. Current status lives in
+> [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md). Fixed since: targetSdk/compileSdk 36 (blocker 1); signed AAB +
+> Play App Signing-ready upload key and R8 release build (2); privacy policy and terms written, site in `site/`
+> ready for Vercel (3, hosting still yours); online play has a friendly "coming soon" state and full
+> delete-my-data / 30-day clean-up (4); application ID `com.tshipiworks.mmele` (5); store assets in
+> `/workspace/mmele-store/` (7); About screen with licences and sources; TalkBack board, contrast, leave-game
+> dialog, backup off. In 1.1.0: monotonic, background-paused clocks; async start-up with SplashScreen; online
+> idle claim enforced by rules; transposition-table draw-counter fix; solved Khutlotharo; Academy, stats,
+> replay, hints, saved games; English + draft Setswana. Still open: blocker 6 (12 testers × 14 days) and
+> everything account-side.
+
 # Mmele: Play release-readiness and legal audit (9 Oct 2026)
 
 > Research summary, **not legal advice**. Checked against commit `86805b6` and official sources on 9 Oct 2026.
