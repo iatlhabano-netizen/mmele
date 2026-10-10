@@ -32,10 +32,22 @@ class SearchAi(private val config: SearchConfig, private val random: Random) : A
     private var stop: () -> Boolean = { false }
     private var abortable = false
 
+    // Move-ordering memory (reset per search): two "killer" quiet moves per ply that caused a
+    // beta cut-off in a sibling, and a history score per action code.
+    private val killers = IntArray(MAX_PLY * 2) { -1 }
+    private val historyScore = IntArray(4096)
+
     /** Statistics of the last search, for tests / debugging. */
     var lastDepthCompleted = 0
         private set
     var lastNodes = 0L
+        private set
+
+    /**
+     * True when the last search was not cut short by the time cap: it finished [SearchConfig.maxDepth],
+     * proved a forced win/loss, or had only one legal move.
+     */
+    var lastSearchComplete = true
         private set
 
     /** Synchronized: the search keeps per-instance scratch state (TT, counters). */
@@ -43,14 +55,19 @@ class SearchAi(private val config: SearchConfig, private val random: Random) : A
     override fun chooseAction(state: GameState, shouldStop: () -> Boolean): Action {
         val rootActions = Rules.legalActions(state)
         require(rootActions.isNotEmpty()) { "no legal actions" }
+        lastDepthCompleted = 0
+        lastNodes = 0
+        lastSearchComplete = true
         if (rootActions.size == 1) return rootActions[0]
         stop = shouldStop
+        killers.fill(-1)
+        historyScore.fill(0)
         deadline = System.nanoTime() + config.timeLimitMs * 1_000_000
         nodes = 0
         // Shuffle first so equal-valued moves vary from game to game.
-        var ordered = order(state, rootActions.shuffled(random), -1)
+        var ordered = order(state, rootActions.shuffled(random), -1, 0)
         var best = ordered[0]
-        lastDepthCompleted = 0
+        var complete = false
         for (depth in 1..config.maxDepth) {
             abortable = depth > 1
             try {
@@ -70,13 +87,14 @@ class SearchAi(private val config: SearchConfig, private val random: Random) : A
                 best = bestHere!!
                 lastDepthCompleted = depth
                 ordered = ordered.sortedByDescending { scores[it] ?: -INF }
-                if (alpha >= WIN - 1000) break // forced win found
+                if (depth == config.maxDepth || kotlin.math.abs(alpha) >= WIN - 1000) { complete = true; break } // done, or forced result
             } catch (_: Timeout) {
                 break
             }
             if (System.nanoTime() > deadline) break
         }
         lastNodes = nodes
+        lastSearchComplete = complete
         return best
     }
 
@@ -115,7 +133,7 @@ class SearchAi(private val config: SearchConfig, private val random: Random) : A
             }
         }
 
-        val actions = order(s, Rules.legalActions(s), ttMove)
+        val actions = order(s, Rules.legalActions(s), ttMove, ply)
         var bestScore = -INF
         var bestMove = -1
         for (a in actions) {
@@ -127,7 +145,10 @@ class SearchAi(private val config: SearchConfig, private val random: Random) : A
             }
             if (score > bestScore) { bestScore = score; bestMove = a.encode() }
             if (score > alpha) alpha = score
-            if (alpha >= beta) break
+            if (alpha >= beta) {
+                if (a !is Action.Shoot && !Heuristics.formsMill(s, a)) rememberCutoff(a.encode(), ply, depth)
+                break
+            }
         }
 
         if (config.useTranspositionTable) {
@@ -143,22 +164,59 @@ class SearchAi(private val config: SearchConfig, private val random: Random) : A
         return bestScore
     }
 
-    /** Move ordering: TT move, mills, shots of threatening cows, blocks, then the rest. */
-    private fun order(s: GameState, actions: List<Action>, ttMove: Int): List<Action> {
-        if (actions.size <= 1) return actions
-        return actions.sortedByDescending { a ->
+    private fun rememberCutoff(code: Int, ply: Int, depth: Int) {
+        if (ply < MAX_PLY) {
+            val k = ply * 2
+            if (killers[k] != code) { killers[k + 1] = killers[k]; killers[k] = code }
+        }
+        val h = historyScore[code] + depth * depth
+        historyScore[code] = if (h > HISTORY_CAP) HISTORY_CAP else h
+    }
+
+    /**
+     * Move ordering, best first: TT move, moves that complete a mill, shots of cows in an enemy
+     * open two, moves that block an enemy mill, killer moves of this ply, then quiet moves by
+     * history score and intersection value. Keys are computed once per move (not per comparison).
+     */
+    private fun order(s: GameState, actions: List<Action>, ttMove: Int, ply: Int): List<Action> {
+        val n = actions.size
+        if (n <= 1) return actions
+        val k1 = if (ply < MAX_PLY) killers[ply * 2] else -1
+        val k2 = if (ply < MAX_PLY) killers[ply * 2 + 1] else -1
+        val keys = IntArray(n)
+        for (i in 0 until n) {
+            val a = actions[i]
+            val code = a.encode()
             var k = 0
-            if (a.encode() == ttMove) k += 10_000
+            if (code == ttMove) k += 8_000_000
             when (a) {
-                is Action.Shoot -> if (Heuristics.isThreatCow(s, a.target)) k += 500
+                is Action.Shoot -> {
+                    if (Heuristics.isThreatCow(s, a.target)) k += 1_000_000
+                    k += s.board.millsAt[a.target].size * 10
+                }
                 else -> {
-                    if (Heuristics.formsMill(s, a)) k += 1000
-                    if (Heuristics.blocksMill(s, a)) k += 400
-                    k += s.board.millsAt[Heuristics.targetOf(a)].size * 10 + s.board.neighbors[Heuristics.targetOf(a)].size
+                    when {
+                        Heuristics.formsMill(s, a) -> k += 2_000_000
+                        Heuristics.blocksMill(s, a) -> k += 1_000_000
+                        code == k1 -> k += 600_000
+                        code == k2 -> k += 500_000
+                    }
+                    val to = Heuristics.targetOf(a)
+                    k += historyScore[code] + s.board.millsAt[to].size * 10 + s.board.neighbors[to].size
                 }
             }
-            k
+            keys[i] = k
         }
+        // Insertion sort by key, descending: lists are short (<= ~70) and stable for equal keys,
+        // which keeps the root shuffle meaningful.
+        val idx = IntArray(n) { it }
+        for (i in 1 until n) {
+            val cur = idx[i]
+            var j = i - 1
+            while (j >= 0 && keys[idx[j]] < keys[cur]) { idx[j + 1] = idx[j]; j-- }
+            idx[j + 1] = cur
+        }
+        return List(n) { actions[idx[it]] }
     }
 
     companion object {
@@ -167,5 +225,7 @@ class SearchAi(private val config: SearchConfig, private val random: Random) : A
         private const val EXACT = 0
         private const val LOWER = 1
         private const val UPPER = 2
+        private const val MAX_PLY = 64
+        private const val HISTORY_CAP = 400_000
     }
 }
