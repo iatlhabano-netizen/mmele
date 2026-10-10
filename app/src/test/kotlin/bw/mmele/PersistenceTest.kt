@@ -116,6 +116,23 @@ class PersistenceTest {
         b.viewModelScope_cancel()
     }
 
+    /** Review fix: the clock is monotonic and stops while the app is in the background. */
+    @Test fun clockStopsWhileBackgrounded() = runTest(dispatcher) {
+        val a = vm()
+        a.onIntent(GameIntent.NodeTapped(c("a7"))) // Light's clock starts
+        advanceTimeBy(3_000); runCurrent()
+        a.onHidden()
+        advanceTimeBy(600_000); runCurrent() // ten minutes in the background
+        assertEquals(60_000L, a.state.value.clockMs1)
+        assertTrue("light still has time", a.state.value.clockMs2 in 56_000L..57_100L)
+        assertTrue(!a.state.value.game.isGameOver)
+        a.onShown()
+        advanceTimeBy(2_000); runCurrent()
+        a.onIntent(GameIntent.NodeTapped(c("g1")))
+        assertTrue("only foreground time is charged: ${a.state.value.clockMs2}", a.state.value.clockMs2 in 54_900L..55_100L)
+        a.viewModelScope_cancel()
+    }
+
     @Test fun savedStateHandleSurvivesProcessDeath() = runTest(dispatcher) {
         val handle = SavedStateHandle()
         val a = GameViewModel.create(pnp, handle, resume = null, onSaveGame = {}, onResult = { _, _ -> })

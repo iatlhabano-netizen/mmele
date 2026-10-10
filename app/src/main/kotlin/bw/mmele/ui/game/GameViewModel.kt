@@ -4,6 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import bw.mmele.engine.Action
+import bw.mmele.engine.Explain
+import bw.mmele.engine.IllegalReason
+import bw.mmele.engine.ai.Difficulty
 import bw.mmele.engine.GameResult
 import bw.mmele.engine.GameState
 import bw.mmele.engine.MillEffect
@@ -55,6 +58,8 @@ class GameViewModel(
     private val config: GameConfig,
     private val aiDispatcher: CoroutineDispatcher = Dispatchers.Default,
     private val aiFactory: (GameConfig) -> AiPlayer = { Ai.create(it.difficulty, variant = it.variant) },
+    /** Engine behind the Hint button: Hard strength, but a short think. */
+    private val hintFactory: (GameConfig) -> AiPlayer = { Ai.create(Difficulty.HARD, timeLimitMs = 1_200, variant = it.variant) },
     private val minAiDelayMs: Long = 450,
     /** Set for online games: the room you're seated in. */
     private val online: OnlineSession? = null,
@@ -136,6 +141,8 @@ class GameViewModel(
             GameIntent.Resign -> onlineOp { repo, code, seat -> repo.resign(code, seat) }
             GameIntent.OfferDraw -> onlineOp { repo, code, seat -> repo.offerDraw(code, seat) }
             GameIntent.ClaimAbandoned -> onlineOp { repo, code, seat -> repo.claimAbandoned(code, seat) }
+            GameIntent.Hint -> hint()
+            GameIntent.DismissIllegal -> _state.update { it.copy(illegal = null) }
         }
     }
 
@@ -148,10 +155,10 @@ class GameViewModel(
         if (node == null) { select(null); return }
         when {
             g.mustShoot -> {
-                if (ui.shootable and (1 shl node) != 0) commit(Action.Shoot(node)) else invalid()
+                if (ui.shootable and (1 shl node) != 0) commit(Action.Shoot(node)) else invalid(Action.Shoot(node))
             }
             g.handOf(g.toMove) > 0 -> {
-                if (g.at(node) == bw.mmele.engine.NodeState.EMPTY) commit(Action.Place(node)) else invalid()
+                if (g.at(node) == bw.mmele.engine.NodeState.EMPTY) commit(Action.Place(node)) else invalid(Action.Place(node))
             }
             else -> {
                 val sel = ui.selected
@@ -159,8 +166,9 @@ class GameViewModel(
                     sel != null && ui.targets and (1 shl node) != 0 -> commit(Action.Move(sel, node))
                     node == sel -> select(null)
                     ui.draggable and (1 shl node) != 0 -> { select(node); emit(FeedbackEvent.SELECT) }
-                    g.ownerAt(node) == g.toMove -> { select(null); invalid() } // own cow with no moves
-                    else -> { if (sel != null) select(null) else invalid() }
+                    g.ownerAt(node) == g.toMove -> { select(null); invalid(IllegalReason.COW_IS_STUCK) } // own cow with no moves
+                    sel != null -> { select(null); invalid(Action.Move(sel, node)) }
+                    else -> invalid(IllegalReason.NOT_YOUR_COW)
                 }
             }
         }
@@ -176,12 +184,39 @@ class GameViewModel(
         val ui = _state.value
         if (!ui.isHumanTurn) return
         if (to != null && Rules.isLegal(ui.game, Action.Move(from, to))) commit(Action.Move(from, to))
-        else { select(null); if (to == null) Unit else invalid() }
+        else { select(null); if (to == null || to == from) Unit else invalid(Action.Move(from, to)) }
     }
 
     private fun select(node: Int?) = _state.update { decorate(it.copy(selected = node)) }
 
     private fun invalid() = emit(FeedbackEvent.INVALID)
+
+    private var illegalSeq = 0
+
+    /** Buzz and say why [action] isn't allowed (reason from the engine). */
+    private fun invalid(action: Action) {
+        val why = Explain.whyIllegal(_state.value.game, action)
+        if (why == null) invalid() else invalid(why)
+    }
+
+    private fun invalid(reason: IllegalReason) {
+        invalid()
+        _state.update { it.copy(illegal = IllegalNotice(++illegalSeq, reason)) }
+    }
+
+    private var hintJob: Job? = null
+
+    /** Ask a strong engine for the side to move's best move; shown on the board until played. */
+    private fun hint() {
+        val ui = _state.value
+        if (!ui.canHint || ui.hinting) return
+        val g = ui.game
+        _state.update { it.copy(hinting = true) }
+        hintJob = viewModelScope.launch {
+            val best = withContext(aiDispatcher) { hintFactory(config).chooseAction(g) }
+            _state.update { if (it.game == g) decorate(it.copy(hint = best, hinting = false, illegal = null)) else it.copy(hinting = false) }
+        }
+    }
 
     private fun emit(e: FeedbackEvent) { _events.tryEmit(e) }
 
@@ -192,6 +227,7 @@ class GameViewModel(
         val ui = _state.value
         val g = ui.game
         if (g.isGameOver || !Rules.isLegal(g, action)) { invalid(); return }
+        hintJob?.cancel()
         if (online == null) history += Snapshot(g, ui.tokens, ui.lastMove, nextTokenId, ui.clockMs1, ui.clockMs2, action)
         val mover = g.toMove
         val next = Rules.apply(g, action)
@@ -238,7 +274,7 @@ class GameViewModel(
             decorate(
                 it.copy(
                     game = next, tokens = tokens, selected = null, lastMove = lastMove,
-                    millFlash = flash, shotFx = shot, canUndo = true,
+                    millFlash = flash, shotFx = shot, canUndo = true, hint = null, illegal = null,
                 ),
             )
         }
@@ -270,8 +306,12 @@ class GameViewModel(
             shootable = if (human) Interaction.shootableFor(g) else 0,
             draggable = if (human) Interaction.draggableFor(g) else 0,
             canUndo = history.isNotEmpty() && undoTarget() != null,
+            hint = ui.hint?.takeIf { human && Rules.isLegal(g, it) },
         )
     }
+
+    /** Every action of this game so far, in order (for the replay viewer). */
+    fun movesSoFar(): List<Action> = if (online != null) localMoves.map { it.action } else history.map { it.action }
 
     // ------------------------------------------------------------------ AI
 

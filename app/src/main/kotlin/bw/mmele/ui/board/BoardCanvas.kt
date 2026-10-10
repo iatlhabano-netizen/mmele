@@ -76,6 +76,7 @@ data class PointWords(
     val validMove: String = "valid move",
     val canBeShot: String = "can be shot",
     val canMove: String = "can move",
+    val hinted: String = "suggested by the hint",
     val separator: String = ", ",
 )
 
@@ -89,6 +90,7 @@ fun rememberPointWords(): PointWords {
         validMove = stringResource(R.string.a11y_valid_move),
         canBeShot = stringResource(R.string.a11y_can_be_shot),
         canMove = stringResource(R.string.a11y_can_move),
+        hinted = stringResource(R.string.a11y_hinted),
         separator = stringResource(R.string.a11y_list_separator),
     )
     return remember(w) { w }
@@ -98,6 +100,7 @@ fun rememberPointWords(): PointWords {
 fun pointDescription(
     label: String, ownerName: String?, selected: Boolean, target: Boolean, shootable: Boolean, movable: Boolean,
     words: PointWords = PointWords(),
+    hinted: Boolean = false,
 ): String {
     val parts = ArrayList<String>()
     parts += words.point.format(label, if (ownerName == null) words.empty else words.cow.format(ownerName))
@@ -105,6 +108,7 @@ fun pointDescription(
     if (target) parts += words.validMove
     if (shootable) parts += words.canBeShot
     if (movable) parts += words.canMove
+    if (hinted) parts += words.hinted
     return parts.joinToString(words.separator)
 }
 
@@ -176,6 +180,8 @@ fun BoardCanvas(
     lastMove: LastMove? = null,
     millFlash: MillFlash? = null,
     shotFx: ShotFx? = null,
+    /** Bitmask of points the hint suggests (the cow to move and where, or the cow to shoot). */
+    hint: Int = 0,
     interactive: Boolean = true,
     animate: Boolean = true,
     drawBackground: Boolean = true,
@@ -332,6 +338,13 @@ fun BoardCanvas(
             }
         }
 
+        // hint rings: white, so they read differently from the gold valid-move pulses
+        for (i in 0 until board.size) {
+            if (!bit(hint, i)) continue
+            val c = geo.px(i)
+            drawCircle(MmeleColors.Bone.copy(alpha = 0.55f + 0.4f * pulse), r * (1.18f + 0.1f * pulse), c, style = Stroke(geo.lineWidth * 1.8f))
+        }
+
         // tokens
         for (t in tokens) {
             if (d != null && t.node == d.from) continue
@@ -378,7 +391,7 @@ fun BoardCanvas(
             val label = pointDescription(
                 board.labels[i], owner?.let { if (it == Player.ONE) oneName else twoName },
                 selected = selected == i, target = bit(targets, i), shootable = bit(shootable, i),
-                movable = bit(draggable, i) && selected != i, words = words,
+                movable = bit(draggable, i) && selected != i, words = words, hinted = bit(hint, i),
             )
             Box(
                 Modifier

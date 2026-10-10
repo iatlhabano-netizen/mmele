@@ -1,5 +1,10 @@
 package bw.mmele.ui.game
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.runtime.saveable.rememberSaveable
+import bw.mmele.engine.Action
+import bw.mmele.engine.IllegalReason
+
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import bw.mmele.ui.labels.fact
@@ -75,7 +80,16 @@ fun GameRoute(viewModel: GameViewModel, feedback: FeedbackController?, onHome: (
     // Ask before abandoning a game that has started; finished or empty games leave straight away.
     val leave = { if (ui.game.isGameOver || ui.game.ply == 0 || ui.online?.waitingForOpponent == true) onHome() else confirmLeave = true }
     BackHandler(onBack = leave)
-    GameScreenContent(ui, viewModel::onIntent, leave, onShareCode = onShareCode)
+    var replay by rememberSaveable { mutableStateOf<String?>(null) }
+    GameScreenContent(
+        ui, viewModel::onIntent, leave, onShareCode = onShareCode,
+        onReplay = { replay = viewModel.movesSoFar().joinToString(",") { it.encode().toString() } },
+    )
+    replay?.let { enc ->
+        val moves = remember(enc) { enc.split(',').filter { it.isNotEmpty() }.map { Action.decode(it.toInt()) } }
+        BackHandler { replay = null }
+        ReplayViewer(ui.config, moves, onClose = { replay = null })
+    }
     if (confirmLeave) {
         AlertDialog(
             onDismissRequest = { confirmLeave = false },
@@ -98,6 +112,7 @@ fun GameScreenContent(
     onHome: () -> Unit,
     animate: Boolean = true,
     onShareCode: (String) -> Unit = {},
+    onReplay: () -> Unit = {},
 ) {
     val config = ui.config
     val bottom = if (config.mode == GameMode.PASS_AND_PLAY) Player.ONE else config.human
@@ -125,6 +140,7 @@ fun GameScreenContent(
                     lastMove = ui.lastMove,
                     millFlash = ui.millFlash,
                     shotFx = ui.shotFx,
+                    hint = hintMask(ui.hint),
                     interactive = ui.isHumanTurn,
                     animate = animate,
                     drawBackground = false,
@@ -147,7 +163,8 @@ fun GameScreenContent(
                     board(Modifier.weight(1f).fillMaxWidth())
                     PromptPill(ui, flipped = false, slot = bottom, modifier = Modifier.align(Alignment.CenterHorizontally).padding(bottom = 8.dp))
                     bottomHud(Modifier)
-                    ControlsRow(ui, onIntent, onHome)
+                    NoticePill(ui, onIntent, Modifier.align(Alignment.CenterHorizontally))
+                    ControlsRow(ui, onIntent, onHome, onReplay = onReplay)
                 }
             } else {
                 Row(Modifier.fillMaxSize().padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -155,10 +172,11 @@ fun GameScreenContent(
                         ui.online?.let { OnlineBar(it, onShareCode) { onIntent(GameIntent.ClaimAbandoned) } }
                         topHud(Modifier)
                         PromptPill(ui, flipped = false, slot = null, modifier = Modifier.align(Alignment.CenterHorizontally))
+                        NoticePill(ui, onIntent, Modifier.align(Alignment.CenterHorizontally))
                         bottomHud(Modifier)
                     }
                     board(Modifier.weight(1f).fillMaxHeight())
-                    Column(Modifier.width(120.dp)) { ControlsRow(ui, onIntent, onHome, vertical = true) }
+                    Column(Modifier.width(132.dp)) { ControlsRow(ui, onIntent, onHome, vertical = true, onReplay = onReplay) }
                 }
             }
         }
@@ -166,7 +184,69 @@ fun GameScreenContent(
         ui.online?.takeIf { it.opponentOffersDraw && !ui.game.isGameOver }?.let {
             DrawOfferBanner(onIntent, Modifier.align(Alignment.TopCenter).safeDrawingPadding().padding(top = 128.dp))
         }
-        if (ui.showGameOver) GameOverDialog(ui, onIntent, onHome)
+        if (ui.showGameOver) GameOverDialog(ui, onIntent, onHome, onReplay)
+    }
+}
+
+/** Points the hint marks: the cow and its destination, the point to place on, or the cow to shoot. */
+fun hintMask(a: Action?): Int = when (a) {
+    null -> 0
+    is Action.Place -> 1 shl a.to
+    is Action.Move -> (1 shl a.from) or (1 shl a.to)
+    is Action.Shoot -> 1 shl a.target
+}
+
+@androidx.annotation.StringRes
+fun IllegalReason.textRes(): Int = when (this) {
+    IllegalReason.GAME_OVER -> R.string.illegal_game_over
+    IllegalReason.MUST_SHOOT_FIRST -> R.string.illegal_must_shoot
+    IllegalReason.SHOOT_ENEMY_ONLY -> R.string.illegal_shoot_enemy
+    IllegalReason.PROTECTED_IN_MILL -> R.string.illegal_protected
+    IllegalReason.PLACE_FIRST -> R.string.illegal_place_first
+    IllegalReason.OCCUPIED -> R.string.illegal_occupied
+    IllegalReason.NOT_YOUR_COW -> R.string.illegal_not_your_cow
+    IllegalReason.DESTINATION_OCCUPIED -> R.string.illegal_destination_occupied
+    IllegalReason.SLIDE_ONLY -> R.string.illegal_slide_only
+    IllegalReason.STEP_OR_JUMP -> R.string.illegal_step_or_jump
+    IllegalReason.COW_IS_STUCK -> R.string.illegal_stuck
+    IllegalReason.NO_IMMEDIATE_REMILL -> R.string.illegal_remill
+}
+
+@Composable
+fun hintText(a: Action, board: bw.mmele.engine.BoardGraph): String = when (a) {
+    is Action.Place -> stringResource(R.string.game_hint_place, board.labels[a.to])
+    is Action.Move -> stringResource(R.string.game_hint_move, board.labels[a.from], board.labels[a.to])
+    is Action.Shoot -> stringResource(R.string.game_hint_shoot, board.labels[a.target])
+}
+
+/**
+ * Toast-style pill under the board: why a move was refused (fades after a few seconds), or the
+ * hint's suggestion. Spoken by TalkBack.
+ */
+@Composable
+private fun NoticePill(ui: GameUiState, onIntent: (GameIntent) -> Unit, modifier: Modifier = Modifier) {
+    val illegal = ui.illegal
+    LaunchedEffect(illegal?.id) {
+        if (illegal != null) { kotlinx.coroutines.delay(3_500); onIntent(GameIntent.DismissIllegal) }
+    }
+    val text = when {
+        illegal != null -> stringResource(illegal.reason.textRes())
+        ui.hint != null -> hintText(ui.hint, ui.game.board)
+        else -> null
+    }
+    AnimatedVisibility(text != null, enter = fadeIn(), exit = fadeOut(), modifier = modifier) {
+        Text(
+            text.orEmpty(),
+            style = MaterialTheme.typography.labelLarge,
+            color = if (illegal != null) MmeleColors.Slate else MmeleColors.Bone,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(vertical = 4.dp)
+                .semantics { liveRegion = LiveRegionMode.Polite }
+                .background(if (illegal != null) MmeleColors.Bone else MmeleColors.SlateHigh.copy(alpha = 0.95f), RoundedCornerShape(16.dp))
+                .border(1.dp, MmeleColors.Bone.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
+                .padding(horizontal = 14.dp, vertical = 8.dp),
+        )
     }
 }
 
@@ -219,11 +299,17 @@ fun promptText(ui: GameUiState): String {
     return if (ui.config.mode == GameMode.PASS_AND_PLAY) stringResource(R.string.prompt_who, playerName(g.toMove, ui.config), text) else text
 }
 
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 @Composable
-private fun ControlsRow(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> Unit, vertical: Boolean = false) {
+private fun ControlsRow(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> Unit, vertical: Boolean = false, onReplay: () -> Unit = {}) {
     val content = @Composable {
         TextButton(onClick = onHome) { Text(stringResource(R.string.nav_home), color = MmeleColors.BoneDim) }
         val online = ui.online
+        if (online == null && !ui.game.isGameOver) {
+            OutlinedButton(onClick = { onIntent(GameIntent.Hint) }, enabled = ui.canHint && !ui.hinting) {
+                Text(stringResource(if (ui.hinting) R.string.game_hint_thinking else R.string.game_hint))
+            }
+        }
         if (online == null) {
             OutlinedButton(onClick = { onIntent(GameIntent.Undo) }, enabled = ui.canUndo) { Text(stringResource(R.string.game_undo)) }
         } else if (!ui.game.isGameOver) {
@@ -236,16 +322,18 @@ private fun ControlsRow(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome:
             }
         }
         if (ui.game.isGameOver) {
+            OutlinedButton(onClick = onReplay) { Text(stringResource(R.string.game_replay)) }
             OutlinedButton(onClick = { onIntent(GameIntent.Rematch) }, enabled = online?.iOfferedRematch != true) { Text(rematchLabel(ui)) }
         }
     }
     if (vertical) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) { content() }
     } else {
-        Row(
+        // Wraps onto a second line at large font sizes instead of clipping.
+        androidx.compose.foundation.layout.FlowRow(
             Modifier.fillMaxWidth().padding(top = 6.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) { content() }
     }
 }
@@ -286,13 +374,13 @@ fun resultReason(ui: GameUiState): String = when (val r = ui.game.result) {
 }
 
 @Composable
-private fun GameOverDialog(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> Unit) {
-    Dialog(onDismissRequest = { onIntent(GameIntent.DismissGameOver) }) { GameOverCard(ui, onIntent, onHome) }
+private fun GameOverDialog(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> Unit, onReplay: () -> Unit = {}) {
+    Dialog(onDismissRequest = { onIntent(GameIntent.DismissGameOver) }) { GameOverCard(ui, onIntent, onHome, onReplay = onReplay) }
 }
 
 /** Game-over card: the scene at full strength with its caption, result, and rematch. */
 @Composable
-fun GameOverCard(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> Unit, modifier: Modifier = Modifier) {
+fun GameOverCard(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> Unit, modifier: Modifier = Modifier, onReplay: () -> Unit = {}) {
         Column(modifier.then(
             Modifier
                 .background(MmeleColors.SlateRaised, RoundedCornerShape(24.dp))
@@ -301,7 +389,7 @@ fun GameOverCard(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> 
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             SceneHeader(ui.config.scene)
-            GameOverBody(ui, onIntent, onHome)
+            GameOverBody(ui, onIntent, onHome, onReplay)
         }
 }
 
@@ -321,8 +409,9 @@ private fun SceneHeader(scene: bw.mmele.ui.scenes.Scene) {
     }
 }
 
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 @Composable
-private fun GameOverBody(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> Unit) {
+private fun GameOverBody(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> Unit, onReplay: () -> Unit) {
         Column(Modifier.padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             val r = ui.game.result
             if (r is GameResult.Win) PieceIcon(ui.config.styleOf(r.winner), Modifier.width(64.dp).height(64.dp), elevation = 0.8f)
@@ -337,9 +426,13 @@ private fun GameOverBody(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome
                 color = MmeleColors.BoneDim,
             )
             Spacer(Modifier.height(20.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            androidx.compose.foundation.layout.FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
                 TextButton(onClick = onHome) { Text(stringResource(R.string.nav_home)) }
                 TextButton(onClick = { onIntent(GameIntent.DismissGameOver) }) { Text(stringResource(R.string.result_view_board)) }
+                TextButton(onClick = { onIntent(GameIntent.DismissGameOver); onReplay() }) { Text(stringResource(R.string.game_replay)) }
                 androidx.compose.material3.Button(onClick = { onIntent(GameIntent.Rematch) }, enabled = ui.online?.iOfferedRematch != true) { Text(rematchLabel(ui)) }
             }
         }

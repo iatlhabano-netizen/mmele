@@ -1,5 +1,7 @@
 package bw.mmele.ui.game
 
+import bw.mmele.engine.IllegalReason
+
 import androidx.compose.runtime.Immutable
 import bw.mmele.engine.Action
 import bw.mmele.engine.GameState
@@ -50,7 +52,14 @@ data class GameUiState(
     val showGameOver: Boolean = false,
     /** Non-null only in online games. */
     val online: OnlineUi? = null,
+    /** Why the last tap/drop was refused; [IllegalNotice.id] changes so the same reason shows again. */
+    val illegal: IllegalNotice? = null,
+    /** The move the hint suggests for the side to move, until something is played. */
+    val hint: Action? = null,
+    val hinting: Boolean = false,
 ) {
+    /** Hints are for offline games (vs Computer, Pass & Play) on a human turn. */
+    val canHint: Boolean get() = online == null && isHumanTurn && !aiThinking
     val isHumanTurn: Boolean
         get() = !game.isGameOver && (config.mode == GameMode.PASS_AND_PLAY || game.toMove == config.human) &&
             (online == null || !online.waitingForOpponent)
@@ -69,7 +78,12 @@ sealed interface GameIntent {
     data object Resign : GameIntent
     data object OfferDraw : GameIntent
     data object ClaimAbandoned : GameIntent
+    data object Hint : GameIntent
+    data object DismissIllegal : GameIntent
 }
+
+@Immutable
+data class IllegalNotice(val id: Int, val reason: IllegalReason)
 
 /** Online-only status shown around the board. */
 @Immutable

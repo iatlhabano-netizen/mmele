@@ -179,6 +179,7 @@
     <string name="a11y_selected">selected</string>
     <string name="a11y_valid_move">valid move</string>
     <string name="a11y_can_be_shot">can be shot</string>
+    <string name="a11y_hinted">suggested by the hint</string>
     <string name="a11y_can_move">can move</string>
     <string name="a11y_choose">Choose</string>
     <string name="a11y_list_separator">", "</string>
@@ -278,4 +279,35 @@
     <string name="credit_art_body">Every board, scene, piece and sound is drawn or synthesised in code for Mmele. No third-party images, fonts or samples.</string>
     <string name="credit_translation">Setswana</string>
     <string name="credit_translation_body">Setswana translation drafted for Mmele. Corrections are welcome at the contact address.</string>
+
+    <!-- ===== Hint, replay, illegal moves ===== -->
+    <string name="game_hint">Hint</string>
+    <string name="game_hint_thinking">Thinking…</string>
+    <string name="game_hint_place">Hint: place on %1$s</string>
+    <string name="game_hint_move">Hint: move %1$s to %2$s</string>
+    <string name="game_hint_shoot">Hint: shoot the cow on %1$s</string>
+    <string name="game_replay">Replay</string>
+    <string name="replay_title">Replay</string>
+    <string name="replay_position">Move %1$d of %2$d</string>
+    <string name="replay_start">Start</string>
+    <string name="replay_back">Back one move</string>
+    <string name="replay_forward">Forward one move</string>
+    <string name="replay_end">End</string>
+    <string name="replay_close">Close replay</string>
+    <string name="replay_action_place">%1$s placed on %2$s</string>
+    <string name="replay_action_move">%1$s moved %2$s to %3$s</string>
+    <string name="replay_action_shoot">%1$s shot the cow on %2$s</string>
+    <string name="replay_start_position">Empty board</string>
+    <string name="illegal_game_over">The game is over.</string>
+    <string name="illegal_must_shoot">You formed a mill: shoot one of the opponent\'s cows first.</string>
+    <string name="illegal_shoot_enemy">Shoot one of the opponent\'s cows.</string>
+    <string name="illegal_protected">That cow is protected in a mill. Shoot one that isn\'t.</string>
+    <string name="illegal_place_first">Place all your cows before moving any.</string>
+    <string name="illegal_occupied">That point is taken. Place on an empty point.</string>
+    <string name="illegal_not_your_cow">Pick one of your own cows to move.</string>
+    <string name="illegal_destination_occupied">That point is taken. Move to an empty point.</string>
+    <string name="illegal_slide_only">That cow can only slide along a line to a connected empty point.</string>
+    <string name="illegal_step_or_jump">Step to a connected empty point, or jump over the middle cow into the empty end.</string>
+    <string name="illegal_stuck">That cow is boxed in. Try another one.</string>
+    <string name="illegal_remill">You can\'t move straight back to remake the mill you just broke.</string>
 </resources>
