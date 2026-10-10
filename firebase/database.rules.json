@@ -66,7 +66,7 @@
           }
         },
         "resigned": {
-          ".write": "auth != null && ((data.parent().child('phase').val() == 'playing') && ((newData.val() == 'one' && newData.parent().child('hostUid').val() == auth.uid) || (newData.val() == 'two' && newData.parent().child('guestUid').val() == auth.uid) || (newData.val() == 'two' && newData.parent().child('hostUid').val() == auth.uid && data.parent().child('connected/two').val() == false && data.parent().child('leftAt/two').val() + 90000 <= now) || (newData.val() == 'one' && newData.parent().child('guestUid').val() == auth.uid && data.parent().child('connected/one').val() == false && data.parent().child('leftAt/one').val() + 90000 <= now))) || (auth != null && !newData.exists() && data.parent().child('phase').val().matches(/^(finished|abandoned)$/) && newData.parent().child('phase').val() == 'playing' && !newData.parent().child('moves').exists() && (newData.parent().child('hostUid').val() == auth.uid || newData.parent().child('guestUid').val() == auth.uid))",
+          ".write": "auth != null && ((data.parent().child('phase').val() == 'playing') && ((newData.val() == 'one' && newData.parent().child('hostUid').val() == auth.uid) || (newData.val() == 'two' && newData.parent().child('guestUid').val() == auth.uid) || (newData.val() == 'two' && newData.parent().child('hostUid').val() == auth.uid && data.parent().child('connected/two').val() == false && data.parent().child('leftAt/two').val() + 90000 <= now) || (newData.val() == 'one' && newData.parent().child('guestUid').val() == auth.uid && data.parent().child('connected/one').val() == false && data.parent().child('leftAt/one').val() + 90000 <= now) || (newData.val() == 'two' && newData.parent().child('hostUid').val() == auth.uid && data.parent().child('toMove').val() == 'two' && data.parent().child('lastMoveAt').val() + 300000 <= now) || (newData.val() == 'one' && newData.parent().child('guestUid').val() == auth.uid && data.parent().child('toMove').val() == 'one' && data.parent().child('lastMoveAt').val() + 300000 <= now))) || (auth != null && !newData.exists() && data.parent().child('phase').val().matches(/^(finished|abandoned)$/) && newData.parent().child('phase').val() == 'playing' && !newData.parent().child('moves').exists() && (newData.parent().child('hostUid').val() == auth.uid || newData.parent().child('guestUid').val() == auth.uid))",
           ".validate": "newData.val().matches(/^(one|two)$/)"
         },
         "offers": {
@@ -105,6 +105,14 @@
               ".validate": "newData.isString() && newData.val().matches(/^(P[|][0-9]{1,2}|M[|][0-9]{1,2}[|][0-9]{1,2}|S[|][0-9]{1,2})$/) && (!data.exists() || data.val() == newData.val())"
             }
           }
+        },
+        "lastMoveAt": {
+          ".write": "auth != null && (newData.parent().child('hostUid').val() == auth.uid || newData.parent().child('guestUid').val() == auth.uid)",
+          ".validate": "newData.isNumber() && newData.val() == now && (newData.parent().child('moveCount').val() != data.parent().child('moveCount').val() || (newData.parent().child('phase').val() == 'playing' && data.parent().child('phase').val() != 'playing'))"
+        },
+        "toMove": {
+          ".write": "auth != null && (newData.parent().child('hostUid').val() == auth.uid || newData.parent().child('guestUid').val() == auth.uid)",
+          ".validate": "newData.val().matches(/^(one|two)$/) && (!data.exists() || newData.val() == data.val() || newData.parent().child('moveCount').val() != data.parent().child('moveCount').val())"
         },
         "$other": {
           ".validate": false

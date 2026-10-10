@@ -5,7 +5,9 @@
  */
 import { initializeApp } from "firebase/app";
 import { getAuth, signInAnonymously, connectAuthEmulator } from "firebase/auth";
-import { getDatabase, ref, set, update, get, connectDatabaseEmulator } from "firebase/database";
+import { getDatabase, ref, set, update, get, serverTimestamp, connectDatabaseEmulator } from "firebase/database";
+import { initializeApp as adminApp } from "firebase-admin/app";
+import { getDatabase as adminDb } from "firebase-admin/database";
 
 const app = initializeApp({ apiKey: "demo", authDomain: "demo-mmele.firebaseapp.com", databaseURL: "http://127.0.0.1:9000/?ns=demo-mmele-default-rtdb", projectId: "demo-mmele" });
 const auth = getAuth(app);
@@ -119,6 +121,24 @@ async function main() {
   await expect("guest joins ABC238", true, update(ref(gdb, "rooms/ABC238"), { guestUid: guest.uid, "connected/two": true, phase: "playing", updatedAt: Date.now() }));
   await expect("guest may delete a room it plays in", true, set(ref(gdb, "rooms/ABC238"), null));
   await expect("delete is not a back door to overwrite", false, set(sroom("ABC239"), { ...base("x"), phase: "finished" }));
+
+  // ---- idle claim: the player to move sits for 5 minutes without moving ----
+  // (lastMoveAt must be server "now" when written, so the admin SDK backdates it, as time passing would.)
+  const admin = adminDb(adminApp({ projectId: "demo-mmele", databaseURL: `http://${process.env.FIREBASE_DATABASE_EMULATOR_HOST ?? "127.0.0.1:9000"}/?ns=demo-mmele-default-rtdb` }, "rules-admin"));
+  await expect("host creates idle-test room", true, set(room("WAT234"), base(hostUid)));
+  const iroom = (path = "") => ref(gdb, `rooms/WAT234${path ? "/" + path : ""}`);
+  await expect("guest joins with the idle clock", true, update(iroom(), { guestUid: guest.uid, "connected/two": true, phase: "playing", updatedAt: serverTimestamp(), lastMoveAt: serverTimestamp(), toMove: "one" }));
+  await expect("lastMoveAt must be server time", false, update(room("WAT234"), { "moves/0": { by: "one", m: "P|3" }, moveCount: 1, lastMoveAt: Date.now() - 400000, toMove: "two" }));
+  await expect("host moves and hands the turn over", true, update(room("WAT234"), { "moves/0": { by: "one", m: "P|3" }, moveCount: 1, lastMoveAt: serverTimestamp(), toMove: "two" }));
+  await expect("guest cannot reset the idle clock without moving", false, update(iroom(), { lastMoveAt: serverTimestamp() }));
+  await expect("guest cannot take the turn back without moving", false, update(iroom(), { toMove: "one" }));
+  await expect("host cannot claim before 5 minutes", false, update(room("WAT234"), { resigned: "two", phase: "abandoned" }));
+  await admin.ref("rooms/WAT234/lastMoveAt").set(Date.now() - 301000);
+  await expect("guest (to move) cannot claim on the idle clock", false, update(iroom(), { resigned: "one", phase: "abandoned" }));
+  await expect("host claims after 5 idle minutes, guest still connected", true, update(room("WAT234"), { resigned: "two", phase: "abandoned" }));
+  // The idle player can't dodge by flipping connection: the claim doesn't depend on presence.
+  await admin.ref("rooms/WAT235").set({ ...base(hostUid), guestUid: guest.uid, phase: "playing", connected: { one: true, two: true }, moveCount: 1, moves: { 0: { by: "one", m: "P|1" } }, toMove: "one", lastMoveAt: Date.now() - 400000 });
+  await expect("guest claims when the host is the idle one (toMove one)", true, update(ref(gdb, "rooms/WAT235"), { resigned: "one", phase: "abandoned" }));
 
   await expect("unauthenticated write denied", false, (async () => { await auth.signOut(); await update(room("ABC234"), { phase: "playing" }); })());
 

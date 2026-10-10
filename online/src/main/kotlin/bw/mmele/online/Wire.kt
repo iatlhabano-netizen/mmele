@@ -90,6 +90,8 @@ object Wire {
         ),
         "moves" to room.moves.associate { it.ply.toString() to mapOf("by" to seatName(it.seat), "m" to encodeAction(it.seat, it.action).substringAfter('|')) }.ifEmpty { null },
         "moveCount" to room.moves.size,
+        "lastMoveAt" to room.lastMoveAtMs.takeIf { it > 0 },
+        "toMove" to RoomRules.toMove(room)?.let { seatName(it) },
     )
 
     /** Parse a database value back. Unknown shapes return null rather than throwing. */
@@ -144,6 +146,7 @@ object Wire {
             offers = offers,
             updatedAtMs = (value["updatedAt"] as? Number)?.toLong() ?: 0,
             leftAtMs = left,
+            lastMoveAtMs = (value["lastMoveAt"] as? Number)?.toLong() ?: 0,
         )
     }
 }

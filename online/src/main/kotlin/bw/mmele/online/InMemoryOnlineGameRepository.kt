@@ -55,6 +55,7 @@ class InMemoryOnlineGameRepository(
     override suspend fun offerDraw(code: String, seat: Seat) = apply(code) { RoomRules.offerDraw(it, seat, clock()) }
     override suspend fun offerRematch(code: String, seat: Seat) = apply(code) { RoomRules.offerRematch(it, seat, clock()) }
     override suspend fun claimAbandoned(code: String, seat: Seat) = apply(code) { RoomRules.claimAbandoned(it, seat, clock()) }
+    override suspend fun claimIdle(code: String, seat: Seat) = apply(code) { RoomRules.claimIdle(it, seat, clock()) }
 
     override suspend fun disconnect(code: String, seat: Seat) {
         store.mutate<Unit> { rooms ->

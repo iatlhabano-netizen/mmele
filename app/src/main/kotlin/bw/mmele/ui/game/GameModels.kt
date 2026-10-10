@@ -78,6 +78,7 @@ sealed interface GameIntent {
     data object Resign : GameIntent
     data object OfferDraw : GameIntent
     data object ClaimAbandoned : GameIntent
+    data object ClaimIdle : GameIntent
     data object Hint : GameIntent
     data object DismissIllegal : GameIntent
 }
@@ -97,6 +98,10 @@ data class OnlineUi(
     val opponentOffersRematch: Boolean = false,
     /** Seconds until you may claim the win because the opponent left; null while they're here. */
     val abandonSecondsLeft: Int? = null,
+    /** Opponent's turn: seconds until you may claim because they haven't moved (0 = claim now). */
+    val idleClaimSecondsLeft: Int? = null,
+    /** Your turn: seconds before the opponent may claim the game; set only in the last two minutes. */
+    val myIdleSecondsLeft: Int? = null,
     /** A move is on its way to the server. */
     val syncing: Boolean = false,
     val message: OnlineMessage? = null,

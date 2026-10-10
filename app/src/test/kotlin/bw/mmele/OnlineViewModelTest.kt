@@ -7,6 +7,9 @@ import bw.mmele.engine.Player
 import bw.mmele.engine.Variant
 import bw.mmele.engine.WinReason
 import bw.mmele.online.InMemoryOnlineGameRepository
+import kotlinx.coroutines.cancel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.test.advanceTimeBy
 import bw.mmele.online.OnlineSession
 import bw.mmele.online.RoomConfig
 import bw.mmele.online.RoomRules
@@ -62,6 +65,27 @@ class OnlineViewModelTest {
         val guest = GameViewModel(guestSession.configFor(Scene.OKAVANGO), online = guestSession, now = { clock })
         runCurrent()
         return host to guest
+    }
+
+    @Test fun idlePlayerSeesACountdownAndTheOpponentCanClaim() = runTest(dispatcher) {
+        val (host, guest) = pair()
+        host.onIntent(GameIntent.NodeTapped(c("a7")))
+        runCurrent()
+        // Guest to move and idle: no warning yet, then a countdown in the last two minutes.
+        assertNull(guest.state.value.online!!.myIdleSecondsLeft)
+        clock += RoomRules.IDLE_CLAIM_AFTER_MS - 90_000
+        guestRepo.offerDraw(guest.state.value.online!!.code, Seat.TWO) // any room update refreshes both phones
+        runCurrent()
+        assertEquals(90, guest.state.value.online!!.myIdleSecondsLeft)
+        assertTrue(host.state.value.online!!.idleClaimSecondsLeft!! in 89..90)
+        clock += 90_000
+        guestRepo.reconnect(guest.state.value.online!!.code, Seat.TWO)
+        runCurrent()
+        assertEquals(0, host.state.value.online!!.idleClaimSecondsLeft)
+        host.onIntent(GameIntent.ClaimIdle)
+        runCurrent()
+        assertEquals(GameResult.Win(Player.ONE, WinReason.ABANDONED), guest.state.value.game.result)
+        host.viewModelScope.cancel(); guest.viewModelScope.cancel()
     }
 
     @Test fun movesSyncBothWaysAndTurnsAreEnforced() = runTest(dispatcher) {

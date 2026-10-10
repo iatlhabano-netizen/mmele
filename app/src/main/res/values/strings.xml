@@ -136,6 +136,8 @@
     <string name="online_sending">sending…</string>
     <string name="online_share_action">share room code</string>
     <string name="online_away_too_long">Your opponent has been away too long.</string>
+    <string name="online_idle_claim">Your opponent hasn\'t moved for 5 minutes.</string>
+    <string name="online_idle_warning">Your move: %1$s left before your opponent can claim the game</string>
     <string name="online_claim_win">Claim win</string>
     <string name="online_room_code">ROOM CODE</string>
     <string name="online_send_code">Send this code to a friend. The game starts as soon as they join.</string>

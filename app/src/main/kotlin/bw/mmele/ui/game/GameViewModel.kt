@@ -141,6 +141,7 @@ class GameViewModel(
             GameIntent.Resign -> onlineOp { repo, code, seat -> repo.resign(code, seat) }
             GameIntent.OfferDraw -> onlineOp { repo, code, seat -> repo.offerDraw(code, seat) }
             GameIntent.ClaimAbandoned -> onlineOp { repo, code, seat -> repo.claimAbandoned(code, seat) }
+            GameIntent.ClaimIdle -> onlineOp { repo, code, seat -> repo.claimIdle(code, seat) }
             GameIntent.Hint -> hint()
             GameIntent.DismissIllegal -> _state.update { it.copy(illegal = null) }
         }
@@ -625,17 +626,36 @@ class GameViewModel(
         val r = room ?: return
         val ui = onlineUi(r)
         _state.update { decorate(it.copy(online = ui)) }
-        // Tick the "opponent disconnected" countdown only while it matters.
-        if (ui.abandonSecondsLeft != null && ui.abandonSecondsLeft > 0 && countdownJob?.isActive != true) {
+        // Countdowns (opponent disconnected, idle claim) tick once a second while what they show
+        // changes; an idle clock still far off sleeps until its warning window. Any room update
+        // restarts this, so a frozen clock (tests) simply lets the job end.
+        countdownJob?.cancel()
+        run {
+            val wait = nextTickMs(r) ?: return
             countdownJob = viewModelScope.launch {
+                var delayMs = wait
                 while (isActive) {
-                    delay(1000)
-                    val left = room?.let { RoomRules.abandonCountdown(it, online!!.seat, now()) }
+                    delay(delayMs)
+                    val before = _state.value.online
                     refreshOnlineState()
-                    if (left == null || left <= 0) break
+                    val cur = room ?: break
+                    val abandoning = RoomRules.abandonCountdown(cur, online!!.seat, now())?.let { it > 0 } == true
+                    if (!abandoning && _state.value.online == before) break
+                    delayMs = nextTickMs(cur) ?: break
                 }
             }
         }
+    }
+
+    /** Milliseconds until a visible countdown next changes, or null if none is running. */
+    private fun nextTickMs(r: RoomSnapshot): Long? {
+        val seat = online?.seat ?: return null
+        val t = now()
+        val abandon = RoomRules.abandonCountdown(r, seat, t)
+        if (abandon != null && abandon > 0) return 1_000
+        val idle = RoomRules.idleCountdown(r, seat, t) ?: RoomRules.idleCountdown(r, seat.other, t) ?: return null
+        if (idle <= 0) return null
+        return if (idle > RoomRules.IDLE_WARNING_MS) idle - RoomRules.IDLE_WARNING_MS else 1_000
     }
 
     private fun refreshOnlineState() {
@@ -656,6 +676,9 @@ class GameViewModel(
             iOfferedRematch = r.offers.any { it.seat == seat && it.kind == OfferKind.REMATCH },
             opponentOffersRematch = r.offers.any { it.seat == opp && it.kind == OfferKind.REMATCH },
             abandonSecondsLeft = left?.let { ((it + 999) / 1000).toInt() },
+            idleClaimSecondsLeft = RoomRules.idleCountdown(r, seat, now())?.let { ((it + 999) / 1000).toInt() },
+            myIdleSecondsLeft = RoomRules.idleCountdown(r, opp, now())
+                ?.takeIf { it <= RoomRules.IDLE_WARNING_MS }?.let { ((it + 999) / 1000).toInt() },
             syncing = pendingSubmits > 0,
             message = message,
         )

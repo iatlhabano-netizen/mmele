@@ -34,6 +34,9 @@ interface OnlineGameRepository {
     /** Claim the win after the opponent has been away for [RoomRules.ABANDON_AFTER_MS]. */
     suspend fun claimAbandoned(code: String, seat: Seat): SubmitResult
 
+    /** Claim the win after the opponent, whose turn it is, hasn't moved for [RoomRules.IDLE_CLAIM_AFTER_MS]. */
+    suspend fun claimIdle(code: String, seat: Seat): SubmitResult
+
     /** Tell the room this seat's app is backgrounded or gone. */
     suspend fun disconnect(code: String, seat: Seat)
 

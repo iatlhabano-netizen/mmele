@@ -162,6 +162,41 @@ class OnlineRoomTest {
         assertEquals(GameResult.Win(Player.ONE, WinReason.ABANDONED), RoomRules.resultOf(room))
     }
 
+    @Test fun idlePlayerToMoveCanBeClaimedAfterFiveMinutes() = runTest {
+        val code = host.createRoom(RoomConfig()).code
+        guest.joinRoom(code)
+        // Host to move first: the guest may claim if the host sits idle, the host may not.
+        assertNull(RoomRules.idleCountdown(store.peek(code)!!, Seat.ONE, now))
+        assertEquals(RoomRules.IDLE_CLAIM_AFTER_MS, RoomRules.idleCountdown(store.peek(code)!!, Seat.TWO, now))
+        now += 60_000
+        host.submitMove(code, Seat.ONE, Action.Place(c("a7")))
+        // A move restarts the clock and passes the turn.
+        assertEquals(RoomRules.IDLE_CLAIM_AFTER_MS, RoomRules.idleCountdown(store.peek(code)!!, Seat.ONE, now))
+        assertNull(RoomRules.idleCountdown(store.peek(code)!!, Seat.TWO, now))
+        // Reconnect/offers don't reset it: only a move does.
+        guest.offerDraw(code, Seat.TWO)
+        now += RoomRules.IDLE_CLAIM_AFTER_MS - 1
+        assertTrue(host.claimIdle(code, Seat.ONE) is SubmitResult.Rejected)
+        assertTrue("the idle player can't claim", guest.claimIdle(code, Seat.TWO) is SubmitResult.Rejected)
+        now += 1
+        assertTrue(host.claimIdle(code, Seat.ONE) is SubmitResult.Accepted)
+        val room = store.peek(code)!!
+        assertEquals(GameResult.Win(Player.ONE, WinReason.ABANDONED), RoomRules.resultOf(room))
+    }
+
+    @Test fun millKeepsTheTurnForTheShotOnTheIdleClock() = runTest {
+        val code = host.createRoom(RoomConfig()).code
+        guest.joinRoom(code)
+        for ((seat, l) in listOf(Seat.ONE to "a7", Seat.TWO to "a1", Seat.ONE to "d7", Seat.TWO to "g1", Seat.ONE to "g7")) {
+            (if (seat == Seat.ONE) host else guest).submitMove(code, seat, Action.Place(c(l)))
+        }
+        // Host made a mill and must shoot: still the host's turn, so the host can't claim.
+        assertEquals(Seat.ONE, RoomRules.toMove(store.peek(code)!!))
+        now += RoomRules.IDLE_CLAIM_AFTER_MS
+        assertTrue(host.claimIdle(code, Seat.ONE) is SubmitResult.Rejected)
+        assertTrue(guest.claimIdle(code, Seat.TWO) is SubmitResult.Accepted)
+    }
+
     @Test fun corruptMoveListIsDetected() {
         val bad = RoomSnapshot(
             code = "ABCDEF", config = RoomConfig(), phase = RoomPhase.PLAYING,
@@ -205,5 +240,6 @@ class OnlineRoomTest {
         val rules = java.io.File("../firebase/database.rules.json").readText()
         assertTrue(rules.contains("now - ${RoomRules.RETENTION_DAYS * 86_400_000L}"))
         assertTrue(java.io.File("../firebase/purge.mjs").readText().contains("--days N (default ${RoomRules.RETENTION_DAYS})"))
+        assertTrue(rules.contains("lastMoveAt').val() + ${RoomRules.IDLE_CLAIM_AFTER_MS} <= now"))
     }
 }

@@ -138,6 +138,12 @@ class FirebaseOnlineGameRepository(
         return write(code, RtdbPayloads.offerRematch(r.room, seat), r)
     }
 
+    override suspend fun claimIdle(code: String, seat: Seat): SubmitResult {
+        val r = RoomRules.claimIdle(read(code), seat, System.currentTimeMillis())
+        if (r !is SubmitResult.Accepted) return r
+        return write(code, RtdbPayloads.claimIdle(seat), r)
+    }
+
     override suspend fun claimAbandoned(code: String, seat: Seat): SubmitResult {
         val r = RoomRules.claimAbandoned(read(code), seat, System.currentTimeMillis())
         if (r !is SubmitResult.Accepted) return r

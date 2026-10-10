@@ -157,7 +157,7 @@ fun GameScreenContent(
             }
             if (!landscape) {
                 Column(Modifier.fillMaxSize().padding(horizontal = 12.dp, vertical = 8.dp)) {
-                    ui.online?.let { OnlineBar(it, onShareCode, Modifier.padding(bottom = 6.dp)) { onIntent(GameIntent.ClaimAbandoned) } }
+                    ui.online?.let { OnlineBar(it, onShareCode, Modifier.padding(bottom = 6.dp), onClaimIdle = { onIntent(GameIntent.ClaimIdle) }) { onIntent(GameIntent.ClaimAbandoned) } }
                     topHud(Modifier)
                     PromptPill(ui, flipped = rotateTop, slot = top, modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 8.dp))
                     board(Modifier.weight(1f).fillMaxWidth())
@@ -169,7 +169,7 @@ fun GameScreenContent(
             } else {
                 Row(Modifier.fillMaxSize().padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.width(280.dp).fillMaxHeight(), verticalArrangement = Arrangement.SpaceBetween) {
-                        ui.online?.let { OnlineBar(it, onShareCode) { onIntent(GameIntent.ClaimAbandoned) } }
+                        ui.online?.let { OnlineBar(it, onShareCode, onClaimIdle = { onIntent(GameIntent.ClaimIdle) }) { onIntent(GameIntent.ClaimAbandoned) } }
                         topHud(Modifier)
                         PromptPill(ui, flipped = false, slot = null, modifier = Modifier.align(Alignment.CenterHorizontally))
                         NoticePill(ui, onIntent, Modifier.align(Alignment.CenterHorizontally))
@@ -453,7 +453,7 @@ fun rematchLabel(ui: GameUiState): String {
 
 /** Room code, connection dot, and transient messages for online games. */
 @Composable
-private fun OnlineBar(o: OnlineUi, onShareCode: (String) -> Unit, modifier: Modifier = Modifier, onClaim: () -> Unit = {}) {
+private fun OnlineBar(o: OnlineUi, onShareCode: (String) -> Unit, modifier: Modifier = Modifier, onClaimIdle: () -> Unit = {}, onClaim: () -> Unit = {}) {
     Column(modifier.fillMaxWidth()) {
         Row(
             Modifier
@@ -481,6 +481,21 @@ private fun OnlineBar(o: OnlineUi, onShareCode: (String) -> Unit, modifier: Modi
         }
         if (o.abandonSecondsLeft == 0) {
             ClaimRow(onClaim)
+        } else if (o.idleClaimSecondsLeft == 0) {
+            ClaimRow(onClaimIdle, R.string.online_idle_claim)
+        }
+        o.myIdleSecondsLeft?.let { s ->
+            Text(
+                stringResource(R.string.online_idle_warning, "%d:%02d".format(s / 60, s % 60)),
+                style = MaterialTheme.typography.labelLarge,
+                color = MmeleColors.Slate,
+                modifier = Modifier
+                    .padding(top = 4.dp)
+                    .fillMaxWidth()
+                    .semantics { liveRegion = LiveRegionMode.Polite }
+                    .background(MmeleColors.Gold, RoundedCornerShape(10.dp))
+                    .padding(horizontal = 10.dp, vertical = 6.dp),
+            )
         }
         o.message?.let { msg ->
             Text(msg.text(), style = MaterialTheme.typography.labelMedium, color = MmeleColors.GoldBright, modifier = Modifier.padding(top = 4.dp, start = 4.dp))
@@ -489,10 +504,10 @@ private fun OnlineBar(o: OnlineUi, onShareCode: (String) -> Unit, modifier: Modi
 }
 
 @Composable
-private fun ClaimRow(onClaim: () -> Unit) {
+private fun ClaimRow(onClaim: () -> Unit, @androidx.annotation.StringRes why: Int = R.string.online_away_too_long) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 4.dp, start = 4.dp)) {
         Text(
-            stringResource(R.string.online_away_too_long),
+            stringResource(why),
             style = MaterialTheme.typography.labelMedium,
             color = MmeleColors.Bone,
             modifier = Modifier.weight(1f),

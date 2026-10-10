@@ -22,6 +22,8 @@ object RtdbPayloads {
         "connected/two" to true,
         "phase" to Wire.PHASE_PLAYING,
         "updatedAt" to SERVER_TIME,
+        "lastMoveAt" to SERVER_TIME,
+        "toMove" to "one",
     )
 
     fun reconnect(seat: Seat): Map<String, Any?> {
@@ -41,7 +43,10 @@ object RtdbPayloads {
             "moves/$n" to mapOf("by" to Wire.seatName(seat), "m" to Wire.encodeAction(seat, action).substringAfter('|')),
             "moveCount" to n + 1,
             "updatedAt" to SERVER_TIME,
+            "lastMoveAt" to SERVER_TIME,
         )
+        // Whose turn it is next (a mill keeps the turn for the shot); the idle-claim rule reads it.
+        RoomRules.toMove(after)?.let { m["toMove"] = Wire.seatName(it) }
         if (after.phase == RoomPhase.FINISHED) m["phase"] = Wire.PHASE_FINISHED
         else if (before.offers.any { it.kind == OfferKind.DRAW }) m["offers/draw"] = null
         return m
@@ -58,10 +63,17 @@ object RtdbPayloads {
 
     fun offerRematch(after: RoomSnapshot, seat: Seat): Map<String, Any?> =
         if (after.phase == RoomPhase.PLAYING) {
-            mapOf("moves" to null, "moveCount" to 0, "resigned" to null, "offers" to null, "phase" to Wire.PHASE_PLAYING, "updatedAt" to SERVER_TIME)
+            mapOf(
+                "moves" to null, "moveCount" to 0, "resigned" to null, "offers" to null, "phase" to Wire.PHASE_PLAYING,
+                "updatedAt" to SERVER_TIME, "lastMoveAt" to SERVER_TIME, "toMove" to "one",
+            )
         } else {
             mapOf("offers/rematch/${Wire.seatName(seat)}" to true, "updatedAt" to SERVER_TIME)
         }
+
+    /** Same shape as an abandon claim; the rules accept it on the idle clock instead. */
+    fun claimIdle(claimant: Seat): Map<String, Any?> =
+        mapOf("resigned" to Wire.seatName(claimant.other), "phase" to Wire.PHASE_ABANDONED, "updatedAt" to SERVER_TIME)
 
     fun claimAbandoned(claimant: Seat): Map<String, Any?> =
         mapOf("resigned" to Wire.seatName(claimant.other), "phase" to Wire.PHASE_ABANDONED, "updatedAt" to SERVER_TIME)

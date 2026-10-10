@@ -55,6 +55,8 @@ data class RoomSnapshot(
     val updatedAtMs: Long = 0,
     /** When each absent seat dropped off (server time). Cleared on reconnect. */
     val leftAtMs: Map<Seat, Long> = emptyMap(),
+    /** Server time of the last move (or of the game's start): the idle-claim clock. */
+    val lastMoveAtMs: Long = 0,
 ) {
     /** Replay the move list. Throws if the list is internally inconsistent (corrupt room). */
     fun replay(): bw.mmele.engine.GameState {
@@ -79,6 +81,15 @@ object RoomRules {
     /** A room with nobody connected for this long is abandoned. */
     const val ABANDON_AFTER_MS = 90_000L
 
+    /**
+     * A player who doesn't move for this long (connected or not) lets the opponent claim the game.
+     * Enforced by the security rules too (lastMoveAt + 300000 <= now, toMove = the idle seat).
+     */
+    const val IDLE_CLAIM_AFTER_MS = 300_000L
+
+    /** The idle player sees a countdown for this last stretch. */
+    const val IDLE_WARNING_MS = 120_000L
+
     /** Rooms idle this long may be deleted by anyone (security rules) and by firebase/purge.mjs. */
     const val RETENTION_DAYS = 30
 
@@ -95,6 +106,7 @@ object RoomRules {
             connected = room.connected + Seat.TWO,
             phase = if (room.phase == RoomPhase.LOBBY) RoomPhase.PLAYING else room.phase,
             updatedAtMs = now,
+            lastMoveAtMs = if (room.phase == RoomPhase.LOBBY) now else room.lastMoveAtMs,
         )
         return SubmitResult.Accepted(next)
     }
@@ -122,6 +134,29 @@ object RoomRules {
         return SubmitResult.Accepted(room.copy(phase = RoomPhase.ABANDONED, resigned = claimant.other, updatedAtMs = now))
     }
 
+    /** Seat whose turn it is in a playing room (null if the room isn't playing or the game is over). */
+    fun toMove(room: RoomSnapshot): Seat? {
+        if (room.phase != RoomPhase.PLAYING) return null
+        val g = runCatching { room.replay() }.getOrNull() ?: return null
+        if (g.isGameOver) return null
+        return if (g.toMove == bw.mmele.engine.Player.ONE) Seat.ONE else Seat.TWO
+    }
+
+    /**
+     * Milliseconds until [claimant] may claim the game because the other seat, whose turn it is,
+     * hasn't moved; null when it's [claimant]'s own turn or the room isn't playing.
+     */
+    fun idleCountdown(room: RoomSnapshot, claimant: Seat, now: Long): Long? {
+        if (room.lastMoveAtMs <= 0 || toMove(room) != claimant.other) return null
+        return (room.lastMoveAtMs + IDLE_CLAIM_AFTER_MS - now).coerceAtLeast(0)
+    }
+
+    fun claimIdle(room: RoomSnapshot, claimant: Seat, now: Long): SubmitResult {
+        val left = idleCountdown(room, claimant, now) ?: return SubmitResult.Rejected("it's your move")
+        if (left > 0) return SubmitResult.Rejected("wait ${left / 1000}s")
+        return SubmitResult.Accepted(room.copy(phase = RoomPhase.ABANDONED, resigned = claimant.other, updatedAtMs = now))
+    }
+
     fun submit(room: RoomSnapshot, seat: Seat, action: Action, now: Long): SubmitResult {
         if (room.phase != RoomPhase.PLAYING) return SubmitResult.Rejected("not playing")
         if (seat !in room.connected) return SubmitResult.Rejected("seat disconnected")
@@ -137,6 +172,7 @@ object RoomRules {
                 phase = if (after.isGameOver) RoomPhase.FINISHED else RoomPhase.PLAYING,
                 offers = emptyList(), // a move withdraws pending draw offers
                 updatedAtMs = now,
+                lastMoveAtMs = now,
             ),
         )
     }
@@ -165,7 +201,7 @@ object RoomRules {
         if (room.offers.any { it.kind == OfferKind.REMATCH && it.seat == seat.other }) {
             // Both agreed: a fresh game in the same room, same seats.
             return SubmitResult.Accepted(
-                room.copy(phase = RoomPhase.PLAYING, moves = emptyList(), resigned = null, offers = emptyList(), updatedAtMs = now),
+                room.copy(phase = RoomPhase.PLAYING, moves = emptyList(), resigned = null, offers = emptyList(), updatedAtMs = now, lastMoveAtMs = now),
             )
         }
         val offers = room.offers.filterNot { it.kind == OfferKind.REMATCH } + Offer(seat, OfferKind.REMATCH)
