@@ -8,9 +8,15 @@ import kotlin.random.Random
 
 data class SearchConfig(
     val maxDepth: Int,
+    /** Safety cap in wall time (slow phones); the search returns its best completed iteration. */
     val timeLimitMs: Long,
     val useTranspositionTable: Boolean,
     val evaluator: Evaluator,
+    /**
+     * Work budget in search nodes: the main limit, so a difficulty plays the same on a fast and a
+     * slow phone (only the time cap differs). Long.MAX_VALUE = time cap only.
+     */
+    val nodeBudget: Long = Long.MAX_VALUE,
 )
 
 /**
@@ -50,6 +56,10 @@ class SearchAi(private val config: SearchConfig, private val random: Random) : A
     var lastSearchComplete = true
         private set
 
+    /** Score of the chosen move at the last completed depth, from the mover's point of view. */
+    var lastScore = 0
+        private set
+
     /** Synchronized: the search keeps per-instance scratch state (TT, counters). */
     @Synchronized
     override fun chooseAction(state: GameState, shouldStop: () -> Boolean): Action {
@@ -85,13 +95,14 @@ class SearchAi(private val config: SearchConfig, private val random: Random) : A
                     if (score > alpha || bestHere == null) { alpha = maxOf(alpha, score); bestHere = a }
                 }
                 best = bestHere!!
+                lastScore = alpha
                 lastDepthCompleted = depth
                 ordered = ordered.sortedByDescending { scores[it] ?: -INF }
                 if (depth == config.maxDepth || kotlin.math.abs(alpha) >= WIN - 1000) { complete = true; break } // done, or forced result
             } catch (_: Timeout) {
                 break
             }
-            if (System.nanoTime() > deadline) break
+            if (System.nanoTime() > deadline || nodes > config.nodeBudget) break
         }
         lastNodes = nodes
         lastSearchComplete = complete
@@ -100,7 +111,7 @@ class SearchAi(private val config: SearchConfig, private val random: Random) : A
 
     private fun search(s: GameState, depth: Int, alphaIn: Int, beta: Int, ply: Int): Int {
         nodes++
-        if (abortable && (nodes and 1023L) == 0L && (System.nanoTime() > deadline || stop())) throw Timeout()
+        if (abortable && (nodes > config.nodeBudget || (nodes and 1023L) == 0L && (System.nanoTime() > deadline || stop()))) throw Timeout()
         val result = s.result
         if (result != null) {
             return when (result) {
@@ -114,7 +125,11 @@ class SearchAi(private val config: SearchConfig, private val random: Random) : A
         var ttMove = -1
         var key = 0L
         var slot = 0
-        if (config.useTranspositionTable) {
+        // The hash leaves out the draw counters (idlePlies, flyingPlies) so positions repeat in the
+        // table. That is only sound where no draw rule can fire inside the searched subtree, so the
+        // table is neither probed nor written near a draw threshold (see drawSafe).
+        val useTt = config.useTranspositionTable && drawSafe(s, depth)
+        if (useTt) {
             key = Zobrist.hash(s)
             slot = (key ushr 46).toInt() and (ttSize - 1)
             if (ttKeys[slot] == key) {
@@ -123,7 +138,7 @@ class SearchAi(private val config: SearchConfig, private val random: Random) : A
                 val flag = ((d shr 8) and 0x3).toInt()
                 val eScore = (d shr 32).toInt()
                 ttMove = ((d shr 10) and 0xFFF).toInt() - 1
-                if (eDepth >= depth && kotlin.math.abs(eScore) < WIN - 1000) {
+                if (eDepth >= depth && drawSafe(s, eDepth) && kotlin.math.abs(eScore) < WIN - 1000) {
                     when (flag) {
                         EXACT -> return eScore
                         LOWER -> if (eScore >= beta) return eScore
@@ -151,7 +166,7 @@ class SearchAi(private val config: SearchConfig, private val random: Random) : A
             }
         }
 
-        if (config.useTranspositionTable) {
+        if (useTt) {
             val flag = when {
                 bestScore <= alphaIn -> UPPER
                 bestScore >= beta -> LOWER
@@ -162,6 +177,17 @@ class SearchAi(private val config: SearchConfig, private val random: Random) : A
                 (flag.toLong() shl 8) or (depth.toLong() and 0xFF)
         }
         return bestScore
+    }
+
+    /**
+     * True when neither draw rule can trigger within [depth] more turns from [s]: each turn adds at
+     * most one ply to the counters (a shot resets them), so the subtree's values don't depend on them.
+     */
+    private fun drawSafe(s: GameState, depth: Int): Boolean {
+        val r = s.rules
+        if (s.idlePlies + depth + 1 >= r.idleDrawPlies) return false
+        if (r.flyingDrawPlies > 0 && s.flyingPlies + depth + 1 >= r.flyingDrawPlies) return false
+        return true
     }
 
     private fun rememberCutoff(code: Int, ply: Int, depth: Int) {

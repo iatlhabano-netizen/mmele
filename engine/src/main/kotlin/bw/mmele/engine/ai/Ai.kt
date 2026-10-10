@@ -3,9 +3,10 @@ package bw.mmele.engine.ai
 import bw.mmele.engine.Action
 import bw.mmele.engine.GameState
 import bw.mmele.engine.Rules
+import bw.mmele.engine.Variant
 import kotlin.random.Random
 
-enum class Difficulty { EASY, MEDIUM, HARD }
+enum class Difficulty { EASY, MEDIUM, HARD, EXPERT }
 
 /** A computer opponent. Implementations are pure JVM and safe to call from a background thread. */
 interface AiPlayer {
@@ -18,23 +19,53 @@ interface AiPlayer {
 }
 
 object Ai {
-    fun create(difficulty: Difficulty, seed: Long = System.nanoTime(), timeLimitMs: Long = defaultTimeMs(difficulty)): AiPlayer =
-        when (difficulty) {
-            Difficulty.EASY -> EasyAi(Random(seed))
+    /**
+     * Classic: Easy is heuristic-random; Medium a 3-turn search; Hard and Expert deepen with a
+     * transposition table under a node budget (same strength on every phone) and a time safety cap.
+     * Khutlotharo is solved, so Hard/Expert play perfectly and Easy/Medium are deliberately fallible.
+     */
+    fun create(
+        difficulty: Difficulty,
+        seed: Long = System.nanoTime(),
+        timeLimitMs: Long = defaultTimeMs(difficulty),
+        variant: Variant = Variant.CLASSIC,
+    ): AiPlayer {
+        val random = Random(seed)
+        if (variant == Variant.TRIANGLE) return when (difficulty) {
+            Difficulty.EASY -> FallibleAi(EasyAi(random), mistakeRate = 0.35f, random)
+            Difficulty.MEDIUM -> FallibleAi(
+                SearchAi(SearchConfig(maxDepth = 2, timeLimitMs = timeLimitMs, useTranspositionTable = false, evaluator = Evaluator.MEDIUM), random),
+                mistakeRate = 0.2f, random,
+            )
+            Difficulty.HARD, Difficulty.EXPERT -> PerfectTriangleAi(random)
+        }
+        return when (difficulty) {
+            Difficulty.EASY -> EasyAi(random)
             Difficulty.MEDIUM -> SearchAi(
-                SearchConfig(maxDepth = 3, timeLimitMs = timeLimitMs, useTranspositionTable = false, evaluator = Evaluator.MEDIUM),
-                Random(seed),
+                SearchConfig(maxDepth = 3, timeLimitMs = timeLimitMs, useTranspositionTable = false, evaluator = Evaluator.MEDIUM, nodeBudget = 200_000),
+                random,
             )
             Difficulty.HARD -> SearchAi(
-                SearchConfig(maxDepth = 32, timeLimitMs = timeLimitMs, useTranspositionTable = true, evaluator = Evaluator.HARD),
-                Random(seed),
+                SearchConfig(maxDepth = 32, timeLimitMs = timeLimitMs, useTranspositionTable = true, evaluator = Evaluator.HARD, nodeBudget = HARD_NODES),
+                random,
+            )
+            Difficulty.EXPERT -> SearchAi(
+                SearchConfig(maxDepth = 32, timeLimitMs = timeLimitMs, useTranspositionTable = true, evaluator = Evaluator.HARD, nodeBudget = EXPERT_NODES),
+                random,
             )
         }
+    }
 
+    /** Node budgets: roughly 0.3 s / 2 s of search on a desktop JVM, 1-2 s / 6-10 s on a slow phone. */
+    const val HARD_NODES = 300_000L
+    const val EXPERT_NODES = 2_000_000L
+
+    /** Time safety caps; the node budget normally ends the search first. */
     fun defaultTimeMs(d: Difficulty): Long = when (d) {
         Difficulty.EASY -> 50
         Difficulty.MEDIUM -> 900
-        Difficulty.HARD -> 1600
+        Difficulty.HARD -> 2_500
+        Difficulty.EXPERT -> 8_000
     }
 }
 

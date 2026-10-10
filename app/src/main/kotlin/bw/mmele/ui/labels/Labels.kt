@@ -26,6 +26,7 @@ import com.tshipiworks.mmele.R
     Difficulty.EASY -> R.string.difficulty_easy
     Difficulty.MEDIUM -> R.string.difficulty_medium
     Difficulty.HARD -> R.string.difficulty_hard
+    Difficulty.EXPERT -> R.string.difficulty_expert
 }
 
 @StringRes fun Scene.titleRes(): Int = when (this) {

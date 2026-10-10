@@ -168,7 +168,7 @@ class PersistenceTest {
         assertEquals(StatKey(GameMode.SOLO, Difficulty.HARD, Variant.CLASSIC), StatKey.of(solo))
         assertEquals(StatKey(GameMode.PASS_AND_PLAY, null, Variant.CLASSIC), StatKey.of(pnp))
         for (k in StatKey.ALL) assertEquals(k, StatKey.decode(k.encode()))
-        assertEquals(10, StatKey.ALL.size)
+        assertEquals(12, StatKey.ALL.size)
     }
 }
 

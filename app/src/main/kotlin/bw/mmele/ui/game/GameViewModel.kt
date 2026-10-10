@@ -54,7 +54,7 @@ import kotlinx.coroutines.withContext
 class GameViewModel(
     private val config: GameConfig,
     private val aiDispatcher: CoroutineDispatcher = Dispatchers.Default,
-    private val aiFactory: (GameConfig) -> AiPlayer = { Ai.create(it.difficulty) },
+    private val aiFactory: (GameConfig) -> AiPlayer = { Ai.create(it.difficulty, variant = it.variant) },
     private val minAiDelayMs: Long = 450,
     /** Set for online games: the room you're seated in. */
     private val online: OnlineSession? = null,
