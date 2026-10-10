@@ -59,20 +59,54 @@ import bw.mmele.ui.theme.MmeleColors
 import bw.mmele.ui.pieces.PieceStyle
 import bw.mmele.ui.pieces.drawPiece
 import kotlinx.coroutines.launch
+import androidx.compose.ui.res.stringResource
+import bw.mmele.engine.Boards
+import bw.mmele.ui.labels.shortLabel
+import com.tshipiworks.mmele.R
 import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.min
 
+/** Localised words for TalkBack point labels (English defaults for tests). */
+data class PointWords(
+    val point: String = "Point %1\$s, %2\$s",
+    val empty: String = "empty",
+    val cow: String = "%1\$s cow",
+    val selected: String = "selected",
+    val validMove: String = "valid move",
+    val canBeShot: String = "can be shot",
+    val canMove: String = "can move",
+    val separator: String = ", ",
+)
+
+@Composable
+fun rememberPointWords(): PointWords {
+    val w = PointWords(
+        point = stringResource(R.string.a11y_point, "%1\$s", "%2\$s"),
+        empty = stringResource(R.string.a11y_empty),
+        cow = stringResource(R.string.a11y_cow, "%1\$s"),
+        selected = stringResource(R.string.a11y_selected),
+        validMove = stringResource(R.string.a11y_valid_move),
+        canBeShot = stringResource(R.string.a11y_can_be_shot),
+        canMove = stringResource(R.string.a11y_can_move),
+        separator = stringResource(R.string.a11y_list_separator),
+    )
+    return remember(w) { w }
+}
+
 /** Spoken label for one board point, e.g. "Point A, empty, valid move". */
-fun pointDescription(label: String, ownerName: String?, selected: Boolean, target: Boolean, shootable: Boolean, movable: Boolean): String =
-    buildString {
-        append("Point ").append(label).append(", ")
-        append(if (ownerName == null) "empty" else "$ownerName cow")
-        if (selected) append(", selected")
-        if (target) append(", valid move")
-        if (shootable) append(", can be shot")
-        if (movable) append(", can move")
-    }
+fun pointDescription(
+    label: String, ownerName: String?, selected: Boolean, target: Boolean, shootable: Boolean, movable: Boolean,
+    words: PointWords = PointWords(),
+): String {
+    val parts = ArrayList<String>()
+    parts += words.point.format(label, if (ownerName == null) words.empty else words.cow.format(ownerName))
+    if (selected) parts += words.selected
+    if (target) parts += words.validMove
+    if (shootable) parts += words.canBeShot
+    if (movable) parts += words.canMove
+    return parts.joinToString(words.separator)
+}
 
 /** Maps normalised board coordinates to pixels for a given canvas size (any aspect ratio). */
 class BoardGeometry(width: Float, height: Float, private val board: BoardGraph) {
@@ -255,12 +289,17 @@ fun BoardCanvas(
     }
 
     var canvasSize by remember { mutableStateOf(IntSize.Zero) }
+    val words = rememberPointWords()
+    val boardName = stringResource(R.string.a11y_board, stringResource(if (board.size == Boards.CLASSIC.size) R.string.a11y_board_classic else R.string.a11y_board_triangle))
+    val oneName = styleOne.shortLabel()
+    val twoName = styleTwo.shortLabel()
+    val chooseLabel = stringResource(R.string.a11y_choose)
     Box(modifier.onSizeChanged { canvasSize = it }) {
     Canvas(
         Modifier
             .matchParentSize()
             .then(input)
-            .semantics { contentDescription = "${board.name} board"; traversalIndex = -1f },
+            .semantics { contentDescription = boardName; traversalIndex = -1f },
     ) {
         val geo = BoardGeometry(size.width, size.height, board)
         val r = geo.tokenRadius
@@ -337,9 +376,9 @@ fun BoardCanvas(
             val c = geo.px(i)
             val owner = tokens.firstOrNull { it.node == i }?.player
             val label = pointDescription(
-                board.labels[i], owner?.let { if (it == Player.ONE) styleOne.shortName else styleTwo.shortName },
+                board.labels[i], owner?.let { if (it == Player.ONE) oneName else twoName },
                 selected = selected == i, target = bit(targets, i), shootable = bit(shootable, i),
-                movable = bit(draggable, i) && selected != i,
+                movable = bit(draggable, i) && selected != i, words = words,
             )
             Box(
                 Modifier
@@ -349,7 +388,7 @@ fun BoardCanvas(
                         contentDescription = label
                         role = Role.Button
                         this.selected = selected == i
-                        if (interactive) onClick(label = "Choose") { tapCb(i); true } else disabled()
+                        if (interactive) onClick(label = chooseLabel) { tapCb(i); true } else disabled()
                     },
             )
         }

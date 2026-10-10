@@ -18,6 +18,8 @@ data class Lesson(
     val hints: List<Int>,
     @StringRes val success: Int,
     val puzzle: Puzzle,
+    /** A fresh position testing the same skill, played after [puzzle] before the next lesson unlocks. */
+    val practice: Puzzle,
 ) {
     val variant: Variant get() = puzzle.start.rules.variant
 }
@@ -27,6 +29,15 @@ object Lessons {
     private fun t(label: String) = Boards.TRIANGLE.labels.indexOf(label).also { require(it >= 0) { label } }
     private fun cs(vararg l: String) = l.map(::c)
     private fun ts(vararg l: String) = l.map(::t)
+
+    /** The classic board turned half a turn (a7 <-> g1): same geometry, a new-looking position. */
+    private fun rot(n: Int) = (n / 8) * 8 + (n % 8 + 4) % 8
+    private fun rot(l: List<Int>) = l.map(::rot)
+    private fun rot(a: Action): Action = when (a) {
+        is Action.Place -> Action.Place(rot(a.to))
+        is Action.Move -> Action.Move(rot(a.from), rot(a.to))
+        is Action.Shoot -> Action.Shoot(rot(a.target))
+    }
 
     /** 1. Placement: two in a row, complete the mill and shoot. */
     val MAKING_A_MILL = Lesson(
@@ -40,6 +51,11 @@ object Lessons {
             start = Rules.position(RuleSet.CLASSIC, cs("a7", "d7"), cs("b6", "f4"), hand1 = 10, hand2 = 10),
             goal = Goal.MillAndShoot,
             solution = listOf(Action.Place(c("g7")), Action.Shoot(c("b6"))),
+        ),
+        practice = Puzzle(
+            start = Rules.position(RuleSet.CLASSIC, cs("d1", "d2"), cs("f4", "b6", "e5"), hand1 = 10, hand2 = 9),
+            goal = Goal.MillAndShoot,
+            solution = listOf(Action.Place(c("d3")), Action.Shoot(c("f4"))),
         ),
     )
 
@@ -55,6 +71,11 @@ object Lessons {
             start = Rules.position(RuleSet.CLASSIC, cs("g7", "d6", "a1", "b4", "c4"), cs("a7", "d7", "a4", "b6")),
             goal = Goal.Win(WinReason.BLOCKADE),
             solution = listOf(Action.Move(c("c4"), c("c5"))),
+        ),
+        practice = Puzzle(
+            start = Rules.position(RuleSet.CLASSIC, rot(cs("g7", "d6", "a1", "b4", "c4")), rot(cs("a7", "d7", "a4", "b6"))),
+            goal = Goal.Win(WinReason.BLOCKADE),
+            solution = listOf(rot(Action.Move(c("c4"), c("c5")))),
         ),
     )
 
@@ -77,6 +98,16 @@ object Lessons {
             // Light's reply in between (deterministic): d1-a1 makes a mill and shoots f4.
             solution = listOf(Action.Move(c("f6"), c("d6")), Action.Shoot(c("g4")), Action.Move(c("g7"), c("g4"))),
         ),
+        practice = Puzzle(
+            start = Rules.position(
+                RuleSet.CLASSIC,
+                rot(cs("d7", "g7", "f6", "f4", "d5", "e5", "d3")),
+                rot(cs("a7", "g4", "d1", "a4", "b6", "f2", "c5", "e4", "e3")),
+            ),
+            goal = Goal.Survive,
+            turns = 2,
+            solution = PRACTICE_ESCAPE,
+        ),
     )
 
     /** 4. Down to three cows you fly: strike first, before Light completes its own line. */
@@ -91,6 +122,11 @@ object Lessons {
             start = Rules.position(RuleSet.CLASSIC, cs("a1", "d1", "c4"), cs("f6", "f4", "d5")),
             goal = Goal.Win(WinReason.REDUCED_TO_TWO),
             solution = listOf(Action.Move(c("c4"), c("g1")), Action.Shoot(c("f6"))),
+        ),
+        practice = Puzzle(
+            start = Rules.position(RuleSet.CLASSIC, cs("a7", "g7", "c3"), cs("b2", "d2", "e5")),
+            goal = Goal.Win(WinReason.REDUCED_TO_TWO),
+            solution = listOf(Action.Move(c("c3"), c("d7")), Action.Shoot(c("e5"))),
         ),
     )
 
@@ -107,7 +143,21 @@ object Lessons {
             goal = Goal.Win(WinReason.LINE_OF_THREE),
             solution = listOf(Action.Move(t("BL"), t("A"))),
         ),
+        practice = Puzzle(
+            start = Rules.position(RuleSet.TRIANGLE, ts("C", "BM", "BR"), ts("CR", "CL", "BL")),
+            goal = Goal.Win(WinReason.LINE_OF_THREE),
+            solution = listOf(Action.Move(t("BR"), t("A"))),
+        ),
     )
 
     val ALL: List<Lesson> = listOf(MAKING_A_MILL, TRAPPING, ESCAPING, FLYING, KHUTLOTHARO)
+}
+
+/**
+ * The deterministic scripted line of the escape practice (AcademyTest.printEscapePracticeLine writes
+ * it out): b2-d2 mills and shoots d7; Light answers a4-a7 and shoots b4; then a1-a4.
+ */
+private val PRACTICE_ESCAPE: List<Action> by lazy {
+    val c = { l: String -> Boards.CLASSIC.labels.indexOf(l) }
+    listOf(Action.Move(c("b2"), c("d2")), Action.Shoot(c("d7")), Action.Move(c("a1"), c("a4")))
 }

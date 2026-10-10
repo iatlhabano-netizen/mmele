@@ -1,5 +1,9 @@
 package bw.mmele.ui.online
 
+import androidx.compose.ui.res.stringResource
+import bw.mmele.ui.labels.shortLabel
+import com.tshipiworks.mmele.R
+
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -89,11 +93,11 @@ fun OnlineLobbyScreen(
         ) {
             Column(Modifier.widthIn(max = 520.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    TextButton(onClick = onBack) { Text("‹ Home", color = MmeleColors.BoneDim) }
+                    TextButton(onClick = onBack) { Text("‹ " + stringResource(R.string.nav_home), color = MmeleColors.BoneDim) }
                 }
                 Spacer(Modifier.height(8.dp))
-                Text("Play online", style = MaterialTheme.typography.headlineMedium, color = MmeleColors.Bone)
-                Text("Tshameka le tsala · play a friend on another phone", style = MaterialTheme.typography.labelMedium, color = MmeleColors.Gold)
+                Text(stringResource(R.string.mode_online), style = MaterialTheme.typography.headlineMedium, color = MmeleColors.Bone)
+                Text(stringResource(R.string.lobby_tagline), style = MaterialTheme.typography.labelMedium, color = MmeleColors.Gold)
                 Spacer(Modifier.height(20.dp))
                 if (repo == null) NotConfiguredCard(onBack) else LobbyBody(config, repo, onSession, initialCode)
             }
@@ -104,18 +108,17 @@ fun OnlineLobbyScreen(
 @Composable
 private fun NotConfiguredCard(onBack: () -> Unit) {
     Panel {
-        Text("Online play is coming soon", style = MaterialTheme.typography.titleLarge, color = MmeleColors.Bone)
+        Text(stringResource(R.string.lobby_off_title), style = MaterialTheme.typography.titleLarge, color = MmeleColors.Bone)
         Spacer(Modifier.height(8.dp))
         Text(
-            "Online games aren't switched on in this version of Mmele yet. You can still play the computer, " +
-                "or a friend on this phone with Pass & Play. Both work without the internet.",
+            stringResource(R.string.lobby_off_body),
             style = MaterialTheme.typography.bodyMedium,
             color = MmeleColors.BoneDim,
         )
         if (com.tshipiworks.mmele.BuildConfig.DEBUG) {
             Spacer(Modifier.height(8.dp))
             Text(
-                "Developer build: add app/google-services.json and rebuild (docs/ONLINE_SETUP.md).",
+                stringResource(R.string.lobby_off_dev),
                 style = MaterialTheme.typography.labelMedium,
                 color = MmeleColors.GoldBright,
             )
@@ -124,7 +127,7 @@ private fun NotConfiguredCard(onBack: () -> Unit) {
         Button(
             onClick = onBack,
             colors = ButtonDefaults.buttonColors(containerColor = MmeleColors.Gold, contentColor = MmeleColors.Slate),
-        ) { Text("Back to offline play") }
+        ) { Text(stringResource(R.string.lobby_off_back)) }
     }
 }
 
@@ -132,7 +135,7 @@ private fun NotConfiguredCard(onBack: () -> Unit) {
 private fun LobbyBody(config: GameConfig, repo: OnlineGameRepository, onSession: (OnlineSession) -> Unit, initialCode: String) {
     val scope = rememberCoroutineScope()
     var busy by remember { mutableStateOf<String?>(null) }
-    var error by remember { mutableStateOf<String?>(null) }
+    var error by remember { mutableStateOf<LobbyError?>(null) }
     var code by remember { mutableStateOf(sanitizeRoomCode(initialCode)) }
 
     fun run(label: String, block: suspend () -> OnlineSession) {
@@ -143,13 +146,13 @@ private fun LobbyBody(config: GameConfig, repo: OnlineGameRepository, onSession:
                 val s = withTimeout(15_000) { block() }
                 onSession(s)
             } catch (e: TimeoutCancellationException) {
-                error = "Couldn't reach the game server. Check your internet connection and try again."
+                error = LobbyError.Network
             } catch (e: RoomNotFoundException) {
-                error = "No game with code $code. Check the code with your friend."
+                error = LobbyError.NoRoom(code)
             } catch (e: RoomFullException) {
-                error = "That game already has two players."
+                error = LobbyError.Full
             } catch (e: Exception) {
-                error = e.message ?: "Something went wrong."
+                error = LobbyError.Other(e.message)
             } finally {
                 busy = null
             }
@@ -157,15 +160,14 @@ private fun LobbyBody(config: GameConfig, repo: OnlineGameRepository, onSession:
     }
 
     Panel {
-        Text("Host a game", style = MaterialTheme.typography.titleMedium, color = MmeleColors.Bone)
+        Text(stringResource(R.string.lobby_host), style = MaterialTheme.typography.titleMedium, color = MmeleColors.Bone)
         Spacer(Modifier.height(6.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             PieceIcon(config.styleOne, Modifier.size(30.dp))
             PieceIcon(config.styleTwo, Modifier.size(30.dp), pieceId = 3)
             Spacer(Modifier.width(10.dp))
             Text(
-                (if (config.variant == Variant.CLASSIC) "Classic · 12 cows" else "Khutlotharo · triangle") +
-                    " · you play ${config.styleOne.shortName} and move first",
+                stringResource(if (config.variant == Variant.CLASSIC) R.string.lobby_host_classic else R.string.lobby_host_triangle, config.styleOne.shortLabel()),
                 style = MaterialTheme.typography.labelMedium,
                 color = MmeleColors.BoneDim,
             )
@@ -184,17 +186,18 @@ private fun LobbyBody(config: GameConfig, repo: OnlineGameRepository, onSession:
             colors = ButtonDefaults.buttonColors(containerColor = MmeleColors.Gold, contentColor = MmeleColors.Slate),
         ) {
             if (busy == "create") CircularProgressIndicator(Modifier.size(20.dp), color = MmeleColors.Slate, strokeWidth = 2.dp)
-            else Text("Create room", style = MaterialTheme.typography.titleMedium)
+            else Text(stringResource(R.string.lobby_create), style = MaterialTheme.typography.titleMedium)
         }
     }
     Spacer(Modifier.height(16.dp))
     Panel {
-        Text("Join a friend", style = MaterialTheme.typography.titleMedium, color = MmeleColors.Bone)
+        Text(stringResource(R.string.lobby_join_title), style = MaterialTheme.typography.titleMedium, color = MmeleColors.Bone)
         Spacer(Modifier.height(10.dp))
         OutlinedTextField(
             value = code,
             onValueChange = { code = sanitizeRoomCode(it) },
             placeholder = { Text("ABC234", color = MmeleColors.BoneDim, style = codeStyle) },
+            label = { Text(stringResource(R.string.lobby_code_label)) },
             singleLine = true,
             textStyle = codeStyle.copy(color = MmeleColors.GoldBright),
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters, autoCorrectEnabled = false, imeAction = ImeAction.Go),
@@ -209,21 +212,34 @@ private fun LobbyBody(config: GameConfig, repo: OnlineGameRepository, onSession:
             modifier = Modifier.fillMaxWidth().height(48.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
-            if (busy == "join") CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp) else Text("Join game")
+            if (busy == "join") CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp) else Text(stringResource(R.string.lobby_join))
         }
     }
-    error?.let {
+    error?.let { err ->
         Spacer(Modifier.height(12.dp))
-        Text(it, style = MaterialTheme.typography.bodyMedium, color = MmeleColors.Danger, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+        val msg = when (err) {
+            LobbyError.Network -> stringResource(R.string.lobby_err_network)
+            is LobbyError.NoRoom -> stringResource(R.string.lobby_err_no_room, err.code)
+            LobbyError.Full -> stringResource(R.string.lobby_err_full)
+            is LobbyError.Other -> err.detail ?: stringResource(R.string.lobby_err_other)
+        }
+        Text(msg, style = MaterialTheme.typography.bodyMedium, color = MmeleColors.Danger, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
     }
     Spacer(Modifier.height(16.dp))
     Text(
-        "Variant and pieces come from the host's choices. Your scene stays your own.",
+        stringResource(R.string.lobby_note),
         style = MaterialTheme.typography.labelMedium,
         color = MmeleColors.BoneDim,
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth(),
     )
+}
+
+private sealed interface LobbyError {
+    data object Network : LobbyError
+    data class NoRoom(val code: String) : LobbyError
+    data object Full : LobbyError
+    data class Other(val detail: String?) : LobbyError
 }
 
 private suspend fun joinSession(repo: OnlineGameRepository, code: String): OnlineSession {

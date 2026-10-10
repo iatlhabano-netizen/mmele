@@ -1,3 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Mmele</string>
+    <string name="app_name" translatable="false">Mmele</string>
+
+    <!-- Common -->
+    <string name="nav_home">Home</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_close">Close</string>
+    <string name="common_back">Back</string>
+
+    <!-- Home -->
+    <string name="home_tagline">MORABARABA · THE CATTLE GAME</string>
+    <string name="home_section_board">Board</string>
+    <string name="home_section_mode">Mode</string>
+    <string name="home_section_clock">Clock per player</string>
+    <string name="home_section_pieces">Pieces</string>
+    <string name="home_section_scene">Scene · Botswana</string>
+    <string name="home_section_language">Language</string>
+    <string name="variant_classic">Classic</string>
+    <string name="variant_classic_sub">12 cows · mills shoot</string>
+    <string name="variant_triangle">Khutlotharo</string>
+    <string name="variant_triangle_sub">Triangle · 3 cows · line wins</string>
+    <string name="mode_solo">Play vs Computer</string>
+    <string name="mode_solo_sub">Solo against the AI</string>
+    <string name="mode_online">Play online</string>
+    <string name="mode_online_sub">A friend over the internet · room code</string>
+    <string name="mode_online_sub_off">Coming soon in this version</string>
+    <string name="mode_pass_and_play">Pass &amp; Play</string>
+    <string name="mode_pass_and_play_sub">Two players on this phone</string>
+    <string name="difficulty_easy">Easy</string>
+    <string name="difficulty_medium">Medium</string>
+    <string name="difficulty_hard">Hard</string>
+    <string name="home_play_side_first">Play %1$s (first)</string>
+    <string name="home_play_side">Play %1$s</string>
+    <string name="clock_off">Off</string>
+    <string name="clock_minutes">%1$d min</string>
+    <string name="home_sound">Sound</string>
+    <string name="home_haptics">Haptics</string>
+    <string name="home_play">Tshameka · Play</string>
+    <string name="home_find_room">Tshameka · Find a room</string>
+    <string name="home_continue">Continue game</string>
+    <string name="home_continue_detail">%1$s · %2$s · move %3$d</string>
+    <string name="home_academy">Academy</string>
+    <string name="home_academy_sub">Guided puzzles · %1$d of %2$d done</string>
+    <string name="home_stats">Stats</string>
+    <string name="home_how_to_play">How to play</string>
+    <string name="home_about">About · privacy · licences</string>
+    <string name="home_footer">Mmele (Setswana) is the Morabaraba family of mill games played across Botswana and Southern Africa.</string>
+    <string name="home_dark_side">Dark side</string>
+    <string name="home_light_side">Light side</string>
+    <string name="home_surprise">Surprise\nme</string>
+    <string name="home_surprise_action">pick a random scene</string>
+    <string name="lang_system">System</string>
+    <string name="lang_english" translatable="false">English</string>
+    <string name="lang_setswana" translatable="false">Setswana</string>
+
+    <!-- Phases (Setswana names are the game terms and stay as they are in every language) -->
+    <string name="phase_place_tn" translatable="false">Go baya</string>
+    <string name="phase_move_tn" translatable="false">Go sutisa</string>
+    <string name="phase_fly_tn" translatable="false">Go fofa</string>
+    <string name="phase_over_tn" translatable="false">Go fedile</string>
+    <string name="phase_place">Placing</string>
+    <string name="phase_move">Moving</string>
+    <string name="phase_fly">Flying</string>
+    <string name="phase_over">Game over</string>
+
+    <!-- Player HUD -->
+    <string name="hud_you">You</string>
+    <string name="hud_computer">Computer · %1$s</string>
+    <string name="hud_you_side">You · %1$s</string>
+    <string name="hud_opponent_side">Opponent · %1$s</string>
+    <string name="hud_in_hand">In hand %1$d</string>
+    <string name="hud_on_board">On board %1$d</string>
+    <string name="hud_shot">Shot %1$d</string>
+
+    <!-- Game prompts -->
+    <string name="prompt_ai_thinking">Computer is thinking…</string>
+    <string name="prompt_opponent_turn">Opponent\'s turn</string>
+    <string name="prompt_who">%1$s: %2$s</string>
+    <string name="prompt_shoot_any">Mill! All their cows are in mills, shoot any one</string>
+    <string name="prompt_shoot">Mill! Tap a glowing cow to shoot it</string>
+    <plurals name="prompt_place">
+        <item quantity="one">Place a cow · %1$d in hand</item>
+        <item quantity="other">Place a cow · %1$d in hand</item>
+    </plurals>
+    <string name="prompt_move_to">Move to a glowing point</string>
+    <string name="prompt_move">Tap or drag a cow to move it</string>
+    <string name="prompt_fly">Three cows left, fly to any empty point</string>
+
+    <!-- Game controls -->
+    <string name="game_undo">Undo</string>
+    <string name="game_offer_draw">Offer draw</string>
+    <string name="game_draw_offered">Draw offered</string>
+    <string name="game_resign">Resign</string>
+    <string name="game_confirm">Tap to confirm</string>
+    <string name="game_rematch">Rematch</string>
+    <string name="game_waiting">Waiting…</string>
+    <string name="game_accept_rematch">Accept rematch</string>
+    <string name="game_leave_title">Leave this game?</string>
+    <string name="game_leave_online">Your opponent can claim the win if you don\'t come back within 90 seconds.</string>
+    <string name="game_leave_saved">Your game is saved. Pick it up again with Continue game on the home screen.</string>
+    <string name="game_leave">Leave</string>
+    <string name="game_keep_playing">Keep playing</string>
+
+    <!-- Results -->
+    <string name="result_you_win">You win!</string>
+    <string name="result_computer_wins">The computer wins</string>
+    <string name="result_side_wins">%1$s wins!</string>
+    <string name="result_opponent_wins">Opponent wins</string>
+    <string name="result_draw">A draw</string>
+    <string name="reason_two">Reduced to two cows, no more mills possible.</string>
+    <string name="reason_blockade">Go tswala: locked in with no legal move.</string>
+    <string name="reason_line">Three in a line.</string>
+    <string name="reason_timeout">Out of time.</string>
+    <string name="reason_resigned">Resigned.</string>
+    <string name="reason_abandoned">Left the game and did not return.</string>
+    <string name="reason_flying_draw">Ten moves each with a player on three cows and no shot.</string>
+    <plurals name="reason_no_line">
+        <item quantity="one">%1$d move each without a placement.</item>
+        <item quantity="other">%1$d moves each without a placement.</item>
+    </plurals>
+    <plurals name="reason_no_shot">
+        <item quantity="one">%1$d move each without a shot.</item>
+        <item quantity="other">%1$d moves each without a shot.</item>
+    </plurals>
+    <string name="reason_agreed">Both players agreed to a draw.</string>
+    <string name="result_moves">Moves played: %1$d</string>
+    <string name="result_view_board">View board</string>
+
+    <!-- Online, in game -->
+    <string name="online_waiting">Waiting for opponent</string>
+    <string name="online_connected">Opponent connected</string>
+    <string name="online_disconnected_countdown">Opponent disconnected · %1$ds</string>
+    <string name="online_disconnected">Opponent disconnected</string>
+    <string name="online_sending">sending…</string>
+    <string name="online_share_action">share room code</string>
+    <string name="online_away_too_long">Your opponent has been away too long.</string>
+    <string name="online_claim_win">Claim win</string>
+    <string name="online_room_code">ROOM CODE</string>
+    <string name="online_send_code">Send this code to a friend. The game starts as soon as they join.</string>
+    <string name="online_share_code">Share code</string>
+    <string name="online_offers_draw">Opponent offers a draw</string>
+    <string name="online_accept">Accept</string>
+    <string name="online_msg_connection">Connection problem: %1$s</string>
+    <string name="online_msg_not_sent">Not sent: %1$s</string>
+    <string name="online_msg_rejected">Move not accepted (%1$s), board resynced</string>
+    <string name="online_msg_corrupt">The other phone sent a move the rules don\'t allow. Game stopped.</string>
+    <string name="online_unknown_error">unknown</string>
+    <string name="share_text">Play Mmele (Morabaraba) with me! Open the app, tap \"Play online\" and enter room code %1$s</string>
+    <string name="share_title">Share room code</string>
+
+    <!-- Online lobby -->
+    <string name="lobby_tagline">Tshameka le tsala · play a friend on another phone</string>
+    <string name="lobby_off_title">Online play is coming soon</string>
+    <string name="lobby_off_body">Online games aren\'t switched on in this version of Mmele yet. You can still play the computer, or a friend on this phone with Pass &amp; Play. Both work without the internet.</string>
+    <string name="lobby_off_dev" translatable="false">Developer build: add app/google-services.json and rebuild (docs/ONLINE_SETUP.md).</string>
+    <string name="lobby_off_back">Back to offline play</string>
+    <string name="lobby_err_network">Couldn\'t reach the game server. Check your internet connection and try again.</string>
+    <string name="lobby_err_no_room">No game with code %1$s. Check the code with your friend.</string>
+    <string name="lobby_err_full">That game already has two players.</string>
+    <string name="lobby_err_other">Something went wrong.</string>
+    <string name="lobby_host">Host a game</string>
+    <string name="lobby_host_classic">Classic · 12 cows · you play %1$s and move first</string>
+    <string name="lobby_host_triangle">Khutlotharo · triangle · you play %1$s and move first</string>
+    <string name="lobby_create">Create room</string>
+    <string name="lobby_join_title">Join a friend</string>
+    <string name="lobby_code_label">Room code</string>
+    <string name="lobby_join">Join game</string>
+    <string name="lobby_note">Variant and pieces come from the host\'s choices. Your scene stays your own.</string>
+
+    <!-- Board accessibility (TalkBack) -->
+    <string name="a11y_board">%1$s board</string>
+    <string name="a11y_board_classic">Mmele (Morabaraba)</string>
+    <string name="a11y_board_triangle">Khutlotharo (triangle)</string>
+    <string name="a11y_point">Point %1$s, %2$s</string>
+    <string name="a11y_empty">empty</string>
+    <string name="a11y_cow">%1$s cow</string>
+    <string name="a11y_selected">selected</string>
+    <string name="a11y_valid_move">valid move</string>
+    <string name="a11y_can_be_shot">can be shot</string>
+    <string name="a11y_can_move">can move</string>
+    <string name="a11y_choose">Choose</string>
+    <string name="a11y_list_separator">", "</string>
+
+    <!-- Pieces -->
+    <string name="family_pebbles">Classic pebbles</string>
+    <string name="family_pebbles_blurb">Obsidian and river-quartz stones</string>
+    <string name="family_diamonds">Rough diamonds</string>
+    <string name="family_diamonds_blurb">Botswana\'s famed uncut crystals</string>
+    <string name="family_eggs">Bird eggs</string>
+    <string name="family_eggs_blurb">Eggs of birds found in Botswana</string>
+    <string name="piece_obsidian">Obsidian</string>
+    <string name="piece_obsidian_full">Obsidian pebble</string>
+    <string name="piece_quartz">Quartz</string>
+    <string name="piece_quartz_full">River-quartz pebble</string>
+    <string name="piece_smoky">Smoky</string>
+    <string name="piece_smoky_full">Smoky rough diamond</string>
+    <string name="piece_clear">Clear</string>
+    <string name="piece_clear_full">Clear rough diamond</string>
+    <string name="egg_ostrich">Ostrich</string>
+    <string name="egg_ostrich_full">Ostrich egg</string>
+    <string name="egg_guineafowl">Guineafowl</string>
+    <string name="egg_guineafowl_full">Helmeted guineafowl egg</string>
+    <string name="egg_lapwing">Lapwing</string>
+    <string name="egg_lapwing_full">Crowned lapwing egg</string>
+    <string name="egg_roller">Roller</string>
+    <string name="egg_roller_full">Lilac-breasted roller egg</string>
+    <string name="egg_kori">Kori</string>
+    <string name="egg_kori_full">Kori bustard egg</string>
+
+    <!-- Scenes -->
+    <string name="scene_okavango">Okavango Delta</string>
+    <string name="scene_okavango_short">Okavango</string>
+    <string name="scene_okavango_fact">A UNESCO World Heritage Site since 2014, the List\'s 1,000th, and a great inland delta that never reaches the sea.</string>
+    <string name="scene_chobe">Chobe National Park</string>
+    <string name="scene_chobe_short">Chobe</string>
+    <string name="scene_chobe_fact">Botswana\'s first national park, where huge elephant herds gather on the Chobe River in the dry season.</string>
+    <string name="scene_makgadikgadi">Makgadikgadi Pans</string>
+    <string name="scene_makgadikgadi_short">Makgadikgadi</string>
+    <string name="scene_makgadikgadi_fact">One of the largest salt pans on Earth: the dry bed of an ancient lake, ringed by ancient baobabs.</string>
+    <string name="scene_kalahari">Central Kalahari</string>
+    <string name="scene_kalahari_short">Central Kalahari</string>
+    <string name="scene_kalahari_fact">Established in 1961, the Central Kalahari Game Reserve covers 52,800 km², larger than the Netherlands.</string>
+    <string name="scene_tsodilo">Tsodilo Hills</string>
+    <string name="scene_tsodilo_short">Tsodilo</string>
+    <string name="scene_tsodilo_fact">A UNESCO World Heritage Site with over 4,500 rock paintings in just 10 km², the \"Louvre of the Desert\".</string>
+
+    <!-- Stats -->
+    <string name="stats_title">Stats</string>
+    <string name="stats_subtitle">Your results on this phone. Nothing is uploaded.</string>
+    <string name="stats_empty">No finished games yet. Play one and it shows up here.</string>
+    <string name="stats_won">Won</string>
+    <string name="stats_lost">Lost</string>
+    <string name="stats_drawn">Drawn</string>
+    <string name="stats_row_computer">Computer · %1$s</string>
+    <string name="stats_row_spoken">%1$s: %2$d won, %3$d lost, %4$d drawn</string>
+    <string name="stats_pass_and_play_note">In Pass &amp; Play, won means Dark won and lost means Light won.</string>
+    <string name="stats_reset">Reset stats</string>
+    <string name="stats_reset_title">Reset all stats?</string>
+    <string name="stats_reset_body">Every win, loss and draw count goes back to zero. This can\'t be undone.</string>
+    <string name="stats_reset_confirm">Reset</string>
+
+    <!-- About -->
+    <string name="about_title">About Mmele</string>
+    <string name="about_version">Version %1$s (%2$d)</string>
+    <string name="about_privacy_terms">Privacy and terms</string>
+    <string name="about_privacy">Privacy policy</string>
+    <string name="about_terms">Terms of use</string>
+    <string name="about_contact">Contact</string>
+    <string name="about_online_data">Your online data</string>
+    <string name="about_online_off">Online play isn\'t switched on in this version, so Mmele has no online data about you. Offline games never leave your phone.</string>
+    <string name="about_online_on">Online play uses a random anonymous ID and stores your game rooms on Google Firebase. Finished rooms are deleted when the host leaves, and anything idle for 30 days is removed at the next monthly clean-up. You can delete everything now:</string>
+    <string name="about_delete">Delete my online data</string>
+    <string name="about_deleting">Deleting…</string>
+    <string name="about_delete_title">Delete your online data?</string>
+    <string name="about_delete_body">This deletes every online room you created or joined from this phone, and your anonymous online ID. Games in progress will end. Offline play is not affected.</string>
+    <string name="about_delete_confirm">Delete</string>
+    <plurals name="about_deleted_rooms">
+        <item quantity="one">Done: %1$d room deleted.</item>
+        <item quantity="other">Done: %1$d rooms deleted.</item>
+    </plurals>
+    <string name="about_id_deleted">Your anonymous ID has been deleted.</string>
+    <string name="about_id_pending">Your anonymous ID was removed from this phone and will be erased from the server within 60 days.</string>
+    <string name="about_delete_failed">Couldn\'t reach the server (%1$s). Check your connection and try again, or email %2$s.</string>
+    <string name="about_network_error">network error</string>
+    <string name="about_credits">Credits and sources</string>
+    <string name="about_licences">Open-source licences</string>
+    <string name="about_licences_intro">Mmele is built with these open-source libraries. Tap one to read its licence.</string>
+    <string name="about_licences_missing">Licence list unavailable in this build.</string>
+    <string name="about_read_licence">read licence</string>
+    <string name="about_see_website">See website</string>
+    <string name="about_website">Website</string>
+    <string name="credit_rules">Morabaraba rules</string>
+    <string name="credit_eggs">Bird eggs</string>
+    <string name="credit_art">Art and sound</string>
+    <string name="credit_art_body">Every board, scene, piece and sound is drawn or synthesised in code for Mmele. No third-party images, fonts or samples.</string>
+    <string name="credit_translation">Setswana</string>
+    <string name="credit_translation_body">Setswana translation drafted for Mmele. Corrections are welcome at the contact address.</string>
 </resources>

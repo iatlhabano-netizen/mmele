@@ -58,7 +58,7 @@ class PersistenceTest {
         GameViewModel(
             config, aiDispatcher = dispatcher, minAiDelayMs = 0,
             aiFactory = { Ai.create(Difficulty.EASY, seed = 3) },
-            now = { testScheduler.currentTime },
+            clockNow = { testScheduler.currentTime },
             resume = resume, savedState = saved, onSaveGame = onSave, onResult = onResult,
         )
 

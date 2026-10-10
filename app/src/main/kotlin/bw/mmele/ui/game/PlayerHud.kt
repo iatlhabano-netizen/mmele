@@ -33,6 +33,12 @@ import bw.mmele.engine.Player
 import bw.mmele.ui.pieces.PieceStyle
 import bw.mmele.ui.pieces.drawPiece
 import bw.mmele.ui.theme.MmeleColors
+import androidx.compose.ui.res.stringResource
+import bw.mmele.ui.labels.glossRes
+import bw.mmele.ui.labels.label
+import bw.mmele.ui.labels.shortLabel
+import bw.mmele.ui.labels.termRes
+import com.tshipiworks.mmele.R
 
 /** Small pebble glyph for HUDs and buttons. */
 @Composable
@@ -45,10 +51,14 @@ fun PebbleIcon(player: Player, modifier: Modifier = Modifier.size(28.dp), elevat
     PieceIcon(style, modifier, elevation)
 }
 
-fun playerName(p: Player, config: GameConfig): String = when (config.mode) {
-    GameMode.PASS_AND_PLAY -> config.styleOf(p).shortName
-    GameMode.SOLO -> if (p == config.human) "You" else "Computer · ${config.difficulty.name.lowercase().replaceFirstChar { it.uppercase() }}"
-    GameMode.ONLINE -> if (p == config.human) "You · ${config.styleOf(p).shortName}" else "Opponent · ${config.styleOf(p).shortName}"
+@Composable
+fun playerName(p: Player, config: GameConfig): String {
+    val side = config.styleOf(p).shortLabel()
+    return when (config.mode) {
+        GameMode.PASS_AND_PLAY -> side
+        GameMode.SOLO -> if (p == config.human) stringResource(R.string.hud_you) else stringResource(R.string.hud_computer, config.difficulty.label())
+        GameMode.ONLINE -> if (p == config.human) stringResource(R.string.hud_you_side, side) else stringResource(R.string.hud_opponent_side, side)
+    }
 }
 
 fun formatClock(ms: Long): String {
@@ -85,7 +95,7 @@ fun PlayerHud(
             Text(playerName(player, config), style = MaterialTheme.typography.titleMedium, color = MmeleColors.Bone)
             val phaseText = if (game.isGameOver) Phase.GAME_OVER else phase
             Text(
-                "${phaseText.setswana} · ${phaseText.english}",
+                stringResource(phaseText.termRes()) + " · " + stringResource(phaseText.glossRes()),
                 style = MaterialTheme.typography.labelMedium,
                 color = if (active) MmeleColors.GoldBright else MmeleColors.BoneDim,
             )
@@ -100,14 +110,14 @@ fun PlayerHud(
         Column(horizontalAlignment = Alignment.End) {
             val hand = game.handOf(player)
             if (game.rules.cowsPerPlayer > 0 && (hand > 0 || phase == Phase.PLACEMENT)) {
-                Text("In hand $hand", style = MaterialTheme.typography.labelSmall, color = MmeleColors.BoneDim)
+                Text(stringResource(R.string.hud_in_hand, hand), style = MaterialTheme.typography.labelSmall, color = MmeleColors.BoneDim)
                 HandPips(config.styleOf(player), hand, game.rules.cowsPerPlayer)
             } else {
-                Text("On board ${game.onBoard(player)}", style = MaterialTheme.typography.labelSmall, color = MmeleColors.BoneDim)
+                Text(stringResource(R.string.hud_on_board, game.onBoard(player)), style = MaterialTheme.typography.labelSmall, color = MmeleColors.BoneDim)
             }
             if (game.rules.millEffect == bw.mmele.engine.MillEffect.SHOOT) {
                 Text(
-                    "Shot ${game.shotBy(player)}",
+                    stringResource(R.string.hud_shot, game.shotBy(player)),
                     style = MaterialTheme.typography.labelMedium,
                     color = MmeleColors.Bone,
                     modifier = Modifier.padding(top = 2.dp),

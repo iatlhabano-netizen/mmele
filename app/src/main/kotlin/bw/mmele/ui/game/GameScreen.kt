@@ -1,5 +1,11 @@
 package bw.mmele.ui.game
 
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
+import bw.mmele.ui.labels.fact
+import bw.mmele.ui.labels.title
+import com.tshipiworks.mmele.R
+
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
@@ -70,15 +76,10 @@ fun GameRoute(viewModel: GameViewModel, feedback: FeedbackController?, onHome: (
     if (confirmLeave) {
         AlertDialog(
             onDismissRequest = { confirmLeave = false },
-            title = { Text("Leave this game?") },
-            text = {
-                Text(
-                    if (ui.online != null) "Your opponent can claim the win if you don't come back within 90 seconds."
-                    else "This game isn't saved, so it will be lost.",
-                )
-            },
-            confirmButton = { TextButton(onClick = { confirmLeave = false; onHome() }) { Text("Leave") } },
-            dismissButton = { TextButton(onClick = { confirmLeave = false }) { Text("Keep playing") } },
+            title = { Text(stringResource(R.string.game_leave_title)) },
+            text = { Text(stringResource(if (ui.online != null) R.string.game_leave_online else R.string.game_leave_saved)) },
+            confirmButton = { TextButton(onClick = { confirmLeave = false; onHome() }) { Text(stringResource(R.string.game_leave)) } },
+            dismissButton = { TextButton(onClick = { confirmLeave = false }) { Text(stringResource(R.string.game_keep_playing)) } },
             containerColor = MmeleColors.SlateHigh,
             titleContentColor = MmeleColors.Bone,
             textContentColor = MmeleColors.Bone,
@@ -193,42 +194,42 @@ private fun PromptPill(ui: GameUiState, flipped: Boolean, slot: Player?, modifie
     }
 }
 
+@Composable
 fun promptText(ui: GameUiState): String {
     val g = ui.game
     if (g.isGameOver) return ""
     if (!ui.isHumanTurn) return when {
-        ui.aiThinking -> "Computer is thinking…"
-        ui.online != null && !ui.online.waitingForOpponent -> "Opponent's turn"
+        ui.aiThinking -> stringResource(R.string.prompt_ai_thinking)
+        ui.online != null && !ui.online.waitingForOpponent -> stringResource(R.string.prompt_opponent_turn)
         else -> ""
     }
-    val who = if (ui.config.mode == GameMode.PASS_AND_PLAY) "${playerName(g.toMove, ui.config)}: " else ""
-    if (g.mustShoot) {
+    val text = if (g.mustShoot) {
         val enemy = g.maskOf(g.toMove.opponent)
         val allProtected = Rules.shootableMask(g) == enemy && Rules.cowsInMills(g.board, enemy) == enemy
-        return who + if (allProtected) "Mill! All their cows are in mills — shoot any one" else "Mill! Tap a glowing cow to shoot it"
-    }
-    return who + when (g.phase) {
-        Phase.PLACEMENT -> "Place a cow · ${g.handOf(g.toMove)} in hand"
-        Phase.MOVEMENT -> if (ui.selected != null) "Move to a glowing point" else "Tap or drag a cow to move it"
-        Phase.FLYING -> "Three cows left — fly to any empty point"
+        stringResource(if (allProtected) R.string.prompt_shoot_any else R.string.prompt_shoot)
+    } else when (g.phase) {
+        Phase.PLACEMENT -> g.handOf(g.toMove).let { pluralStringResource(R.plurals.prompt_place, it, it) }
+        Phase.MOVEMENT -> stringResource(if (ui.selected != null) R.string.prompt_move_to else R.string.prompt_move)
+        Phase.FLYING -> stringResource(R.string.prompt_fly)
         Phase.GAME_OVER -> ""
     }
+    return if (ui.config.mode == GameMode.PASS_AND_PLAY) stringResource(R.string.prompt_who, playerName(g.toMove, ui.config), text) else text
 }
 
 @Composable
 private fun ControlsRow(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> Unit, vertical: Boolean = false) {
     val content = @Composable {
-        TextButton(onClick = onHome) { Text("Home", color = MmeleColors.BoneDim) }
+        TextButton(onClick = onHome) { Text(stringResource(R.string.nav_home), color = MmeleColors.BoneDim) }
         val online = ui.online
         if (online == null) {
-            OutlinedButton(onClick = { onIntent(GameIntent.Undo) }, enabled = ui.canUndo) { Text("Undo") }
+            OutlinedButton(onClick = { onIntent(GameIntent.Undo) }, enabled = ui.canUndo) { Text(stringResource(R.string.game_undo)) }
         } else if (!ui.game.isGameOver) {
             OutlinedButton(onClick = { onIntent(GameIntent.OfferDraw) }, enabled = !online.iOfferedDraw && !online.waitingForOpponent) {
-                Text(if (online.iOfferedDraw) "Draw offered" else "Offer draw")
+                Text(stringResource(if (online.iOfferedDraw) R.string.game_draw_offered else R.string.game_offer_draw))
             }
             var confirm by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
             OutlinedButton(onClick = { if (confirm) onIntent(GameIntent.Resign) else confirm = true }, enabled = !online.waitingForOpponent) {
-                Text(if (confirm) "Tap to confirm" else "Resign", color = if (confirm) MmeleColors.Danger else androidx.compose.ui.graphics.Color.Unspecified)
+                Text(stringResource(if (confirm) R.string.game_confirm else R.string.game_resign), color = if (confirm) MmeleColors.Danger else androidx.compose.ui.graphics.Color.Unspecified)
             }
         }
         if (ui.game.isGameOver) {
@@ -246,29 +247,37 @@ private fun ControlsRow(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome:
     }
 }
 
+@Composable
 fun resultTitle(ui: GameUiState): String = when (val r = ui.game.result) {
     is GameResult.Win -> when (ui.config.mode) {
-        GameMode.SOLO -> if (r.winner == ui.config.human) "You win!" else "The computer wins"
-        GameMode.PASS_AND_PLAY -> "${playerName(r.winner, ui.config)} wins!"
-        GameMode.ONLINE -> if (r.winner == ui.config.human) "You win!" else "Opponent wins"
+        GameMode.SOLO -> stringResource(if (r.winner == ui.config.human) R.string.result_you_win else R.string.result_computer_wins)
+        GameMode.PASS_AND_PLAY -> stringResource(R.string.result_side_wins, playerName(r.winner, ui.config))
+        GameMode.ONLINE -> stringResource(if (r.winner == ui.config.human) R.string.result_you_win else R.string.result_opponent_wins)
     }
-    is GameResult.Draw -> "A draw"
+    is GameResult.Draw -> stringResource(R.string.result_draw)
     null -> ""
 }
 
+@Composable
 fun resultReason(ui: GameUiState): String = when (val r = ui.game.result) {
-    is GameResult.Win -> when (r.reason) {
-        WinReason.REDUCED_TO_TWO -> "Reduced to two cows — no more mills possible."
-        WinReason.BLOCKADE -> "Go tswala — locked in with no legal move."
-        WinReason.LINE_OF_THREE -> "Three in a line."
-        WinReason.TIMEOUT -> "Out of time."
-        WinReason.RESIGNATION -> "Resigned."
-        WinReason.ABANDONED -> "Left the game and did not return."
-    }
+    is GameResult.Win -> stringResource(
+        when (r.reason) {
+            WinReason.REDUCED_TO_TWO -> R.string.reason_two
+            WinReason.BLOCKADE -> R.string.reason_blockade
+            WinReason.LINE_OF_THREE -> R.string.reason_line
+            WinReason.TIMEOUT -> R.string.reason_timeout
+            WinReason.RESIGNATION -> R.string.reason_resigned
+            WinReason.ABANDONED -> R.string.reason_abandoned
+        },
+    )
     is GameResult.Draw -> when (r.reason) {
-        DrawReason.FLYING_NO_SHOT -> "Ten moves each with a player on three cows and no shot."
-        DrawReason.NO_PROGRESS -> if (ui.game.rules.millEffect == MillEffect.WIN) "Twenty moves each without a line." else "Fifty moves each without a shot."
-        DrawReason.AGREEMENT -> "Both players agreed to a draw."
+        DrawReason.FLYING_NO_SHOT -> stringResource(R.string.reason_flying_draw)
+        DrawReason.NO_PROGRESS -> {
+            val each = ui.game.rules.idleDrawPlies / 2
+            if (ui.game.rules.millEffect == MillEffect.WIN) pluralStringResource(R.plurals.reason_no_line, each, each)
+            else pluralStringResource(R.plurals.reason_no_shot, each, each)
+        }
+        DrawReason.AGREEMENT -> stringResource(R.string.reason_agreed)
     }
     null -> ""
 }
@@ -303,8 +312,8 @@ private fun SceneHeader(scene: bw.mmele.ui.scenes.Scene) {
                 .background(androidx.compose.ui.graphics.Brush.verticalGradient(listOf(androidx.compose.ui.graphics.Color.Transparent, MmeleColors.SlateRaised.copy(alpha = 0.95f)))),
         )
         Column(Modifier.align(Alignment.BottomStart).padding(horizontal = 16.dp, vertical = 8.dp)) {
-            Text(scene.title.uppercase(), style = MaterialTheme.typography.labelSmall, color = MmeleColors.GoldBright)
-            Text(scene.fact, style = MaterialTheme.typography.labelMedium, color = MmeleColors.Bone)
+            Text(scene.title().uppercase(), style = MaterialTheme.typography.labelSmall, color = MmeleColors.GoldBright)
+            Text(scene.fact(), style = MaterialTheme.typography.labelMedium, color = MmeleColors.Bone)
         }
     }
 }
@@ -320,27 +329,30 @@ private fun GameOverBody(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome
             Text(resultReason(ui), style = MaterialTheme.typography.bodyMedium, color = MmeleColors.BoneDim, textAlign = TextAlign.Center)
             Spacer(Modifier.height(6.dp))
             Text(
-                "Moves played: ${ui.game.ply}",
+                stringResource(R.string.result_moves, ui.game.ply),
                 style = MaterialTheme.typography.labelMedium,
                 color = MmeleColors.BoneDim,
             )
             Spacer(Modifier.height(20.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                TextButton(onClick = onHome) { Text("Home") }
-                TextButton(onClick = { onIntent(GameIntent.DismissGameOver) }) { Text("View board") }
+                TextButton(onClick = onHome) { Text(stringResource(R.string.nav_home)) }
+                TextButton(onClick = { onIntent(GameIntent.DismissGameOver) }) { Text(stringResource(R.string.result_view_board)) }
                 androidx.compose.material3.Button(onClick = { onIntent(GameIntent.Rematch) }, enabled = ui.online?.iOfferedRematch != true) { Text(rematchLabel(ui)) }
             }
         }
     }
 
 
+@Composable
 fun rematchLabel(ui: GameUiState): String {
-    val o = ui.online ?: return "Rematch"
-    return when {
-        o.iOfferedRematch -> "Waiting…"
-        o.opponentOffersRematch -> "Accept rematch"
-        else -> "Rematch"
-    }
+    val o = ui.online ?: return stringResource(R.string.game_rematch)
+    return stringResource(
+        when {
+            o.iOfferedRematch -> R.string.game_waiting
+            o.opponentOffersRematch -> R.string.game_accept_rematch
+            else -> R.string.game_rematch
+        },
+    )
 }
 
 /** Room code, connection dot, and transient messages for online games. */
@@ -355,27 +367,27 @@ private fun OnlineBar(o: OnlineUi, onShareCode: (String) -> Unit, modifier: Modi
             verticalAlignment = Alignment.CenterVertically,
         ) {
             val (dot, label) = when {
-                o.waitingForOpponent -> MmeleColors.Gold to "Waiting for opponent"
-                o.opponentConnected -> MmeleColors.Online to "Opponent connected"
-                o.abandonSecondsLeft != null && o.abandonSecondsLeft > 0 -> MmeleColors.Danger to "Opponent disconnected · ${o.abandonSecondsLeft}s"
-                else -> MmeleColors.Danger to "Opponent disconnected"
+                o.waitingForOpponent -> MmeleColors.Gold to stringResource(R.string.online_waiting)
+                o.opponentConnected -> MmeleColors.Online to stringResource(R.string.online_connected)
+                o.abandonSecondsLeft != null && o.abandonSecondsLeft > 0 -> MmeleColors.Danger to stringResource(R.string.online_disconnected_countdown, o.abandonSecondsLeft)
+                else -> MmeleColors.Danger to stringResource(R.string.online_disconnected)
             }
             androidx.compose.foundation.Canvas(Modifier.width(10.dp).height(10.dp)) { drawCircle(dot) }
             Spacer(Modifier.width(8.dp))
             Text(label, style = MaterialTheme.typography.labelMedium, color = MmeleColors.Bone, modifier = Modifier.weight(1f))
-            if (o.syncing) Text("sending…", style = MaterialTheme.typography.labelSmall, color = MmeleColors.BoneDim, modifier = Modifier.padding(end = 8.dp))
+            if (o.syncing) Text(stringResource(R.string.online_sending), style = MaterialTheme.typography.labelSmall, color = MmeleColors.BoneDim, modifier = Modifier.padding(end = 8.dp))
             Text(
                 o.code,
                 style = MaterialTheme.typography.labelLarge.copy(letterSpacing = androidx.compose.ui.unit.TextUnit(2f, androidx.compose.ui.unit.TextUnitType.Sp)),
                 color = MmeleColors.GoldBright,
-                modifier = Modifier.clip(RoundedCornerShape(8.dp)).clickable(onClickLabel = "share room code") { onShareCode(o.code) }.padding(horizontal = 6.dp, vertical = 2.dp),
+                modifier = Modifier.clip(RoundedCornerShape(8.dp)).clickable(onClickLabel = stringResource(R.string.online_share_action)) { onShareCode(o.code) }.padding(horizontal = 6.dp, vertical = 2.dp),
             )
         }
         if (o.abandonSecondsLeft == 0) {
             ClaimRow(onClaim)
         }
-        o.message?.let {
-            Text(it, style = MaterialTheme.typography.labelMedium, color = MmeleColors.GoldBright, modifier = Modifier.padding(top = 4.dp, start = 4.dp))
+        o.message?.let { msg ->
+            Text(msg.text(), style = MaterialTheme.typography.labelMedium, color = MmeleColors.GoldBright, modifier = Modifier.padding(top = 4.dp, start = 4.dp))
         }
     }
 }
@@ -384,12 +396,12 @@ private fun OnlineBar(o: OnlineUi, onShareCode: (String) -> Unit, modifier: Modi
 private fun ClaimRow(onClaim: () -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 4.dp, start = 4.dp)) {
         Text(
-            "Your opponent has been away too long.",
+            stringResource(R.string.online_away_too_long),
             style = MaterialTheme.typography.labelMedium,
             color = MmeleColors.Bone,
             modifier = Modifier.weight(1f),
         )
-        TextButton(onClick = onClaim) { Text("Claim win") }
+        TextButton(onClick = onClaim) { Text(stringResource(R.string.online_claim_win)) }
     }
 }
 
@@ -404,7 +416,7 @@ private fun WaitingCard(o: OnlineUi, onShareCode: (String) -> Unit, onHome: () -
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text("ROOM CODE", style = MaterialTheme.typography.labelSmall, color = MmeleColors.BoneDim)
+        Text(stringResource(R.string.online_room_code), style = MaterialTheme.typography.labelSmall, color = MmeleColors.BoneDim)
         Spacer(Modifier.height(6.dp))
         Text(
             o.code.chunked(3).joinToString(" "),
@@ -412,10 +424,10 @@ private fun WaitingCard(o: OnlineUi, onShareCode: (String) -> Unit, onHome: () -
             color = MmeleColors.GoldBright,
         )
         Spacer(Modifier.height(8.dp))
-        Text("Send this code to a friend. The game starts as soon as they join.", style = MaterialTheme.typography.bodyMedium, color = MmeleColors.Bone, textAlign = TextAlign.Center)
+        Text(stringResource(R.string.online_send_code), style = MaterialTheme.typography.bodyMedium, color = MmeleColors.Bone, textAlign = TextAlign.Center)
         Spacer(Modifier.height(18.dp))
-        androidx.compose.material3.Button(onClick = { onShareCode(o.code) }) { Text("Share code") }
-        TextButton(onClick = onHome) { Text("Cancel", color = MmeleColors.BoneDim) }
+        androidx.compose.material3.Button(onClick = { onShareCode(o.code) }) { Text(stringResource(R.string.online_share_code)) }
+        TextButton(onClick = onHome) { Text(stringResource(R.string.common_cancel), color = MmeleColors.BoneDim) }
     }
 }
 
@@ -428,8 +440,8 @@ private fun DrawOfferBanner(onIntent: (GameIntent) -> Unit, modifier: Modifier =
             .padding(start = 18.dp, end = 6.dp, top = 4.dp, bottom = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text("Opponent offers a draw", style = MaterialTheme.typography.labelLarge, color = MmeleColors.Bone)
+        Text(stringResource(R.string.online_offers_draw), style = MaterialTheme.typography.labelLarge, color = MmeleColors.Bone)
         Spacer(Modifier.width(8.dp))
-        TextButton(onClick = { onIntent(GameIntent.OfferDraw) }) { Text("Accept") }
+        TextButton(onClick = { onIntent(GameIntent.OfferDraw) }) { Text(stringResource(R.string.online_accept)) }
     }
 }

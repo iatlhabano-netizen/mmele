@@ -1,5 +1,9 @@
 package bw.mmele.ui.about
 
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
+import com.tshipiworks.mmele.R
+
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -55,7 +59,7 @@ fun loadLicences(context: android.content.Context): List<LicenceEntry> = runCatc
             LicenceEntry(
                 name = lib.name,
                 version = lib.artifactVersion.orEmpty(),
-                licences = lib.licenses.joinToString { it.name }.ifEmpty { "See website" },
+                licences = lib.licenses.joinToString { it.name },
                 text = lib.licenses.firstOrNull()?.licenseContent,
                 website = lib.website ?: lib.licenses.firstOrNull()?.url,
             )
@@ -63,18 +67,20 @@ fun loadLicences(context: android.content.Context): List<LicenceEntry> = runCatc
         .sortedBy { it.name.lowercase() }
 }.getOrDefault(emptyList())
 
-/** Where the facts in the app come from (mirrors docs/SCENES.md, docs/PIECES.md, docs/RULES.md). */
-val CREDITS: List<Pair<String, String>> = listOf(
-    "Morabaraba rules" to "Mind Sports South Africa, Generally Accepted Rules for Morabaraba; Wikipedia, Morabaraba",
-    "Khutlotharo" to "Board layout from a Motswana player; jump rule as in Tsoro Yematatu (Wikipedia; Ludii, after Matthews 1964)",
-    "Okavango Delta" to "UNESCO World Heritage Centre, news 1159 (whc.unesco.org/en/news/1159)",
-    "Chobe National Park" to "Botswana Tourism Organisation (botswanatourism.co.bw)",
-    "Makgadikgadi Pans" to "NASA Earth Observatory; UNESCO tentative list 5559",
-    "Central Kalahari" to "Wikipedia, Central Kalahari Game Reserve",
-    "Tsodilo Hills" to "UNESCO World Heritage List 1021 (whc.unesco.org/en/list/1021)",
-    "Bird eggs" to "Birds of Botswana descriptions: BDI / SABAP1 (thebdi.org) for kori bustard, crowned lapwing, helmeted guineafowl; " +
+/**
+ * Where the facts in the app come from (mirrors docs/SCENES.md, docs/PIECES.md, docs/RULES.md).
+ * Headings are translated; the citations stay as published.
+ */
+val CREDITS: List<Pair<Int, String>> = listOf(
+    R.string.credit_rules to "Mind Sports South Africa, Generally Accepted Rules for Morabaraba; Wikipedia, Morabaraba",
+    R.string.variant_triangle to "Board layout from a Motswana player; jump rule as in Tsoro Yematatu (Wikipedia; Ludii, after Matthews 1964)",
+    R.string.scene_okavango to "UNESCO World Heritage Centre, news 1159 (whc.unesco.org/en/news/1159)",
+    R.string.scene_chobe to "Botswana Tourism Organisation (botswanatourism.co.bw)",
+    R.string.scene_makgadikgadi to "NASA Earth Observatory; UNESCO tentative list 5559",
+    R.string.scene_kalahari to "Wikipedia, Central Kalahari Game Reserve",
+    R.string.scene_tsodilo to "UNESCO World Heritage List 1021 (whc.unesco.org/en/list/1021)",
+    R.string.credit_eggs to "Birds of Botswana descriptions: BDI / SABAP1 (thebdi.org) for kori bustard, crowned lapwing, helmeted guineafowl; " +
         "Wikipedia for ostrich; Kruger Park guide and Earth Life for lilac-breasted roller; biodiversityexplorer.info for ranges",
-    "Art and sound" to "Every board, scene, piece and sound is drawn or synthesised in code for Mmele. No third-party images, fonts or samples.",
 )
 
 @Composable
@@ -92,7 +98,7 @@ fun AboutScreen(
     val libs = licences ?: remember { loadLicences(context) }
     var openLicence by remember { mutableStateOf<LicenceEntry?>(null) }
     var confirmDelete by remember { mutableStateOf(false) }
-    var deleteStatus by remember { mutableStateOf<String?>(null) }
+    var deleteStatus by remember { mutableStateOf<Result<DeleteResult>?>(null) }
     var deleting by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
@@ -102,49 +108,59 @@ fun AboutScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Column(Modifier.widthIn(max = 560.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                TextButton(onClick = onBack) { Text("‹ Home", color = MmeleColors.BoneDim) }
-                Text("About Mmele", style = MaterialTheme.typography.headlineMedium, color = MmeleColors.Bone, modifier = Modifier.semantics { heading() })
-                Text("Version $versionName ($versionCode)", style = MaterialTheme.typography.labelLarge, color = MmeleColors.Gold)
+                TextButton(onClick = onBack) { Text("‹ " + stringResource(R.string.nav_home), color = MmeleColors.BoneDim) }
+                Text(stringResource(R.string.about_title), style = MaterialTheme.typography.headlineMedium, color = MmeleColors.Bone, modifier = Modifier.semantics { heading() })
+                Text(stringResource(R.string.about_version, versionName, versionCode), style = MaterialTheme.typography.labelLarge, color = MmeleColors.Gold)
                 Text(AppInfo.DEVELOPER, style = MaterialTheme.typography.bodyMedium, color = MmeleColors.BoneDim)
 
-                Section("Privacy and terms")
-                LinkRow("Privacy policy", AppInfo.PRIVACY_URL) { uri.openUri(AppInfo.PRIVACY_URL) }
-                LinkRow("Terms of use", AppInfo.TERMS_URL) { uri.openUri(AppInfo.TERMS_URL) }
-                LinkRow("Contact", AppInfo.CONTACT_EMAIL) { runCatching { uri.openUri("mailto:${AppInfo.CONTACT_EMAIL}?subject=Mmele") } }
+                Section(stringResource(R.string.about_privacy_terms))
+                LinkRow(stringResource(R.string.about_privacy), AppInfo.PRIVACY_URL) { uri.openUri(AppInfo.PRIVACY_URL) }
+                LinkRow(stringResource(R.string.about_terms), AppInfo.TERMS_URL) { uri.openUri(AppInfo.TERMS_URL) }
+                LinkRow(stringResource(R.string.about_contact), AppInfo.CONTACT_EMAIL) { runCatching { uri.openUri("mailto:${AppInfo.CONTACT_EMAIL}?subject=Mmele") } }
 
-                Section("Your online data")
+                Section(stringResource(R.string.about_online_data))
                 if (onDeleteOnlineData == null) {
-                    Body("Online play isn't switched on in this version, so Mmele has no online data about you. Offline games never leave your phone.")
+                    Body(stringResource(R.string.about_online_off))
                 } else {
-                    Body(
-                        "Online play uses a random anonymous ID and stores your game rooms on Google Firebase. Finished rooms are deleted when " +
-                            "the host leaves, and anything idle for 30 days is removed at the next monthly clean-up. You can delete everything now:",
-                    )
+                    Body(stringResource(R.string.about_online_on))
                     OutlinedButton(onClick = { confirmDelete = true }, enabled = !deleting) {
-                        Text(if (deleting) "Deleting…" else "Delete my online data", color = MmeleColors.Bone)
+                        Text(stringResource(if (deleting) R.string.about_deleting else R.string.about_delete), color = MmeleColors.Bone)
                     }
-                    deleteStatus?.let { Body(it) }
+                    deleteStatus?.let { res ->
+                        val text = res.fold(
+                            { r ->
+                                pluralStringResource(R.plurals.about_deleted_rooms, r.roomsDeleted, r.roomsDeleted) + " " +
+                                    stringResource(if (r.identityDeleted) R.string.about_id_deleted else R.string.about_id_pending)
+                            },
+                            { stringResource(R.string.about_delete_failed, it.message ?: stringResource(R.string.about_network_error), AppInfo.CONTACT_EMAIL) },
+                        )
+                        Body(text)
+                    }
                 }
 
-                Section("Credits and sources")
+                Section(stringResource(R.string.about_credits))
                 CREDITS.forEach { (what, src) ->
-                    Text(what, style = MaterialTheme.typography.titleSmall, color = MmeleColors.Bone)
+                    Text(stringResource(what), style = MaterialTheme.typography.titleSmall, color = MmeleColors.Bone)
                     Body(src)
                 }
+                Text(stringResource(R.string.credit_art), style = MaterialTheme.typography.titleSmall, color = MmeleColors.Bone)
+                Body(stringResource(R.string.credit_art_body))
+                Text(stringResource(R.string.credit_translation), style = MaterialTheme.typography.titleSmall, color = MmeleColors.Bone)
+                Body(stringResource(R.string.credit_translation_body))
 
-                Section("Open-source licences")
-                Body("Mmele is built with these open-source libraries. Tap one to read its licence.")
-                if (libs.isEmpty()) Body("Licence list unavailable in this build.")
+                Section(stringResource(R.string.about_licences))
+                Body(stringResource(R.string.about_licences_intro))
+                if (libs.isEmpty()) Body(stringResource(R.string.about_licences_missing))
                 libs.forEach { lib ->
                     Column(
                         Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(10.dp))
-                            .clickable(role = Role.Button, onClickLabel = "read licence") { openLicence = lib }
+                            .clickable(role = Role.Button, onClickLabel = stringResource(R.string.about_read_licence)) { openLicence = lib }
                             .padding(vertical = 6.dp, horizontal = 4.dp),
                     ) {
                         Text("${lib.name} ${lib.version}".trim(), style = MaterialTheme.typography.bodyMedium, color = MmeleColors.Bone)
-                        Text(lib.licences, style = MaterialTheme.typography.labelMedium, color = MmeleColors.BoneDim)
+                        Text(lib.licences.ifEmpty { stringResource(R.string.about_see_website) }, style = MaterialTheme.typography.labelMedium, color = MmeleColors.BoneDim)
                     }
                 }
                 Spacer(Modifier.height(24.dp))
@@ -161,8 +177,8 @@ fun AboutScreen(
                     Text(lib.text ?: "${lib.licences}\n\n${lib.website.orEmpty()}", style = MaterialTheme.typography.bodySmall)
                 }
             },
-            confirmButton = { TextButton(onClick = { openLicence = null }) { Text("Close") } },
-            dismissButton = lib.website?.let { w -> { TextButton(onClick = { uri.openUri(w) }) { Text("Website") } } },
+            confirmButton = { TextButton(onClick = { openLicence = null }) { Text(stringResource(R.string.common_close)) } },
+            dismissButton = lib.website?.let { w -> { TextButton(onClick = { uri.openUri(w) }) { Text(stringResource(R.string.about_website)) } } },
             containerColor = MmeleColors.SlateHigh, titleContentColor = MmeleColors.Bone, textContentColor = MmeleColors.Bone,
         )
     }
@@ -170,28 +186,22 @@ fun AboutScreen(
     if (confirmDelete && onDeleteOnlineData != null) {
         AlertDialog(
             onDismissRequest = { confirmDelete = false },
-            title = { Text("Delete your online data?") },
-            text = { Text("This deletes every online room you created or joined from this phone, and your anonymous online ID. Games in progress will end. Offline play is not affected.") },
+            title = { Text(stringResource(R.string.about_delete_title)) },
+            text = { Text(stringResource(R.string.about_delete_body)) },
             confirmButton = {
                 Button(
                     onClick = {
                         confirmDelete = false
                         deleting = true
                         scope.launch {
-                            deleteStatus = runCatching { onDeleteOnlineData() }.fold(
-                                { r ->
-                                    "Done: ${r.roomsDeleted} room${if (r.roomsDeleted == 1) "" else "s"} deleted. " +
-                                        if (r.identityDeleted) "Your anonymous ID has been deleted." else "Your anonymous ID was removed from this phone and will be erased from the server within 60 days."
-                                },
-                                { "Couldn't reach the server (${it.message ?: "network error"}). Check your connection and try again, or email ${AppInfo.CONTACT_EMAIL}." },
-                            )
+                            deleteStatus = runCatching { onDeleteOnlineData() }
                             deleting = false
                         }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = MmeleColors.Danger, contentColor = MmeleColors.Slate),
-                ) { Text("Delete") }
+                ) { Text(stringResource(R.string.about_delete_confirm)) }
             },
-            dismissButton = { TextButton(onClick = { confirmDelete = false }) { Text("Cancel") } },
+            dismissButton = { TextButton(onClick = { confirmDelete = false }) { Text(stringResource(R.string.common_cancel)) } },
             containerColor = MmeleColors.SlateHigh, titleContentColor = MmeleColors.Bone, textContentColor = MmeleColors.Bone,
         )
     }

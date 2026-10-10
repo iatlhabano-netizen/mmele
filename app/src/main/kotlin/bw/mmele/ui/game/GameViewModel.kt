@@ -59,6 +59,11 @@ class GameViewModel(
     /** Set for online games: the room you're seated in. */
     private val online: OnlineSession? = null,
     private val now: () -> Long = System::currentTimeMillis,
+    /**
+     * Monotonic milliseconds for the chess clocks (never wall time: changing the phone's time or a
+     * network time sync must not add or remove thinking time).
+     */
+    private val clockNow: () -> Long = { System.nanoTime() / 1_000_000 },
     /** Offline game to continue (from [GameRecord.decode]); its config must equal [config]. */
     private val resume: GameRecord? = null,
     /** Survives process death; the current game is mirrored here after every change. */
@@ -94,7 +99,7 @@ class GameViewModel(
     private var room: RoomSnapshot? = online?.room
     private var pendingSubmits = 0
     private val submitLock = Mutex()
-    private var message: String? = null
+    private var message: OnlineMessage? = null
     private var resultReported = false
     private var clockPaused = false
     /** Whose clock ran out, when the game ended on time (not part of the move list). */
@@ -348,7 +353,7 @@ class GameViewModel(
     private fun startClock() {
         clockJob?.cancel()
         if (config.clockMinutes <= 0 || clockPaused || _state.value.game.isGameOver) return
-        clockMark = now()
+        clockMark = clockNow()
         clockJob = viewModelScope.launch {
             while (isActive) {
                 delay(100)
@@ -377,7 +382,7 @@ class GameViewModel(
     private fun chargeClock(): Long {
         val ui = _state.value
         if (config.clockMinutes <= 0 || clockJob?.isActive != true || ui.game.isGameOver) return ui.clockOf(ui.game.toMove)
-        val t = now()
+        val t = clockNow()
         val dt = t - clockMark
         clockMark = t
         val p = ui.game.toMove
@@ -473,7 +478,7 @@ class GameViewModel(
         if (s.room.moves.isNotEmpty()) rebuild(s.room) // reconnecting into a game in progress
         viewModelScope.launch {
             s.repo.observe(s.room.code)
-                .catch { e -> message = "Connection problem: ${e.message ?: "unknown"}"; refreshOnline() }
+                .catch { e -> message = OnlineMessage(OnlineMessage.Kind.CONNECTION, e.message); refreshOnline() }
                 .collect { onRoom(it) }
         }
     }
@@ -484,8 +489,8 @@ class GameViewModel(
         val s = online ?: return
         viewModelScope.launch {
             val r = runCatching { submitLock.withLock { op(s.repo, s.room.code, s.seat) } }
-                .getOrElse { SubmitResult.Rejected(it.message ?: "network error") }
-            if (r is SubmitResult.Rejected) { message = "Not sent: ${r.reason}"; refreshOnline() }
+                .getOrElse { SubmitResult.Rejected(it.message ?: "network") }
+            if (r is SubmitResult.Rejected) { message = OnlineMessage(OnlineMessage.Kind.NOT_SENT, r.reason); refreshOnline() }
             else { message = null; refreshOnline() }
         }
     }
@@ -495,10 +500,10 @@ class GameViewModel(
         pendingSubmits++
         viewModelScope.launch {
             val r = runCatching { submitLock.withLock { s.repo.submitMove(s.room.code, s.seat, action) } }
-                .getOrElse { SubmitResult.Rejected(it.message ?: "network error") }
+                .getOrElse { SubmitResult.Rejected(it.message ?: "network") }
             pendingSubmits--
             if (r is SubmitResult.Rejected) {
-                message = "Move not accepted (${r.reason}) — board resynced"
+                message = OnlineMessage(OnlineMessage.Kind.REJECTED, r.reason)
                 room?.let { rebuild(it) }
             }
             refreshOnline()
@@ -566,7 +571,7 @@ class GameViewModel(
 
     private fun corrupt() {
         val s = online ?: return
-        message = "The other phone sent a move the rules don't allow. Game stopped."
+        message = OnlineMessage(OnlineMessage.Kind.CORRUPT)
         val g = _state.value.game
         if (g.result == null) {
             val over = Rules.forfeit(g, s.seat.other.toPlayer(), WinReason.RESIGNATION)

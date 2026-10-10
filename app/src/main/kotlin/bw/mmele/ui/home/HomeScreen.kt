@@ -1,5 +1,17 @@
 package bw.mmele.ui.home
 
+import androidx.compose.ui.res.stringResource
+import bw.mmele.AppLanguage
+import bw.mmele.ui.game.GameRecord
+import bw.mmele.ui.labels.blurbRes
+import bw.mmele.ui.labels.fact
+import bw.mmele.ui.labels.label
+import bw.mmele.ui.labels.shortLabel
+import bw.mmele.ui.labels.shortRes
+import bw.mmele.ui.labels.title
+import bw.mmele.ui.labels.titleRes
+import com.tshipiworks.mmele.R
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -70,6 +82,16 @@ fun HomeScreen(
     onAbout: () -> Unit = {},
     onlineConfigured: Boolean = true,
     animate: Boolean = true,
+    /** In-progress offline game that can be continued, if any. */
+    savedGame: GameRecord? = null,
+    onContinue: () -> Unit = {},
+    lessonsDone: Int = 0,
+    lessonsTotal: Int = 5,
+    onAcademy: () -> Unit = {},
+    onStats: () -> Unit = {},
+    onHowToPlay: () -> Unit = {},
+    language: AppLanguage = AppLanguage.SYSTEM,
+    onLanguage: (AppLanguage) -> Unit = {},
 ) {
     Box(Modifier.fillMaxSize()) {
         // Botswana scene at full strength, with a gradient that only darkens where controls sit.
@@ -100,19 +122,23 @@ fun HomeScreen(
                     PieceIcon(config.styleTwo, Modifier.height(34.dp).aspectRatio(1f), pieceId = 7)
                 }
                 Text(
-                    "MORABARABA · THE CATTLE GAME",
+                    stringResource(R.string.home_tagline),
                     style = MaterialTheme.typography.labelSmall,
                     color = MmeleColors.Gold,
                 )
                 Spacer(Modifier.height(14.dp))
                 SceneCaption(config.scene)
                 Spacer(Modifier.height(18.dp))
+                if (savedGame != null) {
+                    ContinueCard(savedGame, onContinue)
+                    Spacer(Modifier.height(18.dp))
+                }
 
-                SectionLabel("Board")
+                SectionLabel(stringResource(R.string.home_section_board))
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     VariantCard(
-                        title = "Classic",
-                        subtitle = "12 cows · mills shoot",
+                        title = stringResource(R.string.variant_classic),
+                        subtitle = stringResource(R.string.variant_classic_sub),
                         variant = Variant.CLASSIC,
                         selected = config.variant == Variant.CLASSIC,
                         animate = animate,
@@ -120,8 +146,8 @@ fun HomeScreen(
                         modifier = Modifier.weight(1f),
                     ) { onConfigChange(config.copy(variant = Variant.CLASSIC)) }
                     VariantCard(
-                        title = "Khutlotharo",
-                        subtitle = "Triangle · 3 cows · line wins",
+                        title = stringResource(R.string.variant_triangle),
+                        subtitle = stringResource(R.string.variant_triangle_sub),
                         variant = Variant.TRIANGLE,
                         selected = config.variant == Variant.TRIANGLE,
                         animate = animate,
@@ -131,20 +157,20 @@ fun HomeScreen(
                 }
 
                 Spacer(Modifier.height(20.dp))
-                SectionLabel("Mode")
+                SectionLabel(stringResource(R.string.home_section_mode))
                 // Order matters: vs Computer (default), online with a friend, then same-phone.
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    ModeOption("Play vs Computer", "Solo against the AI", config.mode == GameMode.SOLO) {
+                    ModeOption(stringResource(R.string.mode_solo), stringResource(R.string.mode_solo_sub), config.mode == GameMode.SOLO) {
                         onConfigChange(config.copy(mode = GameMode.SOLO))
                     }
                     ModeOption(
-                        "Play online",
-                        if (onlineConfigured) "A friend over the internet · room code" else "Coming soon in this version",
+                        stringResource(R.string.mode_online),
+                        stringResource(if (onlineConfigured) R.string.mode_online_sub else R.string.mode_online_sub_off),
                         config.mode == GameMode.ONLINE,
                     ) {
                         onConfigChange(config.copy(mode = GameMode.ONLINE))
                     }
-                    ModeOption("Pass & Play", "Two players on this phone", config.mode == GameMode.PASS_AND_PLAY) {
+                    ModeOption(stringResource(R.string.mode_pass_and_play), stringResource(R.string.mode_pass_and_play_sub), config.mode == GameMode.PASS_AND_PLAY) {
                         onConfigChange(config.copy(mode = GameMode.PASS_AND_PLAY))
                     }
                 }
@@ -152,35 +178,44 @@ fun HomeScreen(
                 if (config.mode == GameMode.SOLO) {
                     Spacer(Modifier.height(12.dp))
                     Segmented(
-                        options = listOf("Easy", "Medium", "Hard"),
+                        options = Difficulty.entries.map { it.label() },
                         selectedIndex = config.difficulty.ordinal,
                     ) { onConfigChange(config.copy(difficulty = Difficulty.entries[it])) }
                     Spacer(Modifier.height(12.dp))
                     Segmented(
-                        options = listOf("Play ${config.styleOne.shortName} (first)", "Play ${config.styleTwo.shortName}"),
+                        options = listOf(
+                            stringResource(R.string.home_play_side_first, config.styleOne.shortLabel()),
+                            stringResource(R.string.home_play_side, config.styleTwo.shortLabel()),
+                        ),
                         selectedIndex = if (config.human == Player.ONE) 0 else 1,
                     ) { onConfigChange(config.copy(human = if (it == 0) Player.ONE else Player.TWO)) }
                 }
 
                 Spacer(Modifier.height(20.dp))
                 if (config.mode != GameMode.ONLINE) {
-                    SectionLabel("Clock per player")
+                    SectionLabel(stringResource(R.string.home_section_clock))
                     val clocks = listOf(0, 3, 5, 10)
                     Segmented(
-                        options = listOf("Off", "3 min", "5 min", "10 min"),
+                        options = clocks.map { if (it == 0) stringResource(R.string.clock_off) else stringResource(R.string.clock_minutes, it) },
                         selectedIndex = clocks.indexOf(config.clockMinutes).coerceAtLeast(0),
                     ) { onConfigChange(config.copy(clockMinutes = clocks[it])) }
                     Spacer(Modifier.height(20.dp))
                 }
-                SectionLabel("Pieces")
+                SectionLabel(stringResource(R.string.home_section_pieces))
                 PieceSetPicker(config) { onConfigChange(it) }
                 Spacer(Modifier.height(20.dp))
-                SectionLabel("Scene · Botswana")
+                SectionLabel(stringResource(R.string.home_section_scene))
                 ScenePicker(config.scene) { onConfigChange(config.copy(scene = it)) }
 
                 Spacer(Modifier.height(16.dp))
-                ToggleRow("Sound", soundOn, onSoundChange)
-                ToggleRow("Haptics", hapticsOn, onHapticsChange)
+                ToggleRow(stringResource(R.string.home_sound), soundOn, onSoundChange)
+                ToggleRow(stringResource(R.string.home_haptics), hapticsOn, onHapticsChange)
+                Spacer(Modifier.height(12.dp))
+                SectionLabel(stringResource(R.string.home_section_language))
+                Segmented(
+                    options = AppLanguage.entries.map { stringResource(it.labelRes) },
+                    selectedIndex = language.ordinal,
+                ) { onLanguage(AppLanguage.entries[it]) }
 
                 Spacer(Modifier.height(20.dp))
                 val online = config.mode == GameMode.ONLINE
@@ -189,31 +224,26 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxWidth().height(56.dp),
                     shape = RoundedCornerShape(18.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = MmeleColors.Gold, contentColor = MmeleColors.Slate),
-                ) { Text(if (online) "Tshameka · Find a room" else "Tshameka · Play", style = MaterialTheme.typography.titleMedium) }
+                ) { Text(stringResource(if (online) R.string.home_find_room else R.string.home_play), style = MaterialTheme.typography.titleMedium) }
 
                 Spacer(Modifier.height(14.dp))
-                // Academy is milestone 2.
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .alpha(0.45f)
-                        .border(1.dp, MmeleColors.Bone.copy(alpha = 0.25f), RoundedCornerShape(18.dp))
-                        .padding(horizontal = 16.dp, vertical = 14.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Column(Modifier.weight(1f)) {
-                        Text("Academy", style = MaterialTheme.typography.titleMedium, color = MmeleColors.Bone)
-                        Text("Four guided puzzles — coming soon", style = MaterialTheme.typography.labelMedium, color = MmeleColors.BoneDim)
-                    }
-                    Text("SOON", style = MaterialTheme.typography.labelSmall, color = MmeleColors.Gold)
+                NavCard(
+                    title = stringResource(R.string.home_academy),
+                    subtitle = stringResource(R.string.home_academy_sub, lessonsDone.coerceAtMost(lessonsTotal), lessonsTotal),
+                    onClick = onAcademy,
+                )
+                Spacer(Modifier.height(8.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    NavCard(stringResource(R.string.home_how_to_play), null, onHowToPlay, Modifier.weight(1f))
+                    NavCard(stringResource(R.string.home_stats), null, onStats, Modifier.weight(1f))
                 }
                 Spacer(Modifier.height(16.dp))
                 androidx.compose.material3.TextButton(onClick = onAbout, modifier = Modifier.fillMaxWidth()) {
-                    Text("About · privacy · licences", style = MaterialTheme.typography.labelLarge, color = MmeleColors.GoldBright)
+                    Text(stringResource(R.string.home_about), style = MaterialTheme.typography.labelLarge, color = MmeleColors.GoldBright)
                 }
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    "Mmele (Setswana) is the Morabaraba family of mill games played across Botswana and Southern Africa.",
+                    stringResource(R.string.home_footer),
                     style = MaterialTheme.typography.labelMedium,
                     color = MmeleColors.BoneDim,
                     textAlign = TextAlign.Center,
@@ -361,8 +391,8 @@ private fun SceneCaption(scene: Scene) {
             .border(1.dp, MmeleColors.Bone.copy(alpha = 0.12f), RoundedCornerShape(16.dp))
             .padding(horizontal = 14.dp, vertical = 10.dp),
     ) {
-        Text(scene.title.uppercase(), style = MaterialTheme.typography.labelSmall, color = MmeleColors.GoldBright)
-        Text(scene.fact, style = MaterialTheme.typography.labelMedium, color = MmeleColors.Bone)
+        Text(scene.title().uppercase(), style = MaterialTheme.typography.labelSmall, color = MmeleColors.GoldBright)
+        Text(scene.fact(), style = MaterialTheme.typography.labelMedium, color = MmeleColors.Bone)
     }
 }
 
@@ -383,7 +413,7 @@ private fun ScenePicker(selected: Scene, onSelect: (Scene) -> Unit) {
             ) {
                 SceneBackdrop(scene, SceneMode.FULL, Modifier.height(64.dp).aspectRatio(1.5f), animate = false)
                 Text(
-                    scene.title.substringBefore(" National").substringBefore(" Delta").substringBefore(" Pans").substringBefore(" Hills"),
+                    stringResource(scene.shortRes()),
                     style = MaterialTheme.typography.labelMedium,
                     color = if (sel) MmeleColors.GoldBright else MmeleColors.Bone,
                     modifier = Modifier.background(MmeleColors.SlateRaised).fillMaxWidth().padding(horizontal = 8.dp, vertical = 6.dp),
@@ -397,11 +427,11 @@ private fun ScenePicker(selected: Scene, onSelect: (Scene) -> Unit) {
                 .clip(shape)
                 .border(1.dp, MmeleColors.Bone.copy(alpha = 0.15f), shape)
                 .background(MmeleColors.SlateRaised)
-                .clickable(role = Role.Button, onClickLabel = "pick a random scene") { onSelect(Scene.entries.filter { it != selected }.random()) }
+                .clickable(role = Role.Button, onClickLabel = stringResource(R.string.home_surprise_action)) { onSelect(Scene.entries.filter { it != selected }.random()) }
                 .height(64.dp + 30.dp)
                 .padding(horizontal = 14.dp),
             contentAlignment = Alignment.Center,
-        ) { Text("Surprise\nme", style = MaterialTheme.typography.labelMedium, color = MmeleColors.Bone, textAlign = TextAlign.Center) }
+        ) { Text(stringResource(R.string.home_surprise), style = MaterialTheme.typography.labelMedium, color = MmeleColors.Bone, textAlign = TextAlign.Center) }
     }
 }
 
@@ -431,13 +461,13 @@ private fun PieceSetPicker(config: GameConfig, onChange: (GameConfig) -> Unit) {
                 PieceIcon(two, Modifier.size(36.dp), pieceId = 4)
                 Spacer(Modifier.width(12.dp))
                 Column(Modifier.weight(1f)) {
-                    Text(family.title, style = MaterialTheme.typography.titleMedium, color = MmeleColors.Bone)
-                    Text(family.blurb, style = MaterialTheme.typography.labelMedium, color = MmeleColors.BoneDim)
+                    Text(stringResource(family.titleRes()), style = MaterialTheme.typography.titleMedium, color = MmeleColors.Bone)
+                    Text(stringResource(family.blurbRes()), style = MaterialTheme.typography.labelMedium, color = MmeleColors.BoneDim)
                 }
             }
             if (selected && family == PieceFamily.EGGS) {
-                EggSidePicker("Dark side", config.styleOne, dark = true) { onChange(config.copy(styleOne = it)) }
-                EggSidePicker("Light side", config.styleTwo, dark = false) { onChange(config.copy(styleTwo = it)) }
+                EggSidePicker(stringResource(R.string.home_dark_side), config.styleOne, dark = true) { onChange(config.copy(styleOne = it)) }
+                EggSidePicker(stringResource(R.string.home_light_side), config.styleTwo, dark = false) { onChange(config.copy(styleTwo = it)) }
             }
         }
     }
@@ -467,9 +497,61 @@ private fun EggSidePicker(label: String, current: PieceStyle, dark: Boolean, onP
                         .padding(6.dp),
                 ) {
                     PieceIcon(style, Modifier.size(32.dp), pieceId = kind.ordinal + 2)
-                    Text(kind.shortName, style = MaterialTheme.typography.labelSmall, color = if (sel) MmeleColors.GoldBright else MmeleColors.Bone)
+                    Text(stringResource(kind.shortRes()), style = MaterialTheme.typography.labelSmall, color = if (sel) MmeleColors.GoldBright else MmeleColors.Bone)
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun NavCard(title: String, subtitle: String?, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val shape = RoundedCornerShape(18.dp)
+    Row(
+        modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(MmeleColors.SlateRaised.copy(alpha = 0.85f))
+            .border(1.dp, MmeleColors.Gold.copy(alpha = 0.45f), shape)
+            .clickable(role = Role.Button, onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.titleMedium, color = MmeleColors.Bone)
+            subtitle?.let { Text(it, style = MaterialTheme.typography.labelMedium, color = MmeleColors.BoneDim) }
+        }
+        Text("›", style = MaterialTheme.typography.titleLarge, color = MmeleColors.Gold)
+    }
+}
+
+@Composable
+private fun ContinueCard(rec: GameRecord, onContinue: () -> Unit) {
+    val shape = RoundedCornerShape(18.dp)
+    val mode = when (rec.config.mode) {
+        GameMode.SOLO -> stringResource(R.string.hud_computer, rec.config.difficulty.label())
+        GameMode.PASS_AND_PLAY -> stringResource(R.string.mode_pass_and_play)
+        GameMode.ONLINE -> stringResource(R.string.mode_online)
+    }
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(MmeleColors.Gold)
+            .clickable(role = Role.Button, onClick = onContinue)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        PieceIcon(rec.config.styleOne, Modifier.size(30.dp))
+        Spacer(Modifier.width(12.dp))
+        Column(Modifier.weight(1f)) {
+            Text(stringResource(R.string.home_continue), style = MaterialTheme.typography.titleMedium, color = MmeleColors.Slate)
+            Text(
+                stringResource(R.string.home_continue_detail, rec.config.variant.label(), mode, rec.actions.size),
+                style = MaterialTheme.typography.labelMedium,
+                color = MmeleColors.Slate,
+            )
+        }
+        Text("›", style = MaterialTheme.typography.titleLarge, color = MmeleColors.Slate)
     }
 }

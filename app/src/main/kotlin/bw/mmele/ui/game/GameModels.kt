@@ -85,8 +85,25 @@ data class OnlineUi(
     val abandonSecondsLeft: Int? = null,
     /** A move is on its way to the server. */
     val syncing: Boolean = false,
-    val message: String? = null,
+    val message: OnlineMessage? = null,
 )
+
+/** Transient online notice; [detail] is a technical reason from the network/server (not translated). */
+@Immutable
+data class OnlineMessage(val kind: Kind, val detail: String? = null) {
+    enum class Kind { CONNECTION, NOT_SENT, REJECTED, CORRUPT }
+
+    @androidx.compose.runtime.Composable
+    fun text(): String {
+        val d = detail ?: androidx.compose.ui.res.stringResource(com.tshipiworks.mmele.R.string.online_unknown_error)
+        return when (kind) {
+            Kind.CONNECTION -> androidx.compose.ui.res.stringResource(com.tshipiworks.mmele.R.string.online_msg_connection, d)
+            Kind.NOT_SENT -> androidx.compose.ui.res.stringResource(com.tshipiworks.mmele.R.string.online_msg_not_sent, d)
+            Kind.REJECTED -> androidx.compose.ui.res.stringResource(com.tshipiworks.mmele.R.string.online_msg_rejected, d)
+            Kind.CORRUPT -> androidx.compose.ui.res.stringResource(com.tshipiworks.mmele.R.string.online_msg_corrupt)
+        }
+    }
+}
 
 /** Derive the interaction masks for a state (pure, shared by ViewModel and previews/screenshots). */
 object Interaction {
