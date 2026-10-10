@@ -1,5 +1,6 @@
 package bw.mmele.ui.game
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import bw.mmele.engine.Action
@@ -58,9 +59,26 @@ class GameViewModel(
     /** Set for online games: the room you're seated in. */
     private val online: OnlineSession? = null,
     private val now: () -> Long = System::currentTimeMillis,
+    /** Offline game to continue (from [GameRecord.decode]); its config must equal [config]. */
+    private val resume: GameRecord? = null,
+    /** Survives process death; the current game is mirrored here after every change. */
+    private val savedState: SavedStateHandle? = null,
+    /** Persists the in-progress offline game across app restarts; null = nothing to continue. */
+    private val onSaveGame: (GameRecord?) -> Unit = {},
+    /** Called once when a game ends (for stats). */
+    private val onResult: (GameConfig, GameResult) -> Unit = { _, _ -> },
 ) : ViewModel() {
 
-    private data class Snapshot(val game: GameState, val tokens: List<TokenUi>, val lastMove: LastMove?, val nextId: Int)
+    /** State before an action, with both clocks at that moment: undo restores all of it. */
+    private data class Snapshot(
+        val game: GameState,
+        val tokens: List<TokenUi>,
+        val lastMove: LastMove?,
+        val nextId: Int,
+        val clockMs1: Long,
+        val clockMs2: Long,
+        val action: Action,
+    )
 
     private val rules = RuleSet.of(config.variant)
     private val history = ArrayList<Snapshot>()
@@ -77,6 +95,10 @@ class GameViewModel(
     private var pendingSubmits = 0
     private val submitLock = Mutex()
     private var message: String? = null
+    private var resultReported = false
+    private var clockPaused = false
+    /** Whose clock ran out, when the game ended on time (not part of the move list). */
+    private var timedOut: Player? = null
 
     private val _state = MutableStateFlow(initialState())
     val state: StateFlow<GameUiState> = _state.asStateFlow()
@@ -85,6 +107,7 @@ class GameViewModel(
     val events: SharedFlow<FeedbackEvent> = _events
 
     init {
+        if (online == null && resume != null) restore(resume)
         startClock()
         maybeRunAi()
         if (online != null) startOnline(online)
@@ -163,7 +186,7 @@ class GameViewModel(
         val ui = _state.value
         val g = ui.game
         if (g.isGameOver || !Rules.isLegal(g, action)) { invalid(); return }
-        if (online == null) history += Snapshot(g, ui.tokens, ui.lastMove, nextTokenId)
+        if (online == null) history += Snapshot(g, ui.tokens, ui.lastMove, nextTokenId, ui.clockMs1, ui.clockMs2, action)
         val mover = g.toMove
         val next = Rules.apply(g, action)
         if (online != null) {
@@ -213,12 +236,14 @@ class GameViewModel(
                 ),
             )
         }
-        if (next.isGameOver) onGameOver(next) else maybeRunAi()
+        if (next.isGameOver) onGameOver(next) else { persist(); maybeRunAi() }
     }
 
     private fun onGameOver(g: GameState) {
         clockJob?.cancel()
         val r = g.result
+        if (r != null && !resultReported) { resultReported = true; onResult(config, r) }
+        persist()
         val humanWon = r is GameResult.Win && (config.mode == GameMode.PASS_AND_PLAY || r.winner == config.human)
         emit(if (humanWon) FeedbackEvent.WIN else FeedbackEvent.END)
         gameOverJob?.cancel()
@@ -284,6 +309,7 @@ class GameViewModel(
         aiJob?.cancel()
         gameOverJob?.cancel()
         val snap = history[idx]
+        timedOut = null
         while (history.size > idx) history.removeAt(history.lastIndex)
         nextTokenId = snap.nextId
         _state.update {
@@ -291,10 +317,13 @@ class GameViewModel(
                 it.copy(
                     game = snap.game, tokens = snap.tokens, lastMove = snap.lastMove, selected = null,
                     millFlash = null, shotFx = null, aiThinking = false, showGameOver = false,
+                    // Clock-aware: time goes back to what it was, so undoing a timeout really resumes play.
+                    clockMs1 = snap.clockMs1, clockMs2 = snap.clockMs2,
                 ),
             )
         }
         emit(FeedbackEvent.SELECT)
+        persist()
         if (clockJob?.isActive != true) startClock()
         maybeRunAi()
     }
@@ -305,7 +334,10 @@ class GameViewModel(
         gameOverJob?.cancel()
         history.clear()
         nextTokenId = 1
+        resultReported = false
+        timedOut = null
         _state.value = initialState()
+        persist()
         startClock()
         maybeRunAi()
     }
@@ -314,7 +346,7 @@ class GameViewModel(
 
     private fun startClock() {
         clockJob?.cancel()
-        if (config.clockMinutes <= 0) return
+        if (config.clockMinutes <= 0 || clockPaused || _state.value.game.isGameOver) return
         clockJob = viewModelScope.launch {
             var last = System.currentTimeMillis()
             while (isActive) {
@@ -329,6 +361,7 @@ class GameViewModel(
                 _state.update { if (p == Player.ONE) it.copy(clockMs1 = remaining) else it.copy(clockMs2 = remaining) }
                 if (remaining == 0L) {
                     aiJob?.cancel()
+                    timedOut = p
                     val over = Rules.forfeit(ui.game, p, WinReason.TIMEOUT)
                     _state.update { decorate(it.copy(game = over, selected = null, aiThinking = false)) }
                     onGameOver(over)
@@ -336,6 +369,73 @@ class GameViewModel(
                 }
             }
         }
+    }
+
+    /** The app went to the background: stop the clocks (no one is looking) and save. */
+    fun onHidden() {
+        if (online != null) return
+        clockPaused = true
+        clockJob?.cancel()
+        persist()
+    }
+
+    fun onShown() {
+        if (online != null || !clockPaused) return
+        clockPaused = false
+        startClock()
+    }
+
+    // ------------------------------------------------------------------ persistence
+
+    /** The current offline game as a [GameRecord] (null online). */
+    fun record(): GameRecord? {
+        if (online != null) return null
+        val ui = _state.value
+        return GameRecord(
+            config = config,
+            actions = history.map { it.action },
+            clocksBefore = history.map { it.clockMs1 to it.clockMs2 },
+            clockMs1 = ui.clockMs1,
+            clockMs2 = ui.clockMs2,
+            timedOut = timedOut?.takeIf { (ui.game.result as? GameResult.Win)?.reason == WinReason.TIMEOUT },
+        )
+    }
+
+    /** Mirror to SavedStateHandle (process death) and hand to [onSaveGame] (app restarts). */
+    private fun persist() {
+        val rec = record() ?: return
+        savedState?.set(SAVED_KEY, rec.encode())
+        // Only unfinished games are offered as "Continue game"; a fresh board isn't worth saving.
+        onSaveGame(rec.takeIf { !_state.value.game.isGameOver && rec.actions.isNotEmpty() })
+    }
+
+    /** Rebuild history, tokens and clocks by replaying a record without any feedback. */
+    private fun restore(rec: GameRecord) {
+        var g = Rules.newGame(rules)
+        var tokens = emptyList<TokenUi>()
+        var last: LastMove? = null
+        nextTokenId = 1
+        history.clear()
+        for ((i, a) in rec.actions.withIndex()) {
+            if (g.isGameOver || !Rules.isLegal(g, a)) break
+            val (c1, c2) = rec.clocksBefore[i]
+            history += Snapshot(g, tokens, last, nextTokenId, c1, c2, a)
+            val mover = g.toMove
+            when (a) {
+                is Action.Place -> { tokens = tokens + TokenUi(nextTokenId++, mover, a.to); last = LastMove(null, a.to) }
+                is Action.Move -> { tokens = tokens.map { if (it.node == a.from) it.copy(node = a.to) else it }; last = LastMove(a.from, a.to) }
+                is Action.Shoot -> tokens = tokens.filterNot { it.node == a.target }
+            }
+            g = Rules.apply(g, a)
+        }
+        if (rec.timedOut != null && !g.isGameOver) { g = Rules.forfeit(g, rec.timedOut, WinReason.TIMEOUT); timedOut = rec.timedOut }
+        // A finished game was already counted in the stats before it was saved.
+        resultReported = g.isGameOver
+        _state.value = decorate(
+            _state.value.copy(game = g, tokens = tokens, lastMove = last, clockMs1 = rec.clockMs1, clockMs2 = rec.clockMs2,
+                showGameOver = g.isGameOver),
+        )
+        savedState?.set(SAVED_KEY, rec.encode())
     }
 
     override fun onCleared() {
@@ -501,6 +601,23 @@ class GameViewModel(
     }
 
     companion object {
+        const val SAVED_KEY = "mmele.game"
+
+        /**
+         * Factory used by the app: a record in [savedState] (process death) wins over [resume]
+         * (Continue game); the game's config comes from whichever record is used.
+         */
+        fun create(
+            config: GameConfig,
+            savedState: SavedStateHandle?,
+            resume: GameRecord?,
+            onSaveGame: (GameRecord?) -> Unit,
+            onResult: (GameConfig, GameResult) -> Unit,
+        ): GameViewModel {
+            val rec = GameRecord.decode(savedState?.get<String>(SAVED_KEY)) ?: resume
+            return GameViewModel(rec?.config ?: config, resume = rec, savedState = savedState, onSaveGame = onSaveGame, onResult = onResult)
+        }
+
         /** Whether a rule set shoots (classic) or wins (triangle) on a line. Exposed for the UI copy. */
         fun shootsOnMill(config: GameConfig) = RuleSet.of(config.variant).millEffect == MillEffect.SHOOT
     }

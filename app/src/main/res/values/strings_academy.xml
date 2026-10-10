@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Academy: list screen -->
+    <string name="academy_title">Academy</string>
+    <string name="academy_subtitle">Five short puzzles that teach the ideas behind Mmele.</string>
+    <string name="academy_progress">%1$d of %2$d lessons done</string>
+    <string name="academy_locked">Finish the lesson before to unlock</string>
+    <string name="academy_done">Done</string>
+    <string name="academy_start">Start</string>
+    <string name="academy_again">Play again</string>
+    <string name="academy_lesson_number">Lesson %1$d</string>
+
+    <!-- Academy: lesson screen -->
+    <string name="lesson_goal_label">Goal</string>
+    <string name="lesson_hint">Hint</string>
+    <string name="lesson_next_hint">Another hint</string>
+    <string name="lesson_restart">Restart</string>
+    <string name="lesson_begin">Begin</string>
+    <string name="lesson_wrong">Not quite. That lets Light off the hook. Try again from the same position.</string>
+    <string name="lesson_wrong_punished">Not quite. Watch Light\'s answer, then try again.</string>
+    <string name="lesson_good">Good move. Light answers… your turn again.</string>
+    <string name="lesson_shoot_now">Mill! Now tap a Light cow to shoot it.</string>
+    <string name="lesson_your_turn">Your move. You play Dark.</string>
+    <string name="lesson_solved_title">Well done!</string>
+    <string name="lesson_next">Next lesson</string>
+    <string name="lesson_back_to_academy">Back to the Academy</string>
+    <string name="lesson_all_done">You have finished the Academy. Go and beat the computer!</string>
+
+    <!-- Lesson 1 -->
+    <string name="lesson_mill_title">Making a mill</string>
+    <string name="lesson_mill_intro">Three of your cows in a straight line along a drawn line is a mill. Every time you complete a mill you shoot (remove) one of your opponent\'s cows. You have two cows on the top row already.</string>
+    <string name="lesson_mill_goal">Complete a mill, then shoot one of Light\'s cows.</string>
+    <string name="lesson_mill_hint1">Look along the top edge of the board.</string>
+    <string name="lesson_mill_hint2">Place a cow on the top-right corner, then tap any light cow.</string>
+    <string name="lesson_mill_success">That is a mill: three in a line, and Light is one cow down. Watch for your opponent\'s two-in-a-rows too, and block them.</string>
+
+    <!-- Lesson 2 -->
+    <string name="lesson_trap_title">Trapping vs shooting</string>
+    <string name="lesson_trap_intro">Shooting is not the only way to win. If your opponent cannot move any cow on their turn, they are locked in (go tswala) and lose at once. Light\'s four cows in the top-left corner have just one free point left.</string>
+    <string name="lesson_trap_goal">Win in one move by leaving Light with no legal move.</string>
+    <string name="lesson_trap_hint1">Find the one empty point next to a light cow.</string>
+    <string name="lesson_trap_hint2">It sits on the diagonal from the top-left corner. Step onto it with the cow from the inner square.</string>
+    <string name="lesson_trap_success">Locked in! No shot needed. Against a crowded board, trapping can be faster than shooting.</string>
+
+    <!-- Lesson 3 -->
+    <string name="lesson_escape_title">Escaping a lock</string>
+    <string name="lesson_escape_intro">Now you are the one being squeezed. Light\'s cows surround yours, and most moves let Light shut the last door. A mill lets you shoot a cow out of the wall.</string>
+    <string name="lesson_escape_goal">Keep at least one legal move through Light\'s next two turns.</string>
+    <string name="lesson_escape_hint1">Do not just shuffle: form a mill so you can shoot a blocker.</string>
+    <string name="lesson_escape_hint2">Look at the middle line coming down from the top edge. After the mill any shot will do; the cow on the right edge frees you the most.</string>
+    <string name="lesson_escape_success">You broke out. When you are short of moves, a mill that opens space is worth more than any other cow.</string>
+
+    <!-- Lesson 4 -->
+    <string name="lesson_fly_title">Flying tactics</string>
+    <string name="lesson_fly_intro">With only three cows left you may fly (go fofa): move a cow to any empty point. Light is flying too and threatens to complete a line on the right side next turn.</string>
+    <string name="lesson_fly_goal">Win this turn: Light also has three cows, so one shot is enough.</string>
+    <string name="lesson_fly_hint1">Blocking Light is fine, but striking first is better.</string>
+    <string name="lesson_fly_hint2">Your two cows on the bottom row need a third: fly to the bottom-right corner.</string>
+    <string name="lesson_fly_success">When both sides fly, the first mill usually decides. Always check for a winning flight before you defend.</string>
+
+    <!-- Lesson 5 -->
+    <string name="lesson_tri_title">Khutlotharo</string>
+    <string name="lesson_tri_intro">Khutlotharo is the triangle game: three cows each, and the first line of three wins outright. A cow may also jump over a neighbouring cow to the empty point straight beyond it.</string>
+    <string name="lesson_tri_goal">Win now. Light also threatens the top point.</string>
+    <string name="lesson_tri_hint1">The empty point at the top completes your centre line.</string>
+    <string name="lesson_tri_hint2">Your bottom-left cow can jump over the light cow above it to reach the top.</string>
+    <string name="lesson_tri_success">A jump wins it. In Khutlotharo, always count jumps as well as steps, for both sides.</string>
+
+    <!-- First-run How to play -->
+    <string name="howto_title">How to play</string>
+    <string name="howto_offer">New to Morabaraba? Read the rules in a minute.</string>
+    <string name="howto_show">Show me</string>
+    <string name="howto_skip">Not now</string>
+    <string name="howto_done">Got it</string>
+    <string name="howto_next">Next</string>
+    <string name="howto_page">%1$d / %2$d</string>
+    <string name="howto_place_title">1 · Go baya: place</string>
+    <string name="howto_place_body">Each player has 12 cows. Take turns placing them on any empty point, Dark first.</string>
+    <string name="howto_mill_title">2 · Make a mill, shoot</string>
+    <string name="howto_mill_body">Three of your cows in a straight line is a mill. Each new mill lets you shoot one opposing cow. Cows in a mill are safe while the opponent has others to shoot.</string>
+    <string name="howto_move_title">3 · Go sutisa: move</string>
+    <string name="howto_move_body">When all cows are placed, move one cow per turn along a line to a neighbouring empty point. Break a mill and remake it to shoot again.</string>
+    <string name="howto_fly_title">4 · Go fofa: fly</string>
+    <string name="howto_fly_body">Down to three cows? Your cows may fly to any empty point.</string>
+    <string name="howto_win_title">5 · Winning</string>
+    <string name="howto_win_body">You win when your opponent has only two cows left or cannot move on their turn. Try the Academy for guided puzzles.</string>
+</resources>
