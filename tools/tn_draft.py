@@ -253,7 +253,6 @@ T = {
 "replay_back": ("Motsamao o le mongwe morago", "M"),
 "replay_forward": ("Motsamao o le mongwe pele", "M"),
 "replay_end": ("Bokhutlo", "H"),
-"replay_close": ("Tswala poeletso", "M"),
 "replay_action_place": ("%1$s o beile mo %2$s", "M"),
 "replay_action_move": ("%1$s o sutisitse %2$s go ya %3$s", "M"),
 "replay_action_shoot": ("%1$s o thuntse kgomo e e mo %2$s", "M"),

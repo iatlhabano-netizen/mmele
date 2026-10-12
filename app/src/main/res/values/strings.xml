@@ -295,7 +295,6 @@
     <string name="replay_back">Back one move</string>
     <string name="replay_forward">Forward one move</string>
     <string name="replay_end">End</string>
-    <string name="replay_close">Close replay</string>
     <string name="replay_action_place">%1$s placed on %2$s</string>
     <string name="replay_action_move">%1$s moved %2$s to %3$s</string>
     <string name="replay_action_shoot">%1$s shot the cow on %2$s</string>

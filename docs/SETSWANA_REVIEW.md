@@ -1,7 +1,7 @@
 # Setswana translation review
 
 Mmele ships English (default) and a **draft** Setswana (`tn`) translation. Every Setswana string
-below was drafted by the developer's assistant, not by a native speaker, so **all 339 of 339
+below was drafted by the developer's assistant, not by a native speaker, so **all 338 of 338
 strings need review** before the Setswana UI is promoted (the high-confidence ones should be quick).
 
 How to correct: edit `app/src/main/res/values-tn/strings.xml` or `strings_academy.xml` directly
@@ -18,7 +18,7 @@ Conventions in the draft (please confirm or replace):
 - Place names stay as Batswana write them (Okavango, Chobe, Makgadikgadi, Tsodilo, Kgalagadi).
 - Bird names (lapwing, roller) are low confidence: please supply the names you know.
 
-Counts: 77 high, 233 medium, 29 low confidence, 0 reviewed.
+Counts: 77 high, 232 medium, 29 low confidence, 0 reviewed.
 
 | Key | English | Draft Setswana | Confidence |
 |---|---|---|---|
@@ -271,7 +271,6 @@ Counts: 77 high, 233 medium, 29 low confidence, 0 reviewed.
 | `replay_back` | Back one move | Motsamao o le mongwe morago | medium |
 | `replay_forward` | Forward one move | Motsamao o le mongwe pele | medium |
 | `replay_end` | End | Bokhutlo | high |
-| `replay_close` | Close replay | Tswala poeletso | medium |
 | `replay_action_place` | %1$s placed on %2$s | %1$s o beile mo %2$s | medium |
 | `replay_action_move` | %1$s moved %2$s to %3$s | %1$s o sutisitse %2$s go ya %3$s | medium |
 | `replay_action_shoot` | %1$s shot the cow on %2$s | %1$s o thuntse kgomo e e mo %2$s | medium |

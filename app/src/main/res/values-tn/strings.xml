@@ -504,8 +504,6 @@
     <!-- confidence: high -->
     <string name="replay_end">Bokhutlo</string>
     <!-- confidence: medium -->
-    <string name="replay_close">Tswala poeletso</string>
-    <!-- confidence: medium -->
     <string name="replay_action_place">%1$s o beile mo %2$s</string>
     <!-- confidence: medium -->
     <string name="replay_action_move">%1$s o sutisitse %2$s go ya %3$s</string>
