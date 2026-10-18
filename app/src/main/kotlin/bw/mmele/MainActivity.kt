@@ -54,6 +54,14 @@ class MainActivity : AppCompatActivity() {
             // DataStore reads on its own IO dispatcher; the main thread only waits on the splash.
             val choice = prefs.load()
             val data = store.load()
+            val (factState, photoState) = store.loadDecks()
+            val cards = withContext(kotlinx.coroutines.Dispatchers.IO) {
+                runCatching {
+                    val facts = bw.mmele.data.BotswanaContent.parseFacts(resources.openRawResource(R.raw.botswana_facts).bufferedReader().readText())
+                    val photos = runCatching { bw.mmele.data.BotswanaContent.parsePhotos(assets.open("photos/photos.json").bufferedReader().readText()) }.getOrDefault(emptyList())
+                    bw.mmele.data.FactCards(facts, photos, factState, photoState, persist = { f, ph -> sink.io { store.saveDecks(f, ph) } })
+                }.getOrNull()
+            }
             setContent {
                 MmeleApp(
                     feedback = fb,
@@ -67,6 +75,7 @@ class MainActivity : AppCompatActivity() {
                     onModeChoice = { mode, difficulty -> lifecycleScope.launch { prefs.save(ModePrefs.Choice(mode, difficulty)) } },
                     data = data,
                     sink = sink,
+                    drawFactCard = { cards?.draw() },
                     language = AppLanguage.current(),
                     onLanguage = { it.apply() },
                 )

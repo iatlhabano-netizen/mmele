@@ -78,7 +78,22 @@ class AppStore(private val context: Context) {
         context.appData.edit { it[HOW_TO_PLAY_SEEN] = true }
     }
 
+    /** Persisted no-repeat cycles for the game-over facts and photos (see [FactCards]). */
+    suspend fun loadDecks(): Pair<DeckState?, DeckState?> {
+        val p = runCatching { context.appData.data.first() }.getOrNull() ?: return null to null
+        return DeckState.decode(p[FACT_DECK]) to DeckState.decode(p[PHOTO_DECK])
+    }
+
+    suspend fun saveDecks(facts: DeckState, photos: DeckState?) {
+        context.appData.edit {
+            it[FACT_DECK] = facts.encode()
+            if (photos != null) it[PHOTO_DECK] = photos.encode()
+        }
+    }
+
     private companion object {
+        val FACT_DECK = stringPreferencesKey("fact_deck")
+        val PHOTO_DECK = stringPreferencesKey("photo_deck")
         const val STAT_PREFIX = "stat."
         val SAVED_GAME = stringPreferencesKey("saved_game")
         val LESSONS_DONE = intPreferencesKey("lessons_done")

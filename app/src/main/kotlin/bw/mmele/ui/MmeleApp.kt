@@ -45,7 +45,7 @@ import bw.mmele.ui.scenes.Scene
 import bw.mmele.ui.stats.StatsScreen
 import bw.mmele.ui.theme.MmeleTheme
 
-private enum class Screen { HOME, GAME, LOBBY, ABOUT, ACADEMY, LESSON, STATS }
+private enum class Screen { HOME, GAME, LOBBY, ABOUT, ACADEMY, LESSON, STATS, MORUBA_SETUP, MORUBA }
 
 /** Callbacks that persist app data (DataStore in the app, no-ops in previews/tests). */
 interface AppDataSink {
@@ -76,6 +76,8 @@ fun MmeleApp(
     sink: AppDataSink = object : AppDataSink {},
     language: AppLanguage = AppLanguage.SYSTEM,
     onLanguage: (AppLanguage) -> Unit = {},
+    /** Next non-repeating Botswana fact (+ photo) for a finished game; null in previews/tests. */
+    drawFactCard: () -> bw.mmele.data.FactCard? = { null },
 ) {
     MmeleTheme {
         var variant by rememberSaveable { mutableStateOf(Variant.CLASSIC) }
@@ -92,6 +94,10 @@ fun MmeleApp(
         var styleOneId by rememberSaveable { mutableStateOf(PieceStyle.Obsidian.id) }
         var styleTwoId by rememberSaveable { mutableStateOf(PieceStyle.Quartz.id) }
         var lessonIndex by rememberSaveable { mutableIntStateOf(0) }
+        var morubaHoles by rememberSaveable { mutableIntStateOf(8) }
+        var morubaStones by rememberSaveable { mutableIntStateOf(2) }
+        var morubaVsComputer by rememberSaveable { mutableStateOf(true) }
+        var morubaLevel by rememberSaveable { mutableStateOf(Difficulty.MEDIUM) }
         var howTo by rememberSaveable { mutableStateOf(if (data.howToPlaySeen) 0 else 1) } // 0 none, 1 offer, 2 dialog
         // Mirrors of stored data.
         var savedGame by remember { mutableStateOf(data.savedGame) }
@@ -117,7 +123,10 @@ fun MmeleApp(
             val enc = rec?.encode()
             if (enc != savedGame) { savedGame = enc; sink.saveGame(enc) }
         }
+        /** The fact card for the game that just finished (one draw per finished game). */
+        var factCard by remember { mutableStateOf<bw.mmele.data.FactCard?>(null) }
         val onResult: (GameConfig, bw.mmele.engine.GameResult) -> Unit = { c, r ->
+            factCard = drawFactCard()
             val key = StatKey.of(c)
             val o = StatsRules.outcomeOf(c, r)
             stats = stats + (key to (stats[key] ?: Tally()).plus(o))
@@ -134,7 +143,20 @@ fun MmeleApp(
                         if (s != null) GameViewModel(gameConfig, online = s, onResult = onResult)
                         else GameViewModel.create(gameConfig, createSavedStateHandle(), resume, saveGame, onResult).also { resume = null }
                     }
-                    GameRoute(vm, feedback, onHome = { screen = Screen.HOME; onlineSession = null }, onShareCode = onShareCode)
+                    GameRoute(vm, feedback, onHome = { screen = Screen.HOME; onlineSession = null }, onShareCode = onShareCode, factCard = factCard)
+                }
+                Screen.MORUBA_SETUP -> bw.mmele.ui.moruba.MorubaSetupScreen(
+                    setup = bw.mmele.ui.moruba.MorubaSetup(morubaHoles, morubaStones, morubaVsComputer, morubaLevel),
+                    onChange = { morubaHoles = it.holes; morubaStones = it.stones; morubaVsComputer = it.vsComputer; morubaLevel = it.difficulty },
+                    onStart = { session++; screen = Screen.MORUBA },
+                    onBack = { screen = Screen.HOME },
+                )
+                Screen.MORUBA -> {
+                    val setup = bw.mmele.ui.moruba.MorubaSetup(morubaHoles, morubaStones, morubaVsComputer, morubaLevel)
+                    val vm: bw.mmele.ui.moruba.MorubaViewModel = viewModel(key = "moruba-$session") {
+                        bw.mmele.ui.moruba.MorubaViewModel(setup, onGameOver = { factCard = drawFactCard() })
+                    }
+                    bw.mmele.ui.moruba.MorubaRoute(vm, feedback, onHome = { screen = Screen.HOME }, factCard = factCard)
                 }
                 Screen.LOBBY -> OnlineLobbyScreen(
                     config = config,
@@ -189,6 +211,7 @@ fun MmeleApp(
                         onPlay = { onlineSession = null; resume = null; session++; screen = Screen.GAME },
                         onPlayOnline = { lobbyRepo = onlineRepo(); screen = Screen.LOBBY },
                         onAbout = { screen = Screen.ABOUT },
+                        onMoruba = { screen = Screen.MORUBA_SETUP },
                         onlineConfigured = onlineConfigured,
                         savedGame = remember(savedGame) { GameRecord.decode(savedGame) },
                         onContinue = {

@@ -54,6 +54,15 @@ by the bot.
 15. **[BOT]** Fill in placeholders in `PRIVACY_POLICY.md`/`TERMS.md` once you give the details, and export them as
     simple HTML pages.
 
+## Phase 1c: version 1.2.0 (BOT, 18 Oct 2026)
+
+> `versionCode 3` / `versionName 1.2.0`, signed AAB/APK at `/workspace/mmele-release-1.2.0.{aab,apk}` (+ mapping).
+- [x] 670+ Botswana facts (`res/raw/botswana_facts.json`, English only) on the game-over card, never repeating
+      until all are shown (persisted shuffled cycle in DataStore).
+- [x] 57 free-licence Wikimedia Commons photos on the game-over card; credits in About and `docs/PHOTO_CREDITS.md`.
+- [x] New game: Moruba (4-row mancala), vs Computer and Pass & Play.
+- [ ] **[YOU]** Review Moruba strings in `docs/SETSWANA_REVIEW.md`; spot-check facts and photo captions.
+
 ## Phase 1b: version 1.1.0 (BOT, done 10 Oct 2026)
 
 > `versionCode 2` / `versionName 1.1.0`, signed AAB/APK at `/workspace/mmele-release-1.1.0.{aab,apk}`, pushed

@@ -25,7 +25,7 @@ Key files: `engine/.../Rules.kt` (state machine), `engine/.../ai/SearchAi.kt`, `
 See **[docs/RULES.md](docs/RULES.md)** — MSSA "Generally Accepted Rules" with sources, every edge-case
 decision (double mill = one shot, full board, re-mill ban, draw rules) and the Khutlotharo board as drawn by a
 Motswana player (solved as a draw with perfect play by `tools/solve_triangle.py`, with or without jumps).
-Scene facts and sources: **[docs/SCENES.md](docs/SCENES.md)**.
+Scene facts and sources: **[docs/SCENES.md](docs/SCENES.md)**. Game-over facts: `app/src/main/res/raw/botswana_facts.json` (edit freely; `FactsTest` checks them). Photos and credits: **[docs/PHOTO_CREDITS.md](docs/PHOTO_CREDITS.md)**. Moruba rules: see RULES.md.
 Piece sets and egg sources: **[docs/PIECES.md](docs/PIECES.md)**.
 Online play (Firebase setup for beginners, security model, emulator tests): **[docs/ONLINE_SETUP.md](docs/ONLINE_SETUP.md)**.
 
@@ -34,7 +34,7 @@ Online play (Firebase setup for beginners, security model, emulator tests): **[d
 Requirements: **JDK 21** to run Gradle (Paparazzi 2 needs it; `gradle/gradle-daemon-jvm.properties` asks for 21)
 plus JDK 17 for the module toolchains, Android SDK platform 36 + build-tools 36. Toolchain: Gradle 8.13 (wrapper),
 AGP 8.11.1, Kotlin 2.3.21, Paparazzi 2.0.0-alpha05.1. `applicationId com.tshipiworks.mmele`, `minSdk 26`,
-`targetSdk 36`, version 1.0.0 (1). Kotlin sources stay in the `bw.mmele` package; only the namespace/app ID changed.
+`targetSdk 36`, version 1.2.0 (3). Kotlin sources stay in the `bw.mmele` package; only the namespace/app ID changed.
 Android Lint currently crashes with Kotlin 2.3 metadata on AGP 8.11 (a lint bug), so `lint` isn't part of the checks.
 
 ```bash

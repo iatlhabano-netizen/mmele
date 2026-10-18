@@ -1,0 +1,572 @@
+[
+ {
+  "id": "photo_01",
+  "kind": "wildlife",
+  "caption": "A saddle-billed stork wades the Okavango Delta.",
+  "title": "Jabirú africano (Ephippiorhynchus senegalensis), delta del Okavango, Botsuana, 2018-07-31, DD 11.jpg",
+  "author": "Diego Delso",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Jabir%C3%BA_africano_(Ephippiorhynchus_senegalensis),_delta_del_Okavango,_Botsuana,_2018-07-31,_DD_11.jpg"
+ },
+ {
+  "id": "photo_02",
+  "kind": "wildlife",
+  "caption": "Burchell's zebras seen from the air over the Okavango Delta.",
+  "title": "Cebras de Burchell (Equus quagga burchellii), vista aérea del delta del Okavango, Botsuana, 2018-08-01, DD 30.jpg",
+  "author": "Diego Delso",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Cebras_de_Burchell_(Equus_quagga_burchellii),_vista_a%C3%A9rea_del_delta_del_Okavango,_Botsuana,_2018-08-01,_DD_30.jpg"
+ },
+ {
+  "id": "photo_03",
+  "kind": "wildlife",
+  "caption": "African bush elephants in the Okavango Delta.",
+  "title": "Elefantes africanos de sabana (Loxodonta africana), delta del Okavango, Botsuana, 2018-07-31, DD 03.jpg",
+  "author": "Diego Delso",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Elefantes_africanos_de_sabana_(Loxodonta_africana),_delta_del_Okavango,_Botsuana,_2018-07-31,_DD_03.jpg"
+ },
+ {
+  "id": "photo_04",
+  "kind": "place",
+  "caption": "Crossing the Okavango Delta by mokoro, the traditional dugout canoe.",
+  "title": "Travesía del delta del Okavango en makoro, Botsuana, 2018-07-31, DD 08.jpg",
+  "author": "Diego Delso",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Traves%C3%ADa_del_delta_del_Okavango_en_makoro,_Botsuana,_2018-07-31,_DD_08.jpg"
+ },
+ {
+  "id": "photo_05",
+  "kind": "place",
+  "caption": "A mokoro poler guiding visitors through the Okavango.",
+  "title": "Mokoro Polers in the Okavango.jpg",
+  "author": "No machine-readable author provided. DDD DDD~commonswiki assumed (based on copyright claims).",
+  "license": "Public domain",
+  "licenseUrl": "",
+  "source": "https://commons.wikimedia.org/wiki/File:Mokoro_Polers_in_the_Okavango.jpg"
+ },
+ {
+  "id": "photo_06",
+  "kind": "wildlife",
+  "caption": "Young elephants in Chobe National Park, home to one of Africa's largest elephant populations.",
+  "title": "Elefantes africanos de sabana (Loxodonta africana), parque nacional de Chobe, Botsuana, 2018-07-28, DD 25.jpg",
+  "author": "Diego Delso",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Elefantes_africanos_de_sabana_(Loxodonta_africana),_parque_nacional_de_Chobe,_Botsuana,_2018-07-28,_DD_25.jpg"
+ },
+ {
+  "id": "photo_07",
+  "kind": "wildlife",
+  "caption": "Elephants in Chobe National Park.",
+  "title": "Elephants in Chobe National Park 02.jpg",
+  "author": "Bernard Gagnon",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Elephants_in_Chobe_National_Park_02.jpg"
+ },
+ {
+  "id": "photo_08",
+  "kind": "wildlife",
+  "caption": "An elephant herd in Chobe National Park.",
+  "title": "Elephants in Chobe National Park 01.jpg",
+  "author": "Bernard Gagnon",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Elephants_in_Chobe_National_Park_01.jpg"
+ },
+ {
+  "id": "photo_09",
+  "kind": "place",
+  "caption": "A termite mound in Chobe National Park, seen on a Chobe River safari from Kasane.",
+  "title": "Chobe River Safari, Kasane (20260520-P1076204).jpg",
+  "author": "Matti Blume",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+  "source": "https://commons.wikimedia.org/wiki/File:Chobe_River_Safari,_Kasane_(20260520-P1076204).jpg"
+ },
+ {
+  "id": "photo_10",
+  "kind": "wildlife",
+  "caption": "An impala ram in Chobe National Park, near Kasane.",
+  "title": "Chobe River Safari, Kasane (20260520-P1086350).jpg",
+  "author": "Matti Blume",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en",
+  "source": "https://commons.wikimedia.org/wiki/File:Chobe_River_Safari,_Kasane_(20260520-P1086350).jpg"
+ },
+ {
+  "id": "photo_11",
+  "kind": "wildlife",
+  "caption": "Southern red-billed hornbills in Makgadikgadi Pans National Park.",
+  "title": "Cálaos de pico rojo del sur (Tockus rufirostris), parque nacional Makgadikgadi Pans, Botsuana, 2018-07-30, DD 14.jpg",
+  "author": "Diego Delso",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:C%C3%A1laos_de_pico_rojo_del_sur_(Tockus_rufirostris),_parque_nacional_Makgadikgadi_Pans,_Botsuana,_2018-07-30,_DD_14.jpg"
+ },
+ {
+  "id": "photo_12",
+  "kind": "wildlife",
+  "caption": "Meerkats on watch in Makgadikgadi Pans National Park.",
+  "title": "Suricatos (Suricata suricatta), parque nacional Makgadikgadi Pans, Botsuana, 2018-07-30, DD 26.jpg",
+  "author": "Diego Delso",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Suricatos_(Suricata_suricatta),_parque_nacional_Makgadikgadi_Pans,_Botsuana,_2018-07-30,_DD_26.jpg"
+ },
+ {
+  "id": "photo_13",
+  "kind": "place",
+  "caption": "Baines' Baobabs, painted by Thomas Baines in 1862, in Nxai Pan National Park.",
+  "title": "Botswana Nxai Pan NP Baynes Baobabs.jpg",
+  "author": "Ralf Ellerich",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Botswana_Nxai_Pan_NP_Baynes_Baobabs.jpg"
+ },
+ {
+  "id": "photo_14",
+  "kind": "place",
+  "caption": "Baines' Baobabs stand beside a salt pan in Nxai Pan National Park.",
+  "title": "Baines Baobabs, Nxai Pan (48591822591).jpg",
+  "author": "Fabio Achilli from Milano, Italy",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Baines_Baobabs,_Nxai_Pan_(48591822591).jpg"
+ },
+ {
+  "id": "photo_15",
+  "kind": "place",
+  "caption": "Rock paintings at Tsodilo Hills, a UNESCO World Heritage Site.",
+  "title": "Tsodilo Hills banner Rock paintings.jpg",
+  "author": "Tsodilo_Hills_rock_paintings5.jpg: Joachim Huber derivative work: Jjtkk",
+  "license": "CC BY-SA 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Tsodilo_Hills_banner_Rock_paintings.jpg"
+ },
+ {
+  "id": "photo_16",
+  "kind": "place",
+  "caption": "Tsodilo's rock art: over 4,500 paintings in a small area of hills.",
+  "title": "Tsodilo Hills rock paintings4.jpg",
+  "author": "Joachim Huber",
+  "license": "CC BY-SA 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Tsodilo_Hills_rock_paintings4.jpg"
+ },
+ {
+  "id": "photo_17",
+  "kind": "wildlife",
+  "caption": "An ant-eating chat in the Central Kalahari Game Reserve.",
+  "title": "Myrmecocichla formicivora -Central Kalahari Game Reserve, Botswana -female-8.jpg",
+  "author": "Benjamin Hollis from Seattle, WA, USA",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Myrmecocichla_formicivora_-Central_Kalahari_Game_Reserve,_Botswana_-female-8.jpg"
+ },
+ {
+  "id": "photo_18",
+  "kind": "place",
+  "caption": "Afternoon thunderstorms roll over the Kalahari.",
+  "title": "Kalahari thunder.JPG",
+  "author": "DVL2",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Kalahari_thunder.JPG"
+ },
+ {
+  "id": "photo_19",
+  "kind": "place",
+  "caption": "Moremi Game Reserve, on the eastern side of the Okavango Delta, in summer.",
+  "title": "Moremi Game Reserve in summer 02.jpg",
+  "author": "Mothusi Sekhomba",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Moremi_Game_Reserve_in_summer_02.jpg"
+ },
+ {
+  "id": "photo_20",
+  "kind": "place",
+  "caption": "Moremi Game Reserve, the first reserve in Africa created by local people (1963).",
+  "title": "Moremi Game Reserve in summer 05.jpg",
+  "author": "Mothusi Sekhomba",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Moremi_Game_Reserve_in_summer_05.jpg"
+ },
+ {
+  "id": "photo_21",
+  "kind": "wildlife",
+  "caption": "A male lion yawns in the Kgalagadi Transfrontier Park, shared with South Africa.",
+  "title": "Panthera leo yawn (Kgalagadi, 2012).jpg",
+  "author": "Yathin S Krishnappa",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Panthera_leo_yawn_(Kgalagadi,_2012).jpg"
+ },
+ {
+  "id": "photo_23",
+  "kind": "place",
+  "caption": "The Three Dikgosi Monument in Gaborone honours Khama III, Sebele I and Bathoen I.",
+  "title": "Three Dikgosi Monument, Gaborone, Botswana.jpg",
+  "author": "CivArmy",
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Three_Dikgosi_Monument,_Gaborone,_Botswana.jpg"
+ },
+ {
+  "id": "photo_24",
+  "kind": "place",
+  "caption": "The Main Mall in the centre of Gaborone, Botswana's capital.",
+  "title": "Gaborone Main Mall 20200211.jpg",
+  "author": "CNJerem",
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Gaborone_Main_Mall_20200211.jpg"
+ },
+ {
+  "id": "photo_25",
+  "kind": "wildlife",
+  "caption": "An old male lion in Chobe National Park.",
+  "title": "Lion (Panthera leo) old male Chobe.jpg",
+  "author": "Charles J. Sharp",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Lion_(Panthera_leo)_old_male_Chobe.jpg"
+ },
+ {
+  "id": "photo_26",
+  "kind": "wildlife",
+  "caption": "A leopard with its prey near Savute, in northern Botswana.",
+  "title": "African Leopard, Botswana imported from iNaturalist photo 10355594.jpg",
+  "author": "(c) Brian Gratwicke, some rights reserved (CC BY)",
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:African_Leopard,_Botswana_imported_from_iNaturalist_photo_10355594.jpg"
+ },
+ {
+  "id": "photo_27",
+  "kind": "place",
+  "caption": "The Makgadikgadi salt pans seen from space by NASA's MODIS.",
+  "title": "Makgadikgadi Salt Pans, Botswana (MODIS 2021-06-29).jpg",
+  "author": "MODIS Land Rapid Response Team, NASA GSFC",
+  "license": "Public domain",
+  "licenseUrl": "",
+  "source": "https://commons.wikimedia.org/wiki/File:Makgadikgadi_Salt_Pans,_Botswana_(MODIS_2021-06-29).jpg"
+ },
+ {
+  "id": "photo_28",
+  "kind": "wildlife",
+  "caption": "A hippo yawns in the Okavango Delta.",
+  "title": "Hippopotamus open mouth.jpg",
+  "author": "Charles J. Sharp",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Hippopotamus_open_mouth.jpg"
+ },
+ {
+  "id": "photo_29",
+  "kind": "wildlife",
+  "caption": "A lilac-breasted roller in Chobe National Park.",
+  "title": "Lilac-breasted roller (Coracias caudatus caudatus) Botswana.jpg",
+  "author": "Charles J. Sharp",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Lilac-breasted_roller_(Coracias_caudatus_caudatus)_Botswana.jpg"
+ },
+ {
+  "id": "photo_30",
+  "kind": "wildlife",
+  "caption": "An African fish eagle catching a fish in Chobe National Park.",
+  "title": "African fish eagle (Haliaeetus vocifer) feeding composite.jpg",
+  "author": "Charles J. Sharp",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:African_fish_eagle_(Haliaeetus_vocifer)_feeding_composite.jpg"
+ },
+ {
+  "id": "photo_31",
+  "kind": "wildlife",
+  "caption": "A southern carmine bee-eater in Chobe National Park.",
+  "title": "Southern carmine bee-eater (Merops nubicoides).jpg",
+  "author": "Charles J. Sharp",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Southern_carmine_bee-eater_(Merops_nubicoides).jpg"
+ },
+ {
+  "id": "photo_32",
+  "kind": "place",
+  "caption": "A purple sunset over Botswana.",
+  "title": "Purple sunset in Botswana - 27675677023.jpg",
+  "author": "Stephen Temple",
+  "license": "CC BY-SA 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Purple_sunset_in_Botswana_-_27675677023.jpg"
+ },
+ {
+  "id": "photo_33",
+  "kind": "wildlife",
+  "caption": "A cheetah silhouetted against an Okavango sunset.",
+  "title": "Cheetah at Sunset.jpg",
+  "author": "Arturo de Frias Marques",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Cheetah_at_Sunset.jpg"
+ },
+ {
+  "id": "photo_34",
+  "kind": "wildlife",
+  "caption": "Meerkats at play in Makgadikgadi Pans National Park.",
+  "title": "Suricatos (Suricata suricatta), parque nacional Makgadikgadi Pans, Botsuana, 2018-07-30, DD 29.jpg",
+  "author": "Diego Delso",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Suricatos_(Suricata_suricatta),_parque_nacional_Makgadikgadi_Pans,_Botsuana,_2018-07-30,_DD_29.jpg"
+ },
+ {
+  "id": "photo_35",
+  "kind": "wildlife",
+  "caption": "African wild dogs at Duma Tau, northern Botswana, one of their strongholds.",
+  "title": "African wild dog - Duma Tau, Botswana (29208947725).jpg",
+  "author": "Brian Lauer",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:African_wild_dog_-_Duma_Tau,_Botswana_(29208947725).jpg"
+ },
+ {
+  "id": "photo_36",
+  "kind": "wildlife",
+  "caption": "A giraffe crossing a road in Botswana.",
+  "title": "Giraffe crossing a road in Botswana.jpg",
+  "author": "Jeremy T. Hetzel",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Giraffe_crossing_a_road_in_Botswana.jpg"
+ },
+ {
+  "id": "photo_37",
+  "kind": "history",
+  "caption": "Seretse and Ruth Khama in 1964; their 1948 marriage caused an international storm.",
+  "title": "Seretse and Ruth Khama (1964).jpg",
+  "author": "Associated Press",
+  "license": "Public domain",
+  "licenseUrl": "",
+  "source": "https://commons.wikimedia.org/wiki/File:Seretse_and_Ruth_Khama_(1964).jpg"
+ },
+ {
+  "id": "photo_38",
+  "kind": "history",
+  "caption": "The first presidential Daimler, used by Sir Seretse Khama after independence.",
+  "title": "The First Daimler limousine used by President Sir Seretse Khama.jpg",
+  "author": "Shoodho",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:The_First_Daimler_limousine_used_by_President_Sir_Seretse_Khama.jpg"
+ },
+ {
+  "id": "photo_39",
+  "kind": "history",
+  "caption": "Ruth Williams Khama, Botswana's first First Lady, in 1964.",
+  "title": "Ruth Khama (1964) (cropped).jpg",
+  "author": "Associated Press",
+  "license": "Public domain",
+  "licenseUrl": "",
+  "source": "https://commons.wikimedia.org/wiki/File:Ruth_Khama_(1964)_(cropped).jpg"
+ },
+ {
+  "id": "photo_40",
+  "kind": "people",
+  "caption": "Sir Ketumile Masire, Botswana's second president (1980-1998), visiting the European Communities.",
+  "title": "P001487046H Visit of Quett Ketumile Joni Masire, President of Botswana, to the CEC.jpg",
+  "author": "European Communities (Jean-Louis Debaize)",
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:P001487046H_Visit_of_Quett_Ketumile_Joni_Masire,_President_of_Botswana,_to_the_CEC.jpg"
+ },
+ {
+  "id": "photo_41",
+  "kind": "people",
+  "caption": "Festus Mogae, Botswana's third president (1998-2008).",
+  "title": "Festus Mogae.jpg",
+  "author": "Greenweek",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Festus_Mogae.jpg"
+ },
+ {
+  "id": "photo_42",
+  "kind": "people",
+  "caption": "Ian Khama, Botswana's fourth president (2008-2018).",
+  "title": "Pres. Ian Khama of Botswana, cropped.jpg",
+  "author": "071203-F-XZ838-034.JPG: Tech. Sgt. Nic Raven derivative work: Joao Xavier (talk)",
+  "license": "Public domain",
+  "licenseUrl": "",
+  "source": "https://commons.wikimedia.org/wiki/File:Pres._Ian_Khama_of_Botswana,_cropped.jpg"
+ },
+ {
+  "id": "photo_43",
+  "kind": "people",
+  "caption": "Mokgweetsi Masisi, Botswana's fifth president (2018-2024), in 2023.",
+  "title": "Mokgweetsi Masisi May 2023.jpg",
+  "author": "World Intellectual Property Organization",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Mokgweetsi_Masisi_May_2023.jpg"
+ },
+ {
+  "id": "photo_44",
+  "kind": "people",
+  "caption": "Duma Boko at his inauguration parade as president in 2024.",
+  "title": "Duma Boko inauguration parade.jpg",
+  "author": "Aficionado538",
+  "license": "CC0",
+  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "source": "https://commons.wikimedia.org/wiki/File:Duma_Boko_inauguration_parade.jpg"
+ },
+ {
+  "id": "photo_45",
+  "kind": "history",
+  "caption": "Kgosi Khama III of the Bangwato, who died in 1923.",
+  "title": "Khama III, photo by Paul Thompson.jpg",
+  "author": "Paul Thompson",
+  "license": "Public domain",
+  "licenseUrl": "",
+  "source": "https://commons.wikimedia.org/wiki/File:Khama_III,_photo_by_Paul_Thompson.jpg"
+ },
+ {
+  "id": "photo_46",
+  "kind": "history",
+  "caption": "Sebele I of the Bakwena, photographed by Gustav Fritsch in 1865.",
+  "title": "Sebele I by Fritsch 1865.jpg",
+  "author": "Gustav Theodor Fritsch (1838–1927)",
+  "license": "Public domain",
+  "licenseUrl": "",
+  "source": "https://commons.wikimedia.org/wiki/File:Sebele_I_by_Fritsch_1865.jpg"
+ },
+ {
+  "id": "photo_48",
+  "kind": "people",
+  "caption": "Amantle Montsho, 400 m world champion in 2011.",
+  "title": "2011-06-09 Amantle Montsho.jpg",
+  "author": "Chell Hill",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:2011-06-09_Amantle_Montsho.jpg"
+ },
+ {
+  "id": "photo_49",
+  "kind": "people",
+  "caption": "Nijel Amos, 800 m silver medallist at the 2012 London Olympics.",
+  "title": "Nijel Amos.jpg",
+  "author": "Frank",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Nijel_Amos.jpg"
+ },
+ {
+  "id": "photo_50",
+  "kind": "people",
+  "caption": "Letsile Tebogo at the 2024 Paris Olympics, where he won 200 m gold.",
+  "title": "Letsile Tebogo & Cejhae Greene JO 03.08.2024.jpg",
+  "author": "Aeltegop",
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Letsile_Tebogo_%26_Cejhae_Greene_JO_03.08.2024.jpg"
+ },
+ {
+  "id": "photo_51",
+  "kind": "people",
+  "caption": "Unity Dow, Botswana's first woman High Court judge and a novelist.",
+  "title": "Unity Dow - PopTech 2011 - Camden Maine USA (cropped).jpg",
+  "author": "PopTech from Camden, Maine and Brooklyn, NY, USA",
+  "license": "CC BY-SA 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Unity_Dow_-_PopTech_2011_-_Camden_Maine_USA_(cropped).jpg"
+ },
+ {
+  "id": "photo_53",
+  "kind": "history",
+  "caption": "A 1953 Bechuanaland Protectorate coronation stamp.",
+  "title": "1953 Coronation Bechuanaland Protectorate stamp.jpg",
+  "author": "British Government.",
+  "license": "Public domain",
+  "licenseUrl": "",
+  "source": "https://commons.wikimedia.org/wiki/File:1953_Coronation_Bechuanaland_Protectorate_stamp.jpg"
+ },
+ {
+  "id": "photo_55",
+  "kind": "history",
+  "caption": "Bechuanaland Protectorate stamps for the 1947 royal visit.",
+  "title": "Bechuanaland Protectorate 1947 Royal Visit Commemorative issue.jpg",
+  "author": "Waterlow and Sons",
+  "license": "Public domain",
+  "licenseUrl": "",
+  "source": "https://commons.wikimedia.org/wiki/File:Bechuanaland_Protectorate_1947_Royal_Visit_Commemorative_issue.jpg"
+ },
+ {
+  "id": "photo_57",
+  "kind": "history",
+  "caption": "Independence Day celebrations; Botswana became independent on 30 September 1966.",
+  "title": "Botswana Idenpendence day Celebration.jpg",
+  "author": "Bonolo Nikita Rankaga",
+  "license": "CC0",
+  "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "source": "https://commons.wikimedia.org/wiki/File:Botswana_Idenpendence_day_Celebration.jpg"
+ },
+ {
+  "id": "photo_59",
+  "kind": "history",
+  "caption": "The Mafeking Obelisk; Mafikeng was the Bechuanaland Protectorate's capital, outside its borders.",
+  "title": "Mafeking Obelisk Panel2.jpg",
+  "author": "Diverman",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Mafeking_Obelisk_Panel2.jpg"
+ },
+ {
+  "id": "photo_60",
+  "kind": "history",
+  "caption": "Sebele I, Bathoen I and Khama III in London in 1895, where they argued against rule by Rhodes's company.",
+  "title": "Dikgosis on the 3 dikgosi monument.jpg",
+  "author": "w:Russell & Sons, Baker Street. Photographer Edwin Lloyd",
+  "license": "Public domain",
+  "licenseUrl": "",
+  "source": "https://commons.wikimedia.org/wiki/File:Dikgosis_on_the_3_dikgosi_monument.jpg"
+ },
+ {
+  "id": "photo_61",
+  "kind": "place",
+  "caption": "The National Assembly building in Gaborone.",
+  "title": "BotswanaParliament.jpg",
+  "author": "Iulus Ascanius at English Wikipedia",
+  "license": "Public domain",
+  "licenseUrl": "",
+  "source": "https://commons.wikimedia.org/wiki/File:BotswanaParliament.jpg"
+ },
+ {
+  "id": "photo_62",
+  "kind": "history",
+  "caption": "The Gaborone consumer cooperative society in the 1960s, as the new capital was built.",
+  "title": "Front view of Gaborone consumer Cooperative Society 1960s (Botswana History).jpg",
+  "author": "Unknown authorUnknown author",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Front_view_of_Gaborone_consumer_Cooperative_Society_1960s_(Botswana_History).jpg"
+ },
+ {
+  "id": "photo_63",
+  "kind": "place",
+  "caption": "The Bessie Head Library in Pietermaritzburg; Bessie Head wrote her novels in Serowe.",
+  "title": "The Bessie Head Library 2 November 2009.jpg",
+  "author": "Njabulo1",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:The_Bessie_Head_Library_2_November_2009.jpg"
+ }
+]

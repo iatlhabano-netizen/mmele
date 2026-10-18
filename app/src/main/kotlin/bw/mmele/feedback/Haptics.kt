@@ -32,6 +32,7 @@ class Haptics(context: Context) {
         try {
             when (event) {
                 FeedbackEvent.SELECT -> predefinedOr(EFFECT_TICK) { oneShot(8, 70) }
+                FeedbackEvent.DROP -> predefinedOr(EFFECT_TICK) { oneShot(6, 60) }
                 FeedbackEvent.PLACE -> predefinedOr(EFFECT_CLICK) { oneShot(14, 140) }
                 FeedbackEvent.SLIDE -> predefinedOr(EFFECT_TICK) { oneShot(10, 110) }
                 FeedbackEvent.FLY -> waveform(longArrayOf(0, 12, 40, 16), intArrayOf(0, 60, 0, 160))

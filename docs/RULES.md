@@ -143,3 +143,29 @@ any state ──(opponent ≤ 2 cows | opponent has no legal move | draw counter
 ```
 Phases are derived per player from immutable state (cows in hand / on board), so the state machine cannot get
 out of sync with the position.
+
+## Moruba (Nsolo), four-row mancala
+
+Implemented in `engine/.../moruba/MorubaEngine.kt` (rules), `MorubaAi.kt` (AI) and
+`app/.../ui/moruba/BoardScreen.kt` (board). Modes: vs Computer (Easy / Medium / Hard) and Pass & Play.
+
+- **Board:** 4 rows of 6, 8 (default) or 10 pits. North (top, player 2) owns rows 0 (outer) and 1 (inner);
+  South (bottom, player 1, you) owns rows 2 (inner) and 3 (outer). 2 stones per pit by default (2–4 selectable).
+- **Sowing:** pick up all stones from one of your pits holding **at least 2** and sow one per pit,
+  **counter-clockwise** around your own 16-pit loop (with 8 holes). Stones never enter the opponent's pits.
+- **Relay:** if the last stone lands in an occupied pit, lift that whole pit and keep sowing.
+- **Capture:** if the last stone lands in an **empty inner** pit and the opponent's facing inner pit has
+  stones, take those stones **and** the stones in the opponent's outer pit behind it (front-and-back
+  capture). The turn ends. Captured stones leave the board.
+- **Empty outer pit:** the turn simply ends.
+- **Winning:** the player to move loses when they have no stones or no pit with 2 or more stones (no legal move).
+- **Step cap (infinite relays):** relay chains can in theory cycle. A turn stops after
+  `MorubaConfig.stepCap` stone drops (default 2,000, far beyond any real turn). Stones still in hand are put
+  into the pit where the relay stopped (so no stone is lost) and the turn passes. Tests force a cap of 3 to
+  check this.
+- **AI:** Easy = random legal move; Medium = greedy (largest capture, then the longest sowing);
+  Hard = negamax alpha-beta (depth 4) scoring board presence, mobility (pits with ≥ 2) and capture threat,
+  so a position that leaves you open to a big inner+outer double capture scores badly.
+
+Sources: Wikipedia, "Moruba (game)" and "Mancala"; Russ, *The Complete Mancala Games Book*. Local rule
+details differ from village to village; these are the defaults asked for by the developer.

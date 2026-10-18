@@ -1,7 +1,7 @@
 # Setswana translation review
 
 Mmele ships English (default) and a **draft** Setswana (`tn`) translation. Every Setswana string
-below was drafted by the developer's assistant, not by a native speaker, so **all 338 of 338
+below was drafted by the developer's assistant, not by a native speaker, so **all 358 of 358
 strings need review** before the Setswana UI is promoted (the high-confidence ones should be quick).
 
 How to correct: edit `app/src/main/res/values-tn/strings.xml` or `strings_academy.xml` directly
@@ -18,7 +18,7 @@ Conventions in the draft (please confirm or replace):
 - Place names stay as Batswana write them (Okavango, Chobe, Makgadikgadi, Tsodilo, Kgalagadi).
 - Bird names (lapwing, roller) are low confidence: please supply the names you know.
 
-Counts: 77 high, 232 medium, 29 low confidence, 0 reviewed.
+Counts: 86 high, 239 medium, 33 low confidence, 0 reviewed.
 
 | Key | English | Draft Setswana | Confidence |
 |---|---|---|---|
@@ -287,6 +287,26 @@ Counts: 77 high, 232 medium, 29 low confidence, 0 reviewed.
 | `illegal_step_or_jump` | Step to a connected empty point, or jump over the middle cow into the empty end. | Gata go ya kwa ntlheng e e lolea e e gaufi, kgotsa tlolela godimo ga kgomo e e fa gare go ya kwa bokhutlong jo bo lolea. | medium |
 | `illegal_stuck` | That cow is boxed in. Try another one. | Kgomo eo e tswaletswe. Leka e nngwe. | medium |
 | `illegal_remill` | You can't move straight back to remake the mill you just broke. | Ga o kgone go boela kwa morago ka bonako go dira gape mola o o sa tswang go o thuba. | low |
+| `home_moruba` | Moruba | Moruba | high |
+| `home_moruba_sub` | Four-row mancala · vs Computer or Pass & Play | Moruba wa mela e mene · le khomputara kgotsa Fetisa o tshameke | medium |
+| `moruba_title` | Moruba | Moruba | high |
+| `moruba_rules_short` | Sow counter-clockwise round your own two rows, one stone per pit. Land in a full pit to pick it up and keep sowing; land in an empty inner pit to capture the two enemy pits facing it. Leave your opponent without a move to win. | Jala o dikologa kgatlhanong le tsamaiso ya oura mo melelong ya gago e mebedi, leje le le lengwe mo khuting nngwe le nngwe. Fa o wela mo khuting e e nang le majana, a tsee o tswelele o jala; fa o wela mo khuting e e se nang sepe ya mo teng, o tsaya dikhuti tse pedi tsa mophenyisani tse di lebaganeng le yone. Tlogela mophenyisani a sena motsamao gore o fenye. | low |
+| `moruba_opponent` | Opponent | Mophenyisani | high |
+| `moruba_holes` | Holes per row | Dikhuti mo moleng | medium |
+| `moruba_stones` | Stones per pit | Majana mo khuting | medium |
+| `moruba_computer` | Computer | Khomputara | high |
+| `moruba_you` | You | Wena | high |
+| `moruba_south` | South | Borwa | high |
+| `moruba_north` | North | Bokone | high |
+| `moruba_stones_on_board` | %1$d stones | Majana a le %1$d | medium |
+| `moruba_sowing` | Sowing… %1$d in hand | Go jala… %1$d mo seatleng | low |
+| `moruba_thinking` | Computer is thinking… | Khomputara e a akanya… | high |
+| `moruba_your_turn` | Your turn: tap a pit with 2 or more stones | Ke nako ya gago: tobetsa khuti e e nang le majana a le 2 kgotsa go feta | medium |
+| `moruba_side_turn` | %1$s to play | Ke nako ya %1$s | medium |
+| `moruba_board_desc` | Moruba board: four rows of pits; yours are the bottom two rows | Boto ya Moruba: mela e mene ya dikhuti; tsa gago ke mela e mebedi ya kwa tlase | low |
+| `fact_did_you_know` | Did you know? | A o ne o itse? | high |
+| `about_photo_credits` | Photo credits | Ba ba tsereng ditshwantsho | low |
+| `about_photo_credits_body` | Photos from Wikimedia Commons, used under the licences shown (CC0, public domain, CC BY, CC BY-SA). Tap a photo to open its source page. | Ditshwantsho di tswa kwa Wikimedia Commons, di dirisiwa ka dilaesense tse di bontshitsweng (CC0, public domain, CC BY, CC BY-SA). Tobetsa setshwantsho go bula tsebe ya sone. | medium |
 | `academy_title` | Academy | Sekolo | medium |
 | `academy_subtitle` | Five short puzzles that teach the ideas behind Mmele. | Dithaelo tse tlhano tse dikhutshwane tse di rutang dikakanyo tsa Mmele. | medium |
 | `academy_progress` | %1$d of %2$d lessons done | Dithuto di le %1$d go %2$d di weditswe | medium |

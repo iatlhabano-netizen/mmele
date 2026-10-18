@@ -70,7 +70,7 @@ import bw.mmele.ui.theme.MmeleColors
 
 /** Stateful entry point: wires the ViewModel and feedback to the stateless content. */
 @Composable
-fun GameRoute(viewModel: GameViewModel, feedback: FeedbackController?, onHome: () -> Unit, onShareCode: (String) -> Unit = {}) {
+fun GameRoute(viewModel: GameViewModel, feedback: FeedbackController?, onHome: () -> Unit, onShareCode: (String) -> Unit = {}, factCard: bw.mmele.data.FactCard? = null) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(viewModel) { viewModel.events.collect { feedback?.play(it) } }
     // Clocks stop while the app is in the background, and the game is saved.
@@ -82,7 +82,7 @@ fun GameRoute(viewModel: GameViewModel, feedback: FeedbackController?, onHome: (
     BackHandler(onBack = leave)
     var replay by rememberSaveable { mutableStateOf<String?>(null) }
     GameScreenContent(
-        ui, viewModel::onIntent, leave, onShareCode = onShareCode,
+        ui, viewModel::onIntent, leave, onShareCode = onShareCode, factCard = factCard,
         onReplay = { replay = viewModel.movesSoFar().joinToString(",") { it.encode().toString() } },
     )
     replay?.let { enc ->
@@ -113,6 +113,7 @@ fun GameScreenContent(
     animate: Boolean = true,
     onShareCode: (String) -> Unit = {},
     onReplay: () -> Unit = {},
+    factCard: bw.mmele.data.FactCard? = null,
 ) {
     val config = ui.config
     val bottom = if (config.mode == GameMode.PASS_AND_PLAY) Player.ONE else config.human
@@ -184,7 +185,7 @@ fun GameScreenContent(
         ui.online?.takeIf { it.opponentOffersDraw && !ui.game.isGameOver }?.let {
             DrawOfferBanner(onIntent, Modifier.align(Alignment.TopCenter).safeDrawingPadding().padding(top = 128.dp))
         }
-        if (ui.showGameOver) GameOverDialog(ui, onIntent, onHome, onReplay)
+        if (ui.showGameOver) GameOverDialog(ui, onIntent, onHome, onReplay, factCard)
     }
 }
 
@@ -374,13 +375,13 @@ fun resultReason(ui: GameUiState): String = when (val r = ui.game.result) {
 }
 
 @Composable
-private fun GameOverDialog(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> Unit, onReplay: () -> Unit = {}) {
-    Dialog(onDismissRequest = { onIntent(GameIntent.DismissGameOver) }) { GameOverCard(ui, onIntent, onHome, onReplay = onReplay) }
+private fun GameOverDialog(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> Unit, onReplay: () -> Unit = {}, factCard: bw.mmele.data.FactCard? = null) {
+    Dialog(onDismissRequest = { onIntent(GameIntent.DismissGameOver) }) { GameOverCard(ui, onIntent, onHome, onReplay = onReplay, factCard = factCard) }
 }
 
 /** Game-over card: the scene at full strength with its caption, result, and rematch. */
 @Composable
-fun GameOverCard(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> Unit, modifier: Modifier = Modifier, onReplay: () -> Unit = {}) {
+fun GameOverCard(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> Unit, modifier: Modifier = Modifier, onReplay: () -> Unit = {}, factCard: bw.mmele.data.FactCard? = null) {
         Column(modifier.then(
             Modifier
                 .background(MmeleColors.SlateRaised, RoundedCornerShape(24.dp))
@@ -388,7 +389,7 @@ fun GameOverCard(ui: GameUiState, onIntent: (GameIntent) -> Unit, onHome: () -> 
                 .clip(RoundedCornerShape(24.dp))),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            SceneHeader(ui.config.scene)
+            if (factCard == null) SceneHeader(ui.config.scene) else bw.mmele.ui.facts.FactCardHeader(factCard, ui.config.scene)
             GameOverBody(ui, onIntent, onHome, onReplay)
         }
 }

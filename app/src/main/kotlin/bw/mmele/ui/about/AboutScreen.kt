@@ -148,6 +148,15 @@ fun AboutScreen(
                 Text(stringResource(R.string.credit_translation), style = MaterialTheme.typography.titleSmall, color = MmeleColors.Bone)
                 Body(stringResource(R.string.credit_translation_body))
 
+                Section(stringResource(R.string.about_photo_credits))
+                Body(stringResource(R.string.about_photo_credits_body))
+                val photos = remember {
+                    runCatching { bw.mmele.data.BotswanaContent.parsePhotos(context.assets.open("photos/photos.json").bufferedReader().readText()) }.getOrDefault(emptyList())
+                }
+                photos.forEach { p ->
+                    LinkRow("${p.title} — ${p.author} (${p.license})", p.source) { runCatching { uri.openUri(p.source) } }
+                }
+
                 Section(stringResource(R.string.about_licences))
                 Body(stringResource(R.string.about_licences_intro))
                 if (libs.isEmpty()) Body(stringResource(R.string.about_licences_missing))

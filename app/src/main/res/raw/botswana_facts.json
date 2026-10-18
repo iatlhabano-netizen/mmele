@@ -1,0 +1,3365 @@
+{
+ "_readme": "Botswana facts shown on the game-over card, one each finished game, never repeating until all have been shown. Edit freely: keep ids unique and stable (add new ids at the end); FactsTest checks count, uniqueness and length.",
+ "facts": [
+  {
+   "id": "f001",
+   "category": "geography",
+   "text": "Botswana is landlocked and borders South Africa, Namibia, Zimbabwe and Zambia."
+  },
+  {
+   "id": "f002",
+   "category": "geography",
+   "text": "Botswana and Zambia touch at a single point on the Zambezi near Kazungula, one of the shortest borders in the world."
+  },
+  {
+   "id": "f003",
+   "category": "geography",
+   "text": "Botswana covers about 582,000 km², roughly the size of France."
+  },
+  {
+   "id": "f004",
+   "category": "geography",
+   "text": "The Kalahari covers around 70% of Botswana's land."
+  },
+  {
+   "id": "f005",
+   "category": "geography",
+   "text": "Most of Botswana's people live in the east, along the railway line from Lobatse to Francistown."
+  },
+  {
+   "id": "f006",
+   "category": "geography",
+   "text": "Botswana's highest point is Otse Hill (Monalanong), about 1,490 m above sea level."
+  },
+  {
+   "id": "f007",
+   "category": "geography",
+   "text": "Botswana's lowest point is where the Shashe River meets the Limpopo, about 510 m above sea level."
+  },
+  {
+   "id": "f008",
+   "category": "geography",
+   "text": "The Limpopo River forms part of Botswana's border with South Africa."
+  },
+  {
+   "id": "f009",
+   "category": "geography",
+   "text": "The Chobe River forms part of Botswana's northern border with Namibia."
+  },
+  {
+   "id": "f010",
+   "category": "geography",
+   "text": "Botswana sits on a high plateau; most of the country lies around 1,000 m above sea level."
+  },
+  {
+   "id": "f011",
+   "category": "geography",
+   "text": "The Tropic of Capricorn passes through Botswana, just south of Mahalapye."
+  },
+  {
+   "id": "f012",
+   "category": "geography",
+   "text": "Botswana has a semi-arid climate with hot summers and cool, dry winters."
+  },
+  {
+   "id": "f013",
+   "category": "geography",
+   "text": "Botswana's rains fall mostly between November and March."
+  },
+  {
+   "id": "f014",
+   "category": "geography",
+   "text": "Winter nights in the Kalahari can drop below freezing even though the days are warm."
+  },
+  {
+   "id": "f015",
+   "category": "geography",
+   "text": "Botswana is divided into districts such as Central, Ghanzi, Kgalagadi, Kgatleng, Kweneng, North-East, North-West, South-East and Southern."
+  },
+  {
+   "id": "f016",
+   "category": "geography",
+   "text": "The Central District is Botswana's largest district by area."
+  },
+  {
+   "id": "f017",
+   "category": "geography",
+   "text": "The Kazungula Bridge over the Zambezi, linking Botswana and Zambia, opened in 2021."
+  },
+  {
+   "id": "f018",
+   "category": "geography",
+   "text": "Lake Ngami, south of the Okavango, fills and dries with the floods; David Livingstone reached it in 1849."
+  },
+  {
+   "id": "f019",
+   "category": "geography",
+   "text": "The Boteti River carries Okavango overflow towards the Makgadikgadi Pans."
+  },
+  {
+   "id": "f020",
+   "category": "geography",
+   "text": "The Boteti River stopped flowing for years and returned with strong floods around 2009."
+  },
+  {
+   "id": "f021",
+   "category": "geography",
+   "text": "The Gcwihaba (Drotsky's) Caves in north-west Botswana are known for their stalactites and bats."
+  },
+  {
+   "id": "f022",
+   "category": "geography",
+   "text": "The Aha Hills sit on Botswana's border with Namibia in the north-west."
+  },
+  {
+   "id": "f023",
+   "category": "geography",
+   "text": "The Tsodilo Hills rise abruptly from the flat Kalahari sands in the north-west."
+  },
+  {
+   "id": "f024",
+   "category": "geography",
+   "text": "Botswana has no coastline, yet the Okavango is one of Africa's great wetlands."
+  },
+  {
+   "id": "f025",
+   "category": "geography",
+   "text": "The Shashe River flows past Francistown on its way to the Limpopo."
+  },
+  {
+   "id": "f026",
+   "category": "geography",
+   "text": "The Notwane River runs past Gaborone and feeds the Limpopo system."
+  },
+  {
+   "id": "f027",
+   "category": "geography",
+   "text": "Gaborone Dam, on the Notwane River, supplies water to the capital."
+  },
+  {
+   "id": "f028",
+   "category": "geography",
+   "text": "The North-South Carrier pipeline carries water from dams in the north-east to Gaborone."
+  },
+  {
+   "id": "f029",
+   "category": "geography",
+   "text": "Kalahari sand can be more than 100 m deep in places."
+  },
+  {
+   "id": "f030",
+   "category": "geography",
+   "text": "The Linyanti swamps lie in the far north, along the Namibian border."
+  },
+  {
+   "id": "f031",
+   "category": "geography",
+   "text": "Botswana is one of the most sparsely populated countries in Africa."
+  },
+  {
+   "id": "f032",
+   "category": "geography",
+   "text": "Botswana's 2022 census counted about 2.4 million people."
+  },
+  {
+   "id": "f033",
+   "category": "geography",
+   "text": "Fossil river valleys called mekgacha cross the Kalahari, a sign of wetter times."
+  },
+  {
+   "id": "f034",
+   "category": "geography",
+   "text": "Dust devils are common on the open pans on hot afternoons."
+  },
+  {
+   "id": "f035",
+   "category": "geography",
+   "text": "The Mababe Depression, between Savuti and Moremi, is the bed of an ancient lake."
+  },
+  {
+   "id": "f036",
+   "category": "okavango",
+   "text": "The Okavango River rises in the highlands of Angola, where it is called the Cubango."
+  },
+  {
+   "id": "f037",
+   "category": "okavango",
+   "text": "The Okavango Delta never reaches the sea; its water spreads into the Kalahari and evaporates."
+  },
+  {
+   "id": "f038",
+   "category": "okavango",
+   "text": "The Okavango Delta became UNESCO's 1,000th World Heritage Site in 2014."
+  },
+  {
+   "id": "f039",
+   "category": "okavango",
+   "text": "The Okavango floods peak in Botswana's dry winter, months after the rain falls in Angola."
+  },
+  {
+   "id": "f040",
+   "category": "okavango",
+   "text": "Flood water can take about four months to travel from the top of the Okavango to Maun."
+  },
+  {
+   "id": "f041",
+   "category": "okavango",
+   "text": "The Okavango Delta is listed under the Ramsar Convention as a wetland of international importance."
+  },
+  {
+   "id": "f042",
+   "category": "okavango",
+   "text": "The Okavango Panhandle is the narrow channel where the river enters Botswana near Shakawe."
+  },
+  {
+   "id": "f043",
+   "category": "okavango",
+   "text": "Most of the water entering the Okavango Delta is lost to evaporation and plant transpiration."
+  },
+  {
+   "id": "f044",
+   "category": "okavango",
+   "text": "Islands in the Okavango often start as termite mounds that trees and soil build on."
+  },
+  {
+   "id": "f045",
+   "category": "okavango",
+   "text": "Chief's Island is the largest island in the Okavango Delta and lies in Moremi Game Reserve."
+  },
+  {
+   "id": "f046",
+   "category": "okavango",
+   "text": "A mokoro is a dugout canoe poled through the shallow channels of the Okavango."
+  },
+  {
+   "id": "f047",
+   "category": "okavango",
+   "text": "Mokoro polers stand at the back and push with a long pole called a ngashi."
+  },
+  {
+   "id": "f048",
+   "category": "okavango",
+   "text": "Many safari mekoro are now made of fibreglass to save the trees once used to carve them."
+  },
+  {
+   "id": "f049",
+   "category": "okavango",
+   "text": "Papyrus lines the deep, permanent channels of the Okavango."
+  },
+  {
+   "id": "f050",
+   "category": "okavango",
+   "text": "The Okavango's water is so clear in places that you can see the riverbed."
+  },
+  {
+   "id": "f051",
+   "category": "okavango",
+   "text": "The Okavango Delta covers several thousand square kilometres of permanent and seasonal swamp."
+  },
+  {
+   "id": "f052",
+   "category": "okavango",
+   "text": "Maun, on the Thamalakane River, is the gateway town for Okavango safaris."
+  },
+  {
+   "id": "f053",
+   "category": "okavango",
+   "text": "The Okavango Delta is home to the Bayei, Hambukushu, Bataweng and other peoples."
+  },
+  {
+   "id": "f054",
+   "category": "okavango",
+   "text": "The Bayei are known as skilled mokoro builders and fishermen of the Okavango."
+  },
+  {
+   "id": "f055",
+   "category": "okavango",
+   "text": "Water lilies bloom across the Okavango's lagoons and channels."
+  },
+  {
+   "id": "f056",
+   "category": "okavango",
+   "text": "The Okavango Delta supports large populations of elephants, buffalo, lechwe and hippos."
+  },
+  {
+   "id": "f057",
+   "category": "okavango",
+   "text": "The sitatunga antelope lives in the Okavango's papyrus swamps and is an excellent swimmer."
+  },
+  {
+   "id": "f058",
+   "category": "okavango",
+   "text": "Red lechwe use their long, splayed hooves to run through shallow water."
+  },
+  {
+   "id": "f059",
+   "category": "okavango",
+   "text": "The Okavango is one of the largest inland deltas in the world."
+  },
+  {
+   "id": "f060",
+   "category": "okavango",
+   "text": "Scenic flights over the Okavango show its maze of channels, lagoons and islands."
+  },
+  {
+   "id": "f061",
+   "category": "okavango",
+   "text": "The Thamalakane River at Maun fills with water from the Okavango floods."
+  },
+  {
+   "id": "f062",
+   "category": "okavango",
+   "text": "Xakanaxa and Third Bridge are well-known camping areas in Moremi."
+  },
+  {
+   "id": "f063",
+   "category": "okavango",
+   "text": "Moremi Game Reserve covers much of the eastern Okavango Delta."
+  },
+  {
+   "id": "f064",
+   "category": "okavango",
+   "text": "Moremi Game Reserve was declared in 1963 by the BaTawana, one of the first reserves in Africa created by local people."
+  },
+  {
+   "id": "f065",
+   "category": "okavango",
+   "text": "Moremi Game Reserve is named after Kgosi Moremi III of the BaTawana."
+  },
+  {
+   "id": "f066",
+   "category": "okavango",
+   "text": "The Okavango Delta's wildlife moves with the floods, crowding onto islands when the water is high."
+  },
+  {
+   "id": "f067",
+   "category": "okavango",
+   "text": "Fish such as tigerfish and bream draw anglers to the Okavango Panhandle."
+  },
+  {
+   "id": "f068",
+   "category": "chobe",
+   "text": "Chobe was Botswana's first national park, proclaimed in 1968."
+  },
+  {
+   "id": "f069",
+   "category": "chobe",
+   "text": "Chobe National Park has one of the highest concentrations of elephants in Africa."
+  },
+  {
+   "id": "f070",
+   "category": "chobe",
+   "text": "Botswana has the largest elephant population in the world, roughly 130,000 animals."
+  },
+  {
+   "id": "f071",
+   "category": "chobe",
+   "text": "Chobe's Savuti area is known for lions that hunt elephants."
+  },
+  {
+   "id": "f072",
+   "category": "chobe",
+   "text": "The Savuti Channel flows only in some years, then dries up for long periods."
+  },
+  {
+   "id": "f073",
+   "category": "chobe",
+   "text": "Kasane is the main town for visitors to Chobe National Park."
+  },
+  {
+   "id": "f074",
+   "category": "chobe",
+   "text": "Boat safaris on the Chobe River bring visitors close to drinking elephants."
+  },
+  {
+   "id": "f075",
+   "category": "chobe",
+   "text": "Sedudu Island in the Chobe River was ruled Botswana's by the International Court of Justice in 1999."
+  },
+  {
+   "id": "f076",
+   "category": "chobe",
+   "text": "The Chobe riverfront is busiest with game in the dry season, when inland water runs out."
+  },
+  {
+   "id": "f077",
+   "category": "chobe",
+   "text": "Chobe's Linyanti area is known for wild dogs and large elephant herds."
+  },
+  {
+   "id": "f078",
+   "category": "chobe",
+   "text": "Chobe National Park covers about 11,700 km²."
+  },
+  {
+   "id": "f079",
+   "category": "chobe",
+   "text": "Kazungula, near Kasane, is where four countries almost meet: Botswana, Namibia, Zambia and Zimbabwe."
+  },
+  {
+   "id": "f080",
+   "category": "chobe",
+   "text": "Victoria Falls in Zimbabwe is only about 80 km from Kasane."
+  },
+  {
+   "id": "f081",
+   "category": "chobe",
+   "text": "The Chobe River joins the Zambezi near Kazungula."
+  },
+  {
+   "id": "f082",
+   "category": "chobe",
+   "text": "Puku, a rare antelope in Botswana, can be seen along the Chobe floodplains."
+  },
+  {
+   "id": "f083",
+   "category": "chobe",
+   "text": "The Chobe Enclave is a group of villages beside the park where people live with wildlife."
+  },
+  {
+   "id": "f084",
+   "category": "chobe",
+   "text": "Elephants in Chobe swim across the river and use their trunks as snorkels."
+  },
+  {
+   "id": "f085",
+   "category": "chobe",
+   "text": "Kasane has a giant baobab once used as a prison cell."
+  },
+  {
+   "id": "f086",
+   "category": "kalahari & pans",
+   "text": "The Central Kalahari Game Reserve was established in 1961."
+  },
+  {
+   "id": "f087",
+   "category": "kalahari & pans",
+   "text": "The Central Kalahari Game Reserve covers about 52,800 km², larger than the Netherlands."
+  },
+  {
+   "id": "f088",
+   "category": "kalahari & pans",
+   "text": "Deception Valley in the Central Kalahari was home to researchers Mark and Delia Owens, authors of Cry of the Kalahari."
+  },
+  {
+   "id": "f089",
+   "category": "kalahari & pans",
+   "text": "The Kalahari is a semi-desert: it gets more rain than a true desert and is covered in grass and scrub."
+  },
+  {
+   "id": "f090",
+   "category": "kalahari & pans",
+   "text": "The Kalahari is famous for its black-maned lions."
+  },
+  {
+   "id": "f091",
+   "category": "kalahari & pans",
+   "text": "After good rains, the Kalahari pans fill with springbok, gemsbok and wildebeest."
+  },
+  {
+   "id": "f092",
+   "category": "kalahari & pans",
+   "text": "The Khutse Game Reserve lies just south of the Central Kalahari Game Reserve."
+  },
+  {
+   "id": "f093",
+   "category": "kalahari & pans",
+   "text": "The Kgalagadi Transfrontier Park joins Botswana's Gemsbok National Park and South Africa's Kalahari Gemsbok National Park."
+  },
+  {
+   "id": "f094",
+   "category": "kalahari & pans",
+   "text": "The Kgalagadi Transfrontier Park was opened in 2000 as Africa's first formally declared transfrontier park."
+  },
+  {
+   "id": "f095",
+   "category": "kalahari & pans",
+   "text": "The Kalahari's red dunes are coloured by a coating of iron oxide on the sand grains."
+  },
+  {
+   "id": "f096",
+   "category": "kalahari & pans",
+   "text": "Tsamma melons store water and help people and animals survive in the Kalahari."
+  },
+  {
+   "id": "f097",
+   "category": "kalahari & pans",
+   "text": "The Makgadikgadi Pans are among the largest salt flats in the world."
+  },
+  {
+   "id": "f098",
+   "category": "kalahari & pans",
+   "text": "The Makgadikgadi Pans are the remains of an ancient lake that once covered much of northern Botswana."
+  },
+  {
+   "id": "f099",
+   "category": "kalahari & pans",
+   "text": "Ntwetwe and Sowa (Sua) are the two biggest pans of the Makgadikgadi."
+  },
+  {
+   "id": "f100",
+   "category": "kalahari & pans",
+   "text": "Kubu Island, a granite outcrop on Sowa Pan, is ringed by baobabs."
+  },
+  {
+   "id": "f101",
+   "category": "kalahari & pans",
+   "text": "Kubu Island is a national monument and a sacred site."
+  },
+  {
+   "id": "f102",
+   "category": "kalahari & pans",
+   "text": "Kubu means hippopotamus in Setswana."
+  },
+  {
+   "id": "f103",
+   "category": "kalahari & pans",
+   "text": "Sowa Pan fills with water in good rainy seasons and attracts huge flocks of flamingos."
+  },
+  {
+   "id": "f104",
+   "category": "kalahari & pans",
+   "text": "Both greater and lesser flamingos breed on Sowa Pan."
+  },
+  {
+   "id": "f105",
+   "category": "kalahari & pans",
+   "text": "The Nata Bird Sanctuary on the northern edge of Sowa Pan was set up by the local community."
+  },
+  {
+   "id": "f106",
+   "category": "kalahari & pans",
+   "text": "Each year zebras migrate between the Boteti River and the Makgadikgadi pans."
+  },
+  {
+   "id": "f107",
+   "category": "kalahari & pans",
+   "text": "A zebra migration of about 500 km between Namibia's Chobe floodplain and Nxai Pan was recorded in 2014, among Africa's longest."
+  },
+  {
+   "id": "f108",
+   "category": "kalahari & pans",
+   "text": "Nxai Pan National Park lies north of the Makgadikgadi and is known for wet-season zebra herds."
+  },
+  {
+   "id": "f109",
+   "category": "kalahari & pans",
+   "text": "Baines' Baobabs, on Kudiakam Pan in Nxai Pan National Park, were painted by Thomas Baines in 1862."
+  },
+  {
+   "id": "f110",
+   "category": "kalahari & pans",
+   "text": "Baines' Baobabs are also called the Sleeping Sisters."
+  },
+  {
+   "id": "f111",
+   "category": "kalahari & pans",
+   "text": "Chapman's Baobab, a famous Makgadikgadi landmark, fell in 2016."
+  },
+  {
+   "id": "f112",
+   "category": "kalahari & pans",
+   "text": "Green Kalahari grass after rain can turn the pans into a short-lived grazing paradise."
+  },
+  {
+   "id": "f113",
+   "category": "kalahari & pans",
+   "text": "Soda ash and salt are extracted from Sowa Pan at Botash, near Sowa Town."
+  },
+  {
+   "id": "f114",
+   "category": "kalahari & pans",
+   "text": "Stone tools found around the Makgadikgadi show people lived there long ago."
+  },
+  {
+   "id": "f115",
+   "category": "kalahari & pans",
+   "text": "Brown hyenas forage along the edges of the Makgadikgadi Pans."
+  },
+  {
+   "id": "f116",
+   "category": "kalahari & pans",
+   "text": "Meerkat groups near the Makgadikgadi have become used to people and can be watched close up."
+  },
+  {
+   "id": "f117",
+   "category": "kalahari & pans",
+   "text": "On a dry pan, mirages make the horizon seem to shimmer with water."
+  },
+  {
+   "id": "f118",
+   "category": "kalahari & pans",
+   "text": "Makgadikgadi Pans National Park borders the Boteti River on its west."
+  },
+  {
+   "id": "f119",
+   "category": "kalahari & pans",
+   "text": "Quad bikes once crossed the pans in the dry season; the salt crust stays fragile and easily damaged."
+  },
+  {
+   "id": "f120",
+   "category": "kalahari & pans",
+   "text": "The Kalahari is shared by Botswana, Namibia and South Africa."
+  },
+  {
+   "id": "f121",
+   "category": "kalahari & pans",
+   "text": "Camelthorn trees (mogotlho) are a common sight in the Kalahari."
+  },
+  {
+   "id": "f122",
+   "category": "kalahari & pans",
+   "text": "Ghanzi, in the western Kalahari, is a centre of cattle ranching."
+  },
+  {
+   "id": "f123",
+   "category": "kalahari & pans",
+   "text": "Kalahari truffles appear in the sand after good rains."
+  },
+  {
+   "id": "f124",
+   "category": "kalahari & pans",
+   "text": "The Kalahari's sand ridges run in long parallel lines, shaped by ancient winds."
+  },
+  {
+   "id": "f125",
+   "category": "wildlife",
+   "text": "The zebra is Botswana's national animal."
+  },
+  {
+   "id": "f126",
+   "category": "wildlife",
+   "text": "The kori bustard, one of the world's heaviest flying birds, is often called Botswana's national bird."
+  },
+  {
+   "id": "f127",
+   "category": "wildlife",
+   "text": "Botswana is home to Africa's Big Five: lion, leopard, elephant, buffalo and rhino."
+  },
+  {
+   "id": "f128",
+   "category": "wildlife",
+   "text": "The Khama Rhino Sanctuary near Serowe was set up by the community in 1992 to protect rhinos."
+  },
+  {
+   "id": "f129",
+   "category": "wildlife",
+   "text": "Rhinos were reintroduced to the Okavango after poaching wiped them out there."
+  },
+  {
+   "id": "f130",
+   "category": "wildlife",
+   "text": "Northern Botswana is one of the last strongholds of the African wild dog."
+  },
+  {
+   "id": "f131",
+   "category": "wildlife",
+   "text": "African wild dogs are also called painted wolves for their patchy coats."
+  },
+  {
+   "id": "f132",
+   "category": "wildlife",
+   "text": "Cheetahs live across Botswana's open plains and the Kalahari."
+  },
+  {
+   "id": "f133",
+   "category": "wildlife",
+   "text": "Brown hyenas, rare in much of Africa, live in the Kalahari."
+  },
+  {
+   "id": "f134",
+   "category": "wildlife",
+   "text": "Gemsbok can go for long periods without drinking, getting water from plants."
+  },
+  {
+   "id": "f135",
+   "category": "wildlife",
+   "text": "Springbok are famous for pronking: leaping high with a stiff-legged bounce."
+  },
+  {
+   "id": "f136",
+   "category": "wildlife",
+   "text": "Meerkats stand guard on their hind legs while the group feeds."
+  },
+  {
+   "id": "f137",
+   "category": "wildlife",
+   "text": "The aardvark digs burrows that many other animals later use."
+  },
+  {
+   "id": "f138",
+   "category": "wildlife",
+   "text": "Pangolins, among the world's most trafficked animals, live in Botswana."
+  },
+  {
+   "id": "f139",
+   "category": "wildlife",
+   "text": "The honey badger is famous for its fearless temper."
+  },
+  {
+   "id": "f140",
+   "category": "wildlife",
+   "text": "Bat-eared foxes use their huge ears to hear insects underground."
+  },
+  {
+   "id": "f141",
+   "category": "wildlife",
+   "text": "Elephants in Botswana can drink well over 100 litres of water a day."
+  },
+  {
+   "id": "f142",
+   "category": "wildlife",
+   "text": "An elephant's trunk has tens of thousands of muscles."
+  },
+  {
+   "id": "f143",
+   "category": "wildlife",
+   "text": "Elephants use their feet to sense rumbles sent by other elephants."
+  },
+  {
+   "id": "f144",
+   "category": "wildlife",
+   "text": "Hippos can stay under water for several minutes before surfacing to breathe."
+  },
+  {
+   "id": "f145",
+   "category": "wildlife",
+   "text": "Hippos leave the water at night to graze on land."
+  },
+  {
+   "id": "f146",
+   "category": "wildlife",
+   "text": "Nile crocodiles live in the Okavango, Chobe and Limpopo rivers."
+  },
+  {
+   "id": "f147",
+   "category": "wildlife",
+   "text": "Lions in the Okavango have learnt to swim between islands."
+  },
+  {
+   "id": "f148",
+   "category": "wildlife",
+   "text": "Leopards often drag their prey into trees to keep it from hyenas and lions."
+  },
+  {
+   "id": "f149",
+   "category": "wildlife",
+   "text": "A giraffe's tongue can be about 45 cm long."
+  },
+  {
+   "id": "f150",
+   "category": "wildlife",
+   "text": "Giraffes in Botswana often feed on acacia trees despite their thorns."
+  },
+  {
+   "id": "f151",
+   "category": "wildlife",
+   "text": "Buffalo herds in northern Botswana can number in the hundreds."
+  },
+  {
+   "id": "f152",
+   "category": "wildlife",
+   "text": "The roan and sable antelope live in northern Botswana's woodlands."
+  },
+  {
+   "id": "f153",
+   "category": "wildlife",
+   "text": "Kudu bulls have long spiral horns that can reach well over a metre."
+  },
+  {
+   "id": "f154",
+   "category": "wildlife",
+   "text": "The steenbok is a small antelope that lives alone or in pairs."
+  },
+  {
+   "id": "f155",
+   "category": "wildlife",
+   "text": "Impala leap high when startled, confusing predators."
+  },
+  {
+   "id": "f156",
+   "category": "wildlife",
+   "text": "Warthogs kneel on their front legs to graze."
+  },
+  {
+   "id": "f157",
+   "category": "wildlife",
+   "text": "Blue wildebeest once migrated in great herds across the Kalahari."
+  },
+  {
+   "id": "f158",
+   "category": "wildlife",
+   "text": "Veterinary fences built to protect cattle have blocked old wildebeest migration routes in Botswana."
+  },
+  {
+   "id": "f159",
+   "category": "wildlife",
+   "text": "Chacma baboons are common in the Okavango and Chobe."
+  },
+  {
+   "id": "f160",
+   "category": "wildlife",
+   "text": "Vervet monkeys are often seen around camps in northern Botswana."
+  },
+  {
+   "id": "f161",
+   "category": "wildlife",
+   "text": "Spotted hyenas are skilled hunters, not just scavengers."
+  },
+  {
+   "id": "f162",
+   "category": "wildlife",
+   "text": "The caracal can leap high to catch birds in flight."
+  },
+  {
+   "id": "f163",
+   "category": "wildlife",
+   "text": "Ground squirrels in the Kalahari use their bushy tails as sunshades."
+  },
+  {
+   "id": "f164",
+   "category": "wildlife",
+   "text": "The black mamba is one of Botswana's most feared snakes."
+  },
+  {
+   "id": "f165",
+   "category": "wildlife",
+   "text": "The African rock python is Africa's largest snake and lives in Botswana."
+  },
+  {
+   "id": "f166",
+   "category": "wildlife",
+   "text": "Mopane worms are caterpillars of the emperor moth that feed on mopane trees."
+  },
+  {
+   "id": "f167",
+   "category": "wildlife",
+   "text": "Termite mounds in Botswana can stand several metres tall."
+  },
+  {
+   "id": "f168",
+   "category": "wildlife",
+   "text": "Dung beetles roll balls of dung that they use for food and egg laying."
+  },
+  {
+   "id": "f169",
+   "category": "wildlife",
+   "text": "Botswana's wildlife areas cover a large share of the country."
+  },
+  {
+   "id": "f170",
+   "category": "wildlife",
+   "text": "Elephants push over trees to reach leaves and roots, shaping the savanna."
+  },
+  {
+   "id": "f171",
+   "category": "wildlife",
+   "text": "Botswana's tsessebe is among the fastest antelope in Africa."
+  },
+  {
+   "id": "f172",
+   "category": "wildlife",
+   "text": "Waterbuck have a white ring on their rump."
+  },
+  {
+   "id": "f173",
+   "category": "wildlife",
+   "text": "Bushbuck are shy antelope that live in riverine thickets."
+  },
+  {
+   "id": "f174",
+   "category": "wildlife",
+   "text": "The serval has the longest legs for its body size of any cat."
+  },
+  {
+   "id": "f175",
+   "category": "wildlife",
+   "text": "Elands are the largest antelope in the world and live in Botswana."
+  },
+  {
+   "id": "f176",
+   "category": "wildlife",
+   "text": "Lechwe gather in large herds on the Okavango and Chobe floodplains."
+  },
+  {
+   "id": "f177",
+   "category": "wildlife",
+   "text": "The African wildcat, ancestor of house cats, lives in Botswana."
+  },
+  {
+   "id": "f178",
+   "category": "wildlife",
+   "text": "Painted reed frogs call loudly from the Okavango's reeds at night."
+  },
+  {
+   "id": "f179",
+   "category": "wildlife",
+   "text": "Hippos are among the most dangerous animals in Africa."
+  },
+  {
+   "id": "f180",
+   "category": "wildlife",
+   "text": "The puff adder is a common, well-camouflaged snake in Botswana."
+  },
+  {
+   "id": "f181",
+   "category": "wildlife",
+   "text": "Scorpions glow under ultraviolet light, which helps researchers find them at night."
+  },
+  {
+   "id": "f182",
+   "category": "wildlife",
+   "text": "Elephants in Botswana travel long distances between the rivers and the Kalahari."
+  },
+  {
+   "id": "f183",
+   "category": "wildlife",
+   "text": "Botswana banned commercial trophy hunting in 2014 and lifted the ban in 2019."
+  },
+  {
+   "id": "f184",
+   "category": "wildlife",
+   "text": "A group of lions is called a pride; a group of meerkats is a mob."
+  },
+  {
+   "id": "f185",
+   "category": "wildlife",
+   "text": "Wild dogs have one of the highest hunting success rates of any predator."
+  },
+  {
+   "id": "f186",
+   "category": "wildlife",
+   "text": "The Kalahari lion can survive long periods without drinking water."
+  },
+  {
+   "id": "f187",
+   "category": "wildlife",
+   "text": "The southern ground hornbill walks the grasslands hunting small animals."
+  },
+  {
+   "id": "f188",
+   "category": "birds",
+   "text": "More than 550 bird species have been recorded in Botswana."
+  },
+  {
+   "id": "f189",
+   "category": "birds",
+   "text": "The lilac-breasted roller is one of Botswana's most photographed birds."
+  },
+  {
+   "id": "f190",
+   "category": "birds",
+   "text": "The African fish eagle's call is one of the classic sounds of the Okavango."
+  },
+  {
+   "id": "f191",
+   "category": "birds",
+   "text": "Pel's fishing owl, a rare giant owl, hunts fish at night along the Okavango Panhandle."
+  },
+  {
+   "id": "f192",
+   "category": "birds",
+   "text": "The wattled crane, a threatened species, breeds in the Okavango."
+  },
+  {
+   "id": "f193",
+   "category": "birds",
+   "text": "Southern carmine bee-eaters nest in colonies in riverbanks in northern Botswana."
+  },
+  {
+   "id": "f194",
+   "category": "birds",
+   "text": "The African skimmer flies low over the water with its lower bill slicing the surface."
+  },
+  {
+   "id": "f195",
+   "category": "birds",
+   "text": "The slaty egret is a rare heron found in the Okavango."
+  },
+  {
+   "id": "f196",
+   "category": "birds",
+   "text": "Saddle-billed storks have a bright red and black bill with a yellow saddle."
+  },
+  {
+   "id": "f197",
+   "category": "birds",
+   "text": "The ostrich, the world's largest bird, roams the Kalahari and the pans."
+  },
+  {
+   "id": "f198",
+   "category": "birds",
+   "text": "Sociable weavers build huge shared nests that can house hundreds of birds."
+  },
+  {
+   "id": "f199",
+   "category": "birds",
+   "text": "Red-billed quelea flocks can number in the millions."
+  },
+  {
+   "id": "f200",
+   "category": "birds",
+   "text": "The secretary bird stamps on snakes and lizards to kill them."
+  },
+  {
+   "id": "f201",
+   "category": "birds",
+   "text": "The African jacana walks on lily pads with very long toes."
+  },
+  {
+   "id": "f202",
+   "category": "birds",
+   "text": "Jacana fathers raise the chicks and can carry them under their wings."
+  },
+  {
+   "id": "f203",
+   "category": "birds",
+   "text": "The hamerkop builds an enormous dome-shaped nest of sticks."
+  },
+  {
+   "id": "f204",
+   "category": "birds",
+   "text": "Marabou storks are often seen around carcasses and dumps."
+  },
+  {
+   "id": "f205",
+   "category": "birds",
+   "text": "Vultures help keep the bush clean by eating carcasses."
+  },
+  {
+   "id": "f206",
+   "category": "birds",
+   "text": "Poisoning by poachers has killed many vultures in Botswana."
+  },
+  {
+   "id": "f207",
+   "category": "birds",
+   "text": "The yellow-billed hornbill is nicknamed the flying banana."
+  },
+  {
+   "id": "f208",
+   "category": "birds",
+   "text": "Hornbill females seal themselves inside a tree hole while nesting."
+  },
+  {
+   "id": "f209",
+   "category": "birds",
+   "text": "The grey go-away-bird is named after its call."
+  },
+  {
+   "id": "f210",
+   "category": "birds",
+   "text": "Pied kingfishers hover above water before diving for fish."
+  },
+  {
+   "id": "f211",
+   "category": "birds",
+   "text": "The malachite kingfisher is tiny and brilliantly coloured."
+  },
+  {
+   "id": "f212",
+   "category": "birds",
+   "text": "The goliath heron is the largest heron in the world and lives in the Okavango."
+  },
+  {
+   "id": "f213",
+   "category": "birds",
+   "text": "The white-backed vulture is critically endangered."
+  },
+  {
+   "id": "f214",
+   "category": "birds",
+   "text": "The bateleur eagle tilts from side to side as it glides."
+  },
+  {
+   "id": "f215",
+   "category": "birds",
+   "text": "Guineafowl move in noisy flocks through Botswana's bush."
+  },
+  {
+   "id": "f216",
+   "category": "birds",
+   "text": "The kori bustard male puffs out its neck feathers in courtship."
+  },
+  {
+   "id": "f217",
+   "category": "birds",
+   "text": "The red-billed oxpecker eats ticks off giraffes, buffalo and other large animals."
+  },
+  {
+   "id": "f218",
+   "category": "birds",
+   "text": "The Okavango is an Important Bird Area for many water birds."
+  },
+  {
+   "id": "f219",
+   "category": "birds",
+   "text": "The southern yellow-billed hornbill and red-billed hornbill are common in Botswana."
+  },
+  {
+   "id": "f220",
+   "category": "birds",
+   "text": "Openbill storks use their gapped bills to eat snails."
+  },
+  {
+   "id": "f221",
+   "category": "birds",
+   "text": "Crimson-breasted shrikes are often seen in the Kalahari's acacia scrub."
+  },
+  {
+   "id": "f222",
+   "category": "birds",
+   "text": "Pale chanting goshawks perch on trees across the Kalahari."
+  },
+  {
+   "id": "f223",
+   "category": "plants",
+   "text": "The baobab (mowana) can live for more than a thousand years."
+  },
+  {
+   "id": "f224",
+   "category": "plants",
+   "text": "Baobabs store water in their huge, swollen trunks."
+  },
+  {
+   "id": "f225",
+   "category": "plants",
+   "text": "The mopane tree has butterfly-shaped leaves."
+  },
+  {
+   "id": "f226",
+   "category": "plants",
+   "text": "Mopane woodland covers large parts of northern Botswana."
+  },
+  {
+   "id": "f227",
+   "category": "plants",
+   "text": "Marula (morula) fruit is eaten fresh and used to make drinks and jam."
+  },
+  {
+   "id": "f228",
+   "category": "plants",
+   "text": "Marula trees are either male or female; only females bear fruit."
+  },
+  {
+   "id": "f229",
+   "category": "plants",
+   "text": "Devil's claw (sengaparile) is a Kalahari plant used in traditional medicine."
+  },
+  {
+   "id": "f230",
+   "category": "plants",
+   "text": "The sausage tree (moporota) has heavy fruit that look like sausages."
+  },
+  {
+   "id": "f231",
+   "category": "plants",
+   "text": "Mokoro canoes were traditionally carved from sausage trees or African ebony."
+  },
+  {
+   "id": "f232",
+   "category": "plants",
+   "text": "Wild sour plums (moretologa) grow in the Kalahari."
+  },
+  {
+   "id": "f233",
+   "category": "plants",
+   "text": "The camelthorn (mogotlho) has seed pods eaten by many animals."
+  },
+  {
+   "id": "f234",
+   "category": "plants",
+   "text": "Motlopi (shepherd's tree) gives shade and its roots are used as a coffee substitute."
+  },
+  {
+   "id": "f235",
+   "category": "plants",
+   "text": "The mophane tree is used for firewood, building poles and fences."
+  },
+  {
+   "id": "f236",
+   "category": "plants",
+   "text": "Grapple plants have hooked seeds that catch on animals' feet."
+  },
+  {
+   "id": "f237",
+   "category": "plants",
+   "text": "The Kalahari's tsamma melons and gemsbok cucumbers are important water sources."
+  },
+  {
+   "id": "f238",
+   "category": "plants",
+   "text": "Papyrus grows up to several metres tall in the Okavango."
+  },
+  {
+   "id": "f239",
+   "category": "plants",
+   "text": "Real fan palms (mokola) dot the islands of the Okavango."
+  },
+  {
+   "id": "f240",
+   "category": "plants",
+   "text": "The African ebony (motlhakola) grows on Okavango islands."
+  },
+  {
+   "id": "f241",
+   "category": "plants",
+   "text": "Leadwood trees are so dense that their wood sinks in water."
+  },
+  {
+   "id": "f242",
+   "category": "plants",
+   "text": "The wild date palm grows on islands in the Okavango."
+  },
+  {
+   "id": "f243",
+   "category": "plants",
+   "text": "The morama bean is a Kalahari plant with edible seeds and tubers."
+  },
+  {
+   "id": "f244",
+   "category": "plants",
+   "text": "Hoodia, a cactus-like Kalahari plant, was traditionally chewed by the San to stave off hunger."
+  },
+  {
+   "id": "f245",
+   "category": "history",
+   "text": "The San (Basarwa) are the oldest inhabitants of Botswana and southern Africa."
+  },
+  {
+   "id": "f246",
+   "category": "history",
+   "text": "The Tsodilo Hills hold evidence of human activity going back many thousands of years."
+  },
+  {
+   "id": "f247",
+   "category": "history",
+   "text": "Iron Age farmers lived in eastern Botswana more than a thousand years ago."
+  },
+  {
+   "id": "f248",
+   "category": "history",
+   "text": "Toutswe, in eastern Botswana, was a major cattle-keeping settlement around 1,000 years ago."
+  },
+  {
+   "id": "f249",
+   "category": "history",
+   "text": "Botswana became a British protectorate, Bechuanaland, in 1885."
+  },
+  {
+   "id": "f250",
+   "category": "history",
+   "text": "The Bechuanaland Protectorate was run from Mafikeng, a town outside its own borders, in South Africa."
+  },
+  {
+   "id": "f251",
+   "category": "history",
+   "text": "In 1895 Kgosi Khama III, Sebele I and Bathoen I went to London to keep their land from Cecil Rhodes's company."
+  },
+  {
+   "id": "f252",
+   "category": "history",
+   "text": "The three dikgosi met Queen Victoria in 1895 and Britain kept the protectorate out of Rhodes's hands."
+  },
+  {
+   "id": "f253",
+   "category": "history",
+   "text": "The Jameson Raid of 1895 into the Transvaal was launched from Pitsani, in the Bechuanaland Protectorate."
+  },
+  {
+   "id": "f254",
+   "category": "history",
+   "text": "David Livingstone set up a mission at Kolobeng, near Gaborone, in 1847."
+  },
+  {
+   "id": "f255",
+   "category": "history",
+   "text": "Kgosi Sechele I of the Bakwena was baptised by David Livingstone."
+  },
+  {
+   "id": "f256",
+   "category": "history",
+   "text": "The ruins of Livingstone's Kolobeng mission are a national monument."
+  },
+  {
+   "id": "f257",
+   "category": "history",
+   "text": "Missionary Robert Moffat completed a full Setswana Bible translation in 1857."
+  },
+  {
+   "id": "f258",
+   "category": "history",
+   "text": "Khama III ruled the Bangwato from 1875 until his death in 1923."
+  },
+  {
+   "id": "f259",
+   "category": "history",
+   "text": "Khama III was a Christian ruler who banned alcohol in his territory."
+  },
+  {
+   "id": "f260",
+   "category": "history",
+   "text": "Khama III moved his capital from Shoshong to Palapye in 1889 and then to Serowe in 1902."
+  },
+  {
+   "id": "f261",
+   "category": "history",
+   "text": "Shoshong was the capital of the Bangwato in the 19th century."
+  },
+  {
+   "id": "f262",
+   "category": "history",
+   "text": "The Battle of Dimawe in 1852 saw Batswana resist Boer raiders."
+  },
+  {
+   "id": "f263",
+   "category": "history",
+   "text": "Tshekedi Khama ruled as regent for his nephew Seretse after 1925."
+  },
+  {
+   "id": "f264",
+   "category": "history",
+   "text": "Many Batswana soldiers served with the African Pioneer Corps in the Second World War."
+  },
+  {
+   "id": "f265",
+   "category": "history",
+   "text": "In 1943 a troopship, the SS Erinpura, sank with the loss of many Batswana soldiers."
+  },
+  {
+   "id": "f266",
+   "category": "history",
+   "text": "The Bechuanaland Democratic Party, later the BDP, was founded in 1962."
+  },
+  {
+   "id": "f267",
+   "category": "history",
+   "text": "The first general election under universal adult suffrage was held in 1965."
+  },
+  {
+   "id": "f268",
+   "category": "history",
+   "text": "Seretse Khama became Prime Minister of Bechuanaland in 1965."
+  },
+  {
+   "id": "f269",
+   "category": "history",
+   "text": "Botswana became independent on 30 September 1966."
+  },
+  {
+   "id": "f270",
+   "category": "history",
+   "text": "At independence in 1966 Botswana was one of the poorest countries in the world."
+  },
+  {
+   "id": "f271",
+   "category": "history",
+   "text": "Gaborone became the capital in 1965, replacing Mafikeng."
+  },
+  {
+   "id": "f272",
+   "category": "history",
+   "text": "Gaborone was built as a planned capital in the 1960s."
+  },
+  {
+   "id": "f273",
+   "category": "history",
+   "text": "Diamonds were discovered at Orapa in 1967, a year after independence."
+  },
+  {
+   "id": "f274",
+   "category": "history",
+   "text": "Botswana introduced its own currency, the pula, in 1976."
+  },
+  {
+   "id": "f275",
+   "category": "history",
+   "text": "Before 1976 Botswana used the South African rand."
+  },
+  {
+   "id": "f276",
+   "category": "history",
+   "text": "The Botswana Defence Force was founded in 1977."
+  },
+  {
+   "id": "f277",
+   "category": "history",
+   "text": "Botswana was a founding member of SADCC, now SADC, in 1980."
+  },
+  {
+   "id": "f278",
+   "category": "history",
+   "text": "Sir Seretse Khama died in office on 13 July 1980."
+  },
+  {
+   "id": "f279",
+   "category": "history",
+   "text": "The University of Botswana became a full national university in 1982."
+  },
+  {
+   "id": "f280",
+   "category": "history",
+   "text": "Botswana has held regular multi-party elections since independence."
+  },
+  {
+   "id": "f281",
+   "category": "history",
+   "text": "In 2024 the Umbrella for Democratic Change won the election, ending 58 years of BDP rule."
+  },
+  {
+   "id": "f282",
+   "category": "history",
+   "text": "Batswana fought colonial plans to hand the protectorate to South Africa."
+  },
+  {
+   "id": "f283",
+   "category": "history",
+   "text": "Britain's High Commissioner in South Africa oversaw the Bechuanaland Protectorate."
+  },
+  {
+   "id": "f284",
+   "category": "history",
+   "text": "The Bechuanaland Protectorate's railway line was built in the 1890s to link Mafikeng with Bulawayo."
+  },
+  {
+   "id": "f285",
+   "category": "history",
+   "text": "Francistown grew from a gold rush in the late 1860s and 1870s at Tati."
+  },
+  {
+   "id": "f286",
+   "category": "history",
+   "text": "The Tati Concession around Francistown was an early gold mining area."
+  },
+  {
+   "id": "f287",
+   "category": "history",
+   "text": "The Bechuanaland Protectorate was split from British Bechuanaland, a colony that became part of the Cape in 1895."
+  },
+  {
+   "id": "f288",
+   "category": "history",
+   "text": "Bechuanaland stamps were first overprinted British and Cape stamps."
+  },
+  {
+   "id": "f289",
+   "category": "history",
+   "text": "The name Botswana means \"land of the Tswana\"."
+  },
+  {
+   "id": "f290",
+   "category": "history",
+   "text": "The national monument at Domboshaba in north-east Botswana is a stone ruin linked to Great Zimbabwe."
+  },
+  {
+   "id": "f291",
+   "category": "history",
+   "text": "Botswana opened its first diamond mine at Orapa in 1971."
+  },
+  {
+   "id": "f292",
+   "category": "history",
+   "text": "Botswana's National Museum in Gaborone opened in 1968."
+  },
+  {
+   "id": "f293",
+   "category": "seretse khama",
+   "text": "Sir Seretse Khama was born in Serowe in 1921."
+  },
+  {
+   "id": "f294",
+   "category": "seretse khama",
+   "text": "Seretse Khama studied at Fort Hare in South Africa and Balliol College, Oxford."
+  },
+  {
+   "id": "f295",
+   "category": "seretse khama",
+   "text": "Seretse Khama married Ruth Williams, an Englishwoman, in London in 1948."
+  },
+  {
+   "id": "f296",
+   "category": "seretse khama",
+   "text": "Britain exiled Seretse Khama from 1950 to 1956 under pressure from apartheid South Africa."
+  },
+  {
+   "id": "f297",
+   "category": "seretse khama",
+   "text": "Seretse Khama returned to Bechuanaland in 1956 after giving up his claim to the chieftainship."
+  },
+  {
+   "id": "f298",
+   "category": "seretse khama",
+   "text": "Seretse Khama was Botswana's first president, from 1966 to 1980."
+  },
+  {
+   "id": "f299",
+   "category": "seretse khama",
+   "text": "Seretse Khama was knighted in 1966."
+  },
+  {
+   "id": "f300",
+   "category": "seretse khama",
+   "text": "Sir Seretse Khama International Airport in Gaborone is named after him."
+  },
+  {
+   "id": "f301",
+   "category": "seretse khama",
+   "text": "The 2016 film A United Kingdom tells the story of Seretse and Ruth Khama."
+  },
+  {
+   "id": "f302",
+   "category": "seretse khama",
+   "text": "In A United Kingdom, Seretse Khama is played by David Oyelowo and Ruth by Rosamund Pike."
+  },
+  {
+   "id": "f303",
+   "category": "seretse khama",
+   "text": "Ruth Williams Khama became Botswana's first First Lady."
+  },
+  {
+   "id": "f304",
+   "category": "seretse khama",
+   "text": "Ruth Khama was known in Botswana as Mohumagadi Mma Kgosi."
+  },
+  {
+   "id": "f305",
+   "category": "seretse khama",
+   "text": "Ruth Williams Khama died in 2002 and is buried beside Seretse in Serowe."
+  },
+  {
+   "id": "f306",
+   "category": "seretse khama",
+   "text": "Sir Seretse Khama Day is a public holiday on 1 July."
+  },
+  {
+   "id": "f307",
+   "category": "seretse khama",
+   "text": "Seretse Khama pushed for non-racial government from the very start of independence."
+  },
+  {
+   "id": "f308",
+   "category": "seretse khama",
+   "text": "Seretse Khama's government used diamond income to build schools, roads and clinics."
+  },
+  {
+   "id": "f309",
+   "category": "seretse khama",
+   "text": "The royal cemetery on Serowe's hill holds the graves of Khama III and Seretse Khama."
+  },
+  {
+   "id": "f310",
+   "category": "seretse khama",
+   "text": "Seretse Khama's statue stands in front of the National Assembly in Gaborone."
+  },
+  {
+   "id": "f311",
+   "category": "seretse khama",
+   "text": "The book Colour Bar by Susan Williams tells the story of Seretse and Ruth."
+  },
+  {
+   "id": "f312",
+   "category": "presidents & government",
+   "text": "Botswana is a parliamentary republic whose president is elected by the National Assembly."
+  },
+  {
+   "id": "f313",
+   "category": "presidents & government",
+   "text": "Sir Ketumile Masire was Botswana's second president, from 1980 to 1998."
+  },
+  {
+   "id": "f314",
+   "category": "presidents & government",
+   "text": "Festus Mogae was Botswana's third president, from 1998 to 2008."
+  },
+  {
+   "id": "f315",
+   "category": "presidents & government",
+   "text": "Festus Mogae won the Ibrahim Prize for Achievement in African Leadership in 2008."
+  },
+  {
+   "id": "f316",
+   "category": "presidents & government",
+   "text": "Ian Khama was Botswana's fourth president, from 2008 to 2018."
+  },
+  {
+   "id": "f317",
+   "category": "presidents & government",
+   "text": "Mokgweetsi Masisi was Botswana's fifth president, from 2018 to 2024."
+  },
+  {
+   "id": "f318",
+   "category": "presidents & government",
+   "text": "Duma Boko became Botswana's sixth president in November 2024."
+  },
+  {
+   "id": "f319",
+   "category": "presidents & government",
+   "text": "Botswana's presidents are limited to two five-year terms."
+  },
+  {
+   "id": "f320",
+   "category": "presidents & government",
+   "text": "Botswana's parliament is the National Assembly; elections are held every five years."
+  },
+  {
+   "id": "f321",
+   "category": "presidents & government",
+   "text": "Ntlo ya Dikgosi (House of Chiefs) advises parliament on customary and tribal matters."
+  },
+  {
+   "id": "f322",
+   "category": "presidents & government",
+   "text": "Botswana's constitution came into force at independence in 1966."
+  },
+  {
+   "id": "f323",
+   "category": "presidents & government",
+   "text": "The kgotla is a traditional community assembly where anyone may speak."
+  },
+  {
+   "id": "f324",
+   "category": "presidents & government",
+   "text": "Kgotla meetings are usually held under a tree or in an open enclosure."
+  },
+  {
+   "id": "f325",
+   "category": "presidents & government",
+   "text": "Customary courts at the kgotla still handle many local disputes."
+  },
+  {
+   "id": "f326",
+   "category": "presidents & government",
+   "text": "Botswana is often ranked among Africa's least corrupt countries."
+  },
+  {
+   "id": "f327",
+   "category": "presidents & government",
+   "text": "Botswana's High Court has its main seat in Lobatse and also sits in Gaborone and Francistown."
+  },
+  {
+   "id": "f328",
+   "category": "presidents & government",
+   "text": "Botswana's Court of Appeal is the country's highest court."
+  },
+  {
+   "id": "f329",
+   "category": "presidents & government",
+   "text": "Botswana's capital Gaborone hosts the headquarters of SADC."
+  },
+  {
+   "id": "f330",
+   "category": "presidents & government",
+   "text": "Botswana is a member of the Commonwealth, the African Union and the United Nations."
+  },
+  {
+   "id": "f331",
+   "category": "presidents & government",
+   "text": "The Directorate on Corruption and Economic Crime was set up in 1994."
+  },
+  {
+   "id": "f332",
+   "category": "presidents & government",
+   "text": "In 2019 Botswana's High Court decriminalised same-sex relationships."
+  },
+  {
+   "id": "f333",
+   "category": "presidents & government",
+   "text": "Botswana's official language is English and its national language is Setswana."
+  },
+  {
+   "id": "f334",
+   "category": "presidents & government",
+   "text": "Unity Dow won a 1992 case that let Botswana women pass citizenship to their children."
+  },
+  {
+   "id": "f335",
+   "category": "presidents & government",
+   "text": "Unity Dow became Botswana's first woman High Court judge in 1998."
+  },
+  {
+   "id": "f336",
+   "category": "presidents & government",
+   "text": "Dr Gaositwe Chiepe was Botswana's first woman cabinet minister."
+  },
+  {
+   "id": "f337",
+   "category": "presidents & government",
+   "text": "Botswana's national anthem is Fatshe leno la rona (\"This land of ours\")."
+  },
+  {
+   "id": "f338",
+   "category": "presidents & government",
+   "text": "The national anthem was written and composed by Kgalemang Tumediso Motsete."
+  },
+  {
+   "id": "f339",
+   "category": "presidents & government",
+   "text": "Botswana's motto, on the coat of arms, is \"Pula\", meaning rain."
+  },
+  {
+   "id": "f340",
+   "category": "presidents & government",
+   "text": "Botswana's coat of arms shows two zebras holding an elephant tusk and a sorghum stalk."
+  },
+  {
+   "id": "f341",
+   "category": "presidents & government",
+   "text": "The blue of Botswana's flag stands for water and rain."
+  },
+  {
+   "id": "f342",
+   "category": "presidents & government",
+   "text": "The black and white stripes of Botswana's flag stand for racial harmony and recall the zebra."
+  },
+  {
+   "id": "f343",
+   "category": "presidents & government",
+   "text": "Botswana's flag was adopted at independence in 1966."
+  },
+  {
+   "id": "f344",
+   "category": "presidents & government",
+   "text": "The three cogwheels on Botswana's coat of arms stand for industry."
+  },
+  {
+   "id": "f345",
+   "category": "presidents & government",
+   "text": "The waves on Botswana's coat of arms stand for water."
+  },
+  {
+   "id": "f346",
+   "category": "presidents & government",
+   "text": "The bull's head on Botswana's coat of arms stands for cattle farming."
+  },
+  {
+   "id": "f347",
+   "category": "presidents & government",
+   "text": "Botswana's main tribal groups include the Bangwato, Bakwena, Bangwaketse, Batawana, Bakgatla, Balete, Barolong and Batlokwa."
+  },
+  {
+   "id": "f348",
+   "category": "presidents & government",
+   "text": "Dikgosi (chiefs) remain important leaders in Botswana's villages."
+  },
+  {
+   "id": "f349",
+   "category": "presidents & government",
+   "text": "Botswana's first president's party, the BDP, ruled from 1966 to 2024."
+  },
+  {
+   "id": "f350",
+   "category": "setswana language",
+   "text": "Setswana is spoken by most people in Botswana and by millions in South Africa."
+  },
+  {
+   "id": "f351",
+   "category": "setswana language",
+   "text": "Setswana is one of South Africa's official languages."
+  },
+  {
+   "id": "f352",
+   "category": "setswana language",
+   "text": "In Setswana, one person is a Motswana and the people are Batswana."
+  },
+  {
+   "id": "f353",
+   "category": "setswana language",
+   "text": "\"Dumela\" means hello in Setswana; \"Dumelang\" greets several people."
+  },
+  {
+   "id": "f354",
+   "category": "setswana language",
+   "text": "\"Ke a leboga\" means thank you in Setswana."
+  },
+  {
+   "id": "f355",
+   "category": "setswana language",
+   "text": "\"Tsamaya sentle\" means go well, said to someone leaving."
+  },
+  {
+   "id": "f356",
+   "category": "setswana language",
+   "text": "\"Sala sentle\" means stay well, said by the person leaving."
+  },
+  {
+   "id": "f357",
+   "category": "setswana language",
+   "text": "\"O tsogile jang?\" is a Setswana morning greeting: how did you wake up?"
+  },
+  {
+   "id": "f358",
+   "category": "setswana language",
+   "text": "\"Ke tsogile sentle\" means I woke up well."
+  },
+  {
+   "id": "f359",
+   "category": "setswana language",
+   "text": "\"Rra\" is used to address a man and \"Mma\" to address a woman respectfully."
+  },
+  {
+   "id": "f360",
+   "category": "setswana language",
+   "text": "\"Pula\" means rain in Setswana, and it is also the name of Botswana's currency."
+  },
+  {
+   "id": "f361",
+   "category": "setswana language",
+   "text": "\"Thebe\" means shield; 100 thebe make one pula."
+  },
+  {
+   "id": "f362",
+   "category": "setswana language",
+   "text": "\"Kgosi\" means chief or king in Setswana."
+  },
+  {
+   "id": "f363",
+   "category": "setswana language",
+   "text": "\"Motse\" means village or town in Setswana."
+  },
+  {
+   "id": "f364",
+   "category": "setswana language",
+   "text": "\"Metsi\" means water in Setswana."
+  },
+  {
+   "id": "f365",
+   "category": "setswana language",
+   "text": "\"Ntlo\" means house in Setswana."
+  },
+  {
+   "id": "f366",
+   "category": "setswana language",
+   "text": "\"Kgomo\" means cow, and \"dikgomo\" means cattle."
+  },
+  {
+   "id": "f367",
+   "category": "setswana language",
+   "text": "\"Letsatsi\" means both sun and day in Setswana."
+  },
+  {
+   "id": "f368",
+   "category": "setswana language",
+   "text": "\"Ngwedi\" means moon and month in Setswana."
+  },
+  {
+   "id": "f369",
+   "category": "setswana language",
+   "text": "\"Naledi\" means star in Setswana and is also a popular name."
+  },
+  {
+   "id": "f370",
+   "category": "setswana language",
+   "text": "\"Tau\" means lion in Setswana."
+  },
+  {
+   "id": "f371",
+   "category": "setswana language",
+   "text": "\"Tlou\" means elephant in Setswana."
+  },
+  {
+   "id": "f372",
+   "category": "setswana language",
+   "text": "\"Nkwe\" means leopard in Setswana."
+  },
+  {
+   "id": "f373",
+   "category": "setswana language",
+   "text": "\"Phiri\" means hyena in Setswana."
+  },
+  {
+   "id": "f374",
+   "category": "setswana language",
+   "text": "\"Thutlwa\" means giraffe in Setswana."
+  },
+  {
+   "id": "f375",
+   "category": "setswana language",
+   "text": "\"Kwena\" means crocodile; it is the totem of the Bakwena."
+  },
+  {
+   "id": "f376",
+   "category": "setswana language",
+   "text": "\"Tshwene\" means baboon in Setswana."
+  },
+  {
+   "id": "f377",
+   "category": "setswana language",
+   "text": "\"Noga\" means snake in Setswana."
+  },
+  {
+   "id": "f378",
+   "category": "setswana language",
+   "text": "\"Nonyane\" means bird in Setswana."
+  },
+  {
+   "id": "f379",
+   "category": "setswana language",
+   "text": "\"Tshukudu\" means rhino in Setswana."
+  },
+  {
+   "id": "f380",
+   "category": "setswana language",
+   "text": "\"Nare\" means buffalo in Setswana."
+  },
+  {
+   "id": "f381",
+   "category": "setswana language",
+   "text": "\"Tholo\" means kudu in Setswana."
+  },
+  {
+   "id": "f382",
+   "category": "setswana language",
+   "text": "\"Phala\" means impala in Setswana."
+  },
+  {
+   "id": "f383",
+   "category": "setswana language",
+   "text": "\"Kgama\" means red hartebeest, which gave the Khama family its name."
+  },
+  {
+   "id": "f384",
+   "category": "setswana language",
+   "text": "\"Pitse\" means horse, and a zebra is \"pitse ya naga\", the horse of the veld."
+  },
+  {
+   "id": "f385",
+   "category": "setswana language",
+   "text": "\"Mowana\" means baobab in Setswana."
+  },
+  {
+   "id": "f386",
+   "category": "setswana language",
+   "text": "\"Lefatshe\" means land or country in Setswana."
+  },
+  {
+   "id": "f387",
+   "category": "setswana language",
+   "text": "\"Sekolo\" means school in Setswana."
+  },
+  {
+   "id": "f388",
+   "category": "setswana language",
+   "text": "\"Bana\" means children in Setswana."
+  },
+  {
+   "id": "f389",
+   "category": "setswana language",
+   "text": "\"Mosadi\" means woman and \"monna\" means man in Setswana."
+  },
+  {
+   "id": "f390",
+   "category": "setswana language",
+   "text": "\"Mme\" means mother and \"rre\" means father in Setswana."
+  },
+  {
+   "id": "f391",
+   "category": "setswana language",
+   "text": "\"Nko\" means nose and \"matlho\" means eyes in Setswana."
+  },
+  {
+   "id": "f392",
+   "category": "setswana language",
+   "text": "\"Dijo\" means food in Setswana."
+  },
+  {
+   "id": "f393",
+   "category": "setswana language",
+   "text": "\"Ee\" means yes and \"nnyaa\" means no in Setswana."
+  },
+  {
+   "id": "f394",
+   "category": "setswana language",
+   "text": "\"Ke a go rata\" means I love you in Setswana."
+  },
+  {
+   "id": "f395",
+   "category": "setswana language",
+   "text": "\"Go siame\" means it's alright in Setswana."
+  },
+  {
+   "id": "f396",
+   "category": "setswana language",
+   "text": "Setswana counts: nngwe (1), pedi (2), tharo (3), nne (4), tlhano (5)."
+  },
+  {
+   "id": "f397",
+   "category": "setswana language",
+   "text": "Six to ten in Setswana: thataro, supa, robedi, robongwe, lesome."
+  },
+  {
+   "id": "f398",
+   "category": "setswana language",
+   "text": "Monday in Setswana is Mosupologo."
+  },
+  {
+   "id": "f399",
+   "category": "setswana language",
+   "text": "Tuesday is Labobedi, the \"second day\", in Setswana."
+  },
+  {
+   "id": "f400",
+   "category": "setswana language",
+   "text": "Wednesday is Laboraro, the \"third day\", in Setswana."
+  },
+  {
+   "id": "f401",
+   "category": "setswana language",
+   "text": "Thursday is Labone, the \"fourth day\", in Setswana."
+  },
+  {
+   "id": "f402",
+   "category": "setswana language",
+   "text": "Friday is Labotlhano, the \"fifth day\", in Setswana."
+  },
+  {
+   "id": "f403",
+   "category": "setswana language",
+   "text": "Saturday is Matlhatso in Setswana."
+  },
+  {
+   "id": "f404",
+   "category": "setswana language",
+   "text": "Sunday is Tshipi in Setswana."
+  },
+  {
+   "id": "f405",
+   "category": "setswana language",
+   "text": "January in Setswana is Ferikgong."
+  },
+  {
+   "id": "f406",
+   "category": "setswana language",
+   "text": "February in Setswana is Tlhakole."
+  },
+  {
+   "id": "f407",
+   "category": "setswana language",
+   "text": "March in Setswana is Mopitlwe."
+  },
+  {
+   "id": "f408",
+   "category": "setswana language",
+   "text": "April in Setswana is Moranang."
+  },
+  {
+   "id": "f409",
+   "category": "setswana language",
+   "text": "May in Setswana is Motsheganong."
+  },
+  {
+   "id": "f410",
+   "category": "setswana language",
+   "text": "June in Setswana is Seetebosigo."
+  },
+  {
+   "id": "f411",
+   "category": "setswana language",
+   "text": "July in Setswana is Phukwi."
+  },
+  {
+   "id": "f412",
+   "category": "setswana language",
+   "text": "August in Setswana is Phatwe."
+  },
+  {
+   "id": "f413",
+   "category": "setswana language",
+   "text": "September in Setswana is Lwetse."
+  },
+  {
+   "id": "f414",
+   "category": "setswana language",
+   "text": "October in Setswana is Diphalane."
+  },
+  {
+   "id": "f415",
+   "category": "setswana language",
+   "text": "November in Setswana is Ngwanatsele."
+  },
+  {
+   "id": "f416",
+   "category": "setswana language",
+   "text": "December in Setswana is Sedimonthole."
+  },
+  {
+   "id": "f417",
+   "category": "setswana language",
+   "text": "Setswana is a Bantu language closely related to Sesotho and Sepedi."
+  },
+  {
+   "id": "f418",
+   "category": "setswana language",
+   "text": "Setswana nouns come in classes marked by prefixes, like mo- for one person and ba- for many."
+  },
+  {
+   "id": "f419",
+   "category": "setswana language",
+   "text": "Many Setswana place names end in \"-ng\", a suffix meaning \"at\" a place, as in Jwaneng."
+  },
+  {
+   "id": "f420",
+   "category": "setswana language",
+   "text": "Setswana uses the letter \"g\" for a sound like the \"ch\" in Scottish \"loch\"."
+  },
+  {
+   "id": "f421",
+   "category": "setswana language",
+   "text": "Solomon Plaatje translated Shakespeare into Setswana in the 1930s."
+  },
+  {
+   "id": "f422",
+   "category": "setswana language",
+   "text": "Sol Plaatje wrote Mhudi, one of the first novels in English by a black South African, and he was a Motswana."
+  },
+  {
+   "id": "f423",
+   "category": "setswana language",
+   "text": "A Setswana proverb says \"Kgosi ke kgosi ka batho\": a chief is a chief through the people."
+  },
+  {
+   "id": "f424",
+   "category": "setswana language",
+   "text": "A Setswana proverb says \"Kgetsi ya tsie e kgonwa ka go tshwaraganelwa\": a bag of locusts is lifted together."
+  },
+  {
+   "id": "f425",
+   "category": "setswana language",
+   "text": "\"Mmangwana o tshwara thipa ka fa bogaleng\" says a mother holds the knife by the sharp edge, to protect her child."
+  },
+  {
+   "id": "f426",
+   "category": "setswana language",
+   "text": "\"Ntwa kgolo ke ya molomo\" means the greatest battle is fought with words."
+  },
+  {
+   "id": "f427",
+   "category": "setswana language",
+   "text": "\"Moeng goroga re je ka wena\" welcomes guests: arrive, visitor, so we may eat because of you."
+  },
+  {
+   "id": "f428",
+   "category": "setswana language",
+   "text": "\"Botho\" is the Setswana idea of humanity, respect and caring for others."
+  },
+  {
+   "id": "f429",
+   "category": "setswana language",
+   "text": "Botho is one of the pillars of Botswana's national Vision 2016 and Vision 2036."
+  },
+  {
+   "id": "f430",
+   "category": "setswana language",
+   "text": "\"Pula!\" is shouted at gatherings in Botswana as a blessing and cheer."
+  },
+  {
+   "id": "f431",
+   "category": "setswana language",
+   "text": "Many Batswana names have meanings, like Kagiso (peace), Lesedi (light) and Mpho (gift)."
+  },
+  {
+   "id": "f432",
+   "category": "setswana language",
+   "text": "The name Tumelo means faith and Boitumelo means joy in Setswana."
+  },
+  {
+   "id": "f433",
+   "category": "setswana language",
+   "text": "Setswana praise poetry is called maboko."
+  },
+  {
+   "id": "f434",
+   "category": "food",
+   "text": "Seswaa, slow-boiled and pounded beef or goat, is Botswana's national dish."
+  },
+  {
+   "id": "f435",
+   "category": "food",
+   "text": "Seswaa is traditionally cooked by men in three-legged pots at weddings and funerals."
+  },
+  {
+   "id": "f436",
+   "category": "food",
+   "text": "Bogobe is a stiff porridge made from sorghum or maize."
+  },
+  {
+   "id": "f437",
+   "category": "food",
+   "text": "Bogobe jwa lerotse is porridge cooked with lerotse, a type of melon."
+  },
+  {
+   "id": "f438",
+   "category": "food",
+   "text": "Morogo is wild spinach, often cooked with onion and tomato."
+  },
+  {
+   "id": "f439",
+   "category": "food",
+   "text": "Phane (mopane worms) are dried and eaten as a crunchy, protein-rich snack."
+  },
+  {
+   "id": "f440",
+   "category": "food",
+   "text": "Phane harvesting is an important seasonal income in rural Botswana."
+  },
+  {
+   "id": "f441",
+   "category": "food",
+   "text": "Madila is a thick sour milk often eaten with bogobe."
+  },
+  {
+   "id": "f442",
+   "category": "food",
+   "text": "Magwinya are fat cakes, deep-fried dough balls sold at roadside stalls."
+  },
+  {
+   "id": "f443",
+   "category": "food",
+   "text": "Dikgobe is a mix of samp or sorghum with beans."
+  },
+  {
+   "id": "f444",
+   "category": "food",
+   "text": "Serobe is a dish of tripe and intestines, often cooked at celebrations."
+  },
+  {
+   "id": "f445",
+   "category": "food",
+   "text": "Mabele is the Setswana word for sorghum, a staple grain of Botswana."
+  },
+  {
+   "id": "f446",
+   "category": "food",
+   "text": "Ting is a fermented sorghum porridge with a sour taste."
+  },
+  {
+   "id": "f447",
+   "category": "food",
+   "text": "Bojalwa jwa Setswana is a traditional sorghum beer."
+  },
+  {
+   "id": "f448",
+   "category": "food",
+   "text": "Mageu (motogo) is a soured maize or sorghum drink."
+  },
+  {
+   "id": "f449",
+   "category": "food",
+   "text": "Botswana beef is exported to Europe and other markets."
+  },
+  {
+   "id": "f450",
+   "category": "food",
+   "text": "The Botswana Meat Commission abattoir in Lobatse opened in 1954."
+  },
+  {
+   "id": "f451",
+   "category": "food",
+   "text": "Morula fruit can be made into a fermented drink."
+  },
+  {
+   "id": "f452",
+   "category": "food",
+   "text": "Leputshe is a kind of pumpkin cooked in Botswana."
+  },
+  {
+   "id": "f453",
+   "category": "food",
+   "text": "Diphaphata are flat, round breads cooked on a pan, a favourite Botswana breakfast."
+  },
+  {
+   "id": "f454",
+   "category": "food",
+   "text": "Mosutlho is samp, the coarse crushed maize often cooked with beans."
+  },
+  {
+   "id": "f455",
+   "category": "food",
+   "text": "Letlhodi are mung beans, popular in Botswana cooking."
+  },
+  {
+   "id": "f456",
+   "category": "food",
+   "text": "Seswaa is often served with bogobe and morogo."
+  },
+  {
+   "id": "f457",
+   "category": "food",
+   "text": "Masonja is another name for mopane worms in parts of southern Africa."
+  },
+  {
+   "id": "f458",
+   "category": "food",
+   "text": "Wild melons called tsamma are eaten and stored by people in the Kalahari."
+  },
+  {
+   "id": "f459",
+   "category": "food",
+   "text": "Mokoro tours often end with a bush picnic on an Okavango island."
+  },
+  {
+   "id": "f460",
+   "category": "food",
+   "text": "Seswaa is cooked with salt and little else, letting the meat speak for itself."
+  },
+  {
+   "id": "f461",
+   "category": "culture & arts",
+   "text": "Cattle are a traditional sign of wealth in Botswana."
+  },
+  {
+   "id": "f462",
+   "category": "culture & arts",
+   "text": "Bogadi is the Setswana bride price, traditionally paid in cattle."
+  },
+  {
+   "id": "f463",
+   "category": "culture & arts",
+   "text": "Many Batswana families keep a cattle post (moraka) far from their home village."
+  },
+  {
+   "id": "f464",
+   "category": "culture & arts",
+   "text": "Many Batswana have a home village, a cattle post and fields (masimo)."
+  },
+  {
+   "id": "f465",
+   "category": "culture & arts",
+   "text": "Morabaraba, a twelve-cow mill game, is played across Botswana and southern Africa."
+  },
+  {
+   "id": "f466",
+   "category": "culture & arts",
+   "text": "Diketo is a stone-throwing game children play with a hole in the ground."
+  },
+  {
+   "id": "f467",
+   "category": "culture & arts",
+   "text": "Mmele is another name for the mill game played in Botswana."
+  },
+  {
+   "id": "f468",
+   "category": "culture & arts",
+   "text": "Moruba (also called Nsolo) is a four-row mancala game played in southern Africa."
+  },
+  {
+   "id": "f469",
+   "category": "culture & arts",
+   "text": "Okavango baskets are woven from mokola palm leaves and dyed with natural colours."
+  },
+  {
+   "id": "f470",
+   "category": "culture & arts",
+   "text": "Basket patterns in the Okavango have names like \"Tears of the Giraffe\" and \"Flight of the Swallow\"."
+  },
+  {
+   "id": "f471",
+   "category": "culture & arts",
+   "text": "Etsha villages in the Okavango are famous for their Hambukushu basket weavers."
+  },
+  {
+   "id": "f472",
+   "category": "culture & arts",
+   "text": "Gumare is another Okavango village known for fine baskets."
+  },
+  {
+   "id": "f473",
+   "category": "culture & arts",
+   "text": "Thamaga is known for its pottery, made with local clay."
+  },
+  {
+   "id": "f474",
+   "category": "culture & arts",
+   "text": "Oodi weavers near Gaborone have made tapestries since the 1970s."
+  },
+  {
+   "id": "f475",
+   "category": "culture & arts",
+   "text": "Lentswe la Oodi weavers' tapestries show village life in bright colours."
+  },
+  {
+   "id": "f476",
+   "category": "culture & arts",
+   "text": "Botswana's San communities make ostrich eggshell beads."
+  },
+  {
+   "id": "f477",
+   "category": "culture & arts",
+   "text": "Ostrich eggshell beads are among the oldest kinds of jewellery in the world."
+  },
+  {
+   "id": "f478",
+   "category": "culture & arts",
+   "text": "The Kuru Art Project in D'Kar has made San artists known worldwide."
+  },
+  {
+   "id": "f479",
+   "category": "culture & arts",
+   "text": "Traditional Batswana homes (rondavels) have round mud walls and thatched roofs."
+  },
+  {
+   "id": "f480",
+   "category": "culture & arts",
+   "text": "Lelapa is the courtyard of a traditional Setswana home, often smoothed with mud and dung."
+  },
+  {
+   "id": "f481",
+   "category": "culture & arts",
+   "text": "Women traditionally decorate home walls with patterns called lekgapho."
+  },
+  {
+   "id": "f482",
+   "category": "culture & arts",
+   "text": "Mokgatlho is a Setswana word for an association or cooperative."
+  },
+  {
+   "id": "f483",
+   "category": "culture & arts",
+   "text": "Letsema is a Setswana tradition of working together in the fields."
+  },
+  {
+   "id": "f484",
+   "category": "culture & arts",
+   "text": "Boipelego means self-reliance, an idea at the heart of Botswana's development."
+  },
+  {
+   "id": "f485",
+   "category": "culture & arts",
+   "text": "Initiation schools called bogwera (for boys) and bojale (for girls) were part of Setswana tradition."
+  },
+  {
+   "id": "f486",
+   "category": "culture & arts",
+   "text": "Age regiments (mephato) were once formed during initiation."
+  },
+  {
+   "id": "f487",
+   "category": "culture & arts",
+   "text": "Totems (diano) link families and clans with an animal such as the crocodile or elephant."
+  },
+  {
+   "id": "f488",
+   "category": "culture & arts",
+   "text": "The Bangwato totem is the duiker (phuti)."
+  },
+  {
+   "id": "f489",
+   "category": "culture & arts",
+   "text": "The Bakgatla totem is the monkey (kgabo)."
+  },
+  {
+   "id": "f490",
+   "category": "culture & arts",
+   "text": "The Barolong totem is the kudu (tholo)."
+  },
+  {
+   "id": "f491",
+   "category": "culture & arts",
+   "text": "Wedding celebrations in Botswana often last several days."
+  },
+  {
+   "id": "f492",
+   "category": "culture & arts",
+   "text": "Mourners in Botswana traditionally share a meal of seswaa after a funeral."
+  },
+  {
+   "id": "f493",
+   "category": "culture & arts",
+   "text": "The German print fabric called leteisi is a favourite for Botswana women's dresses."
+  },
+  {
+   "id": "f494",
+   "category": "culture & arts",
+   "text": "Wedding guests in Botswana often wear matching leteisi outfits."
+  },
+  {
+   "id": "f495",
+   "category": "culture & arts",
+   "text": "Batswana elders are greeted first and with respect."
+  },
+  {
+   "id": "f496",
+   "category": "culture & arts",
+   "text": "Parents in Botswana are often called after their first child, such as Mma Kagiso (Kagiso's mother)."
+  },
+  {
+   "id": "f497",
+   "category": "culture & arts",
+   "text": "Many Batswana names honour events at birth, such as Pula for a child born in the rain."
+  },
+  {
+   "id": "f498",
+   "category": "culture & arts",
+   "text": "Bessie Head wrote her novels in the village of Serowe."
+  },
+  {
+   "id": "f499",
+   "category": "culture & arts",
+   "text": "Bessie Head's novels include When Rain Clouds Gather, Maru and A Question of Power."
+  },
+  {
+   "id": "f500",
+   "category": "culture & arts",
+   "text": "Bessie Head's Serowe: Village of the Rain Wind tells the village's history."
+  },
+  {
+   "id": "f501",
+   "category": "culture & arts",
+   "text": "The No. 1 Ladies' Detective Agency books by Alexander McCall Smith are set in Gaborone."
+  },
+  {
+   "id": "f502",
+   "category": "culture & arts",
+   "text": "Mma Precious Ramotswe is the detective in The No. 1 Ladies' Detective Agency."
+  },
+  {
+   "id": "f503",
+   "category": "culture & arts",
+   "text": "The No. 1 Ladies' Detective Agency TV series was filmed in Botswana."
+  },
+  {
+   "id": "f504",
+   "category": "culture & arts",
+   "text": "Unity Dow is also a novelist; her books include The Screaming of the Innocent."
+  },
+  {
+   "id": "f505",
+   "category": "culture & arts",
+   "text": "Thapong Visual Arts Centre in Gaborone supports local artists."
+  },
+  {
+   "id": "f506",
+   "category": "culture & arts",
+   "text": "The Phuthadikobo Museum in Mochudi is housed in an old school building."
+  },
+  {
+   "id": "f507",
+   "category": "culture & arts",
+   "text": "The Khama III Memorial Museum is in Serowe."
+  },
+  {
+   "id": "f508",
+   "category": "culture & arts",
+   "text": "The Supa Ngwao Museum is in Francistown."
+  },
+  {
+   "id": "f509",
+   "category": "culture & arts",
+   "text": "The Kgosi Bathoen II Museum is in Kanye."
+  },
+  {
+   "id": "f510",
+   "category": "culture & arts",
+   "text": "Rock art in the Tsodilo Hills was made by San and other peoples."
+  },
+  {
+   "id": "f511",
+   "category": "music & dance",
+   "text": "Traditional dances in Botswana include borankana, phathisi and setapa."
+  },
+  {
+   "id": "f512",
+   "category": "music & dance",
+   "text": "Setapa is a traditional dance of the Bangwaketse."
+  },
+  {
+   "id": "f513",
+   "category": "music & dance",
+   "text": "Tsutsube is a San healing and trance dance."
+  },
+  {
+   "id": "f514",
+   "category": "music & dance",
+   "text": "The segaba is a one-stringed fiddle used in Setswana music."
+  },
+  {
+   "id": "f515",
+   "category": "music & dance",
+   "text": "The setinkane is a thumb piano played in Botswana."
+  },
+  {
+   "id": "f516",
+   "category": "music & dance",
+   "text": "Kwasa kwasa, a Congolese rumba style, became hugely popular in Botswana."
+  },
+  {
+   "id": "f517",
+   "category": "music & dance",
+   "text": "Franco and Afro Musica made kwasa kwasa a Botswana favourite."
+  },
+  {
+   "id": "f518",
+   "category": "music & dance",
+   "text": "Culture Spears is a Botswana band known for traditional music."
+  },
+  {
+   "id": "f519",
+   "category": "music & dance",
+   "text": "Vee Mampeezy is a Botswana star of kwasa kwasa and house."
+  },
+  {
+   "id": "f520",
+   "category": "music & dance",
+   "text": "Botswana has a strong gospel music scene."
+  },
+  {
+   "id": "f521",
+   "category": "music & dance",
+   "text": "Choirs singing in Setswana are popular at church and school events."
+  },
+  {
+   "id": "f522",
+   "category": "music & dance",
+   "text": "Botswana metal fans, known as \"renegades\", dress in black leather and cowboy hats."
+  },
+  {
+   "id": "f523",
+   "category": "music & dance",
+   "text": "Botswana's heavy metal fans have been featured in photo books and documentaries."
+  },
+  {
+   "id": "f524",
+   "category": "music & dance",
+   "text": "Hip-hop and house music, known locally as \"motswako\", mix Setswana and English."
+  },
+  {
+   "id": "f525",
+   "category": "music & dance",
+   "text": "Motswako is a rap style mixing Setswana, English and other languages."
+  },
+  {
+   "id": "f526",
+   "category": "music & dance",
+   "text": "Phathisi is a dance performed by men with clapping and leg slapping."
+  },
+  {
+   "id": "f527",
+   "category": "music & dance",
+   "text": "Dikhwaere (choral music) competitions are held across Botswana."
+  },
+  {
+   "id": "f528",
+   "category": "music & dance",
+   "text": "Drums and hand claps drive many traditional Setswana dances."
+  },
+  {
+   "id": "f529",
+   "category": "music & dance",
+   "text": "The Maitisong Festival is an arts festival held in Gaborone."
+  },
+  {
+   "id": "f530",
+   "category": "festivals & holidays",
+   "text": "Botswana Day (Independence Day) is celebrated on 30 September."
+  },
+  {
+   "id": "f531",
+   "category": "festivals & holidays",
+   "text": "1 October is also a public holiday in Botswana, after Botswana Day."
+  },
+  {
+   "id": "f532",
+   "category": "festivals & holidays",
+   "text": "President's Day in July is a public holiday with dance and music competitions."
+  },
+  {
+   "id": "f533",
+   "category": "festivals & holidays",
+   "text": "Labour Day on 1 May is a public holiday in Botswana."
+  },
+  {
+   "id": "f534",
+   "category": "festivals & holidays",
+   "text": "The Kuru Dance Festival at D'Kar celebrates San culture."
+  },
+  {
+   "id": "f535",
+   "category": "festivals & holidays",
+   "text": "The Domboshaba Festival celebrates the Kalanga culture of north-east Botswana."
+  },
+  {
+   "id": "f536",
+   "category": "festivals & holidays",
+   "text": "The Dithubaruba Cultural Festival celebrates the Bakwena heritage."
+  },
+  {
+   "id": "f537",
+   "category": "festivals & holidays",
+   "text": "The Khawa Dune Challenge is a festival of desert racing and culture in the Kgalagadi."
+  },
+  {
+   "id": "f538",
+   "category": "festivals & holidays",
+   "text": "The Toyota Desert Race was held near Jwaneng for many years."
+  },
+  {
+   "id": "f539",
+   "category": "festivals & holidays",
+   "text": "The Maun International Arts Festival celebrates Okavango art."
+  },
+  {
+   "id": "f540",
+   "category": "festivals & holidays",
+   "text": "Christmas is a public holiday in Botswana, as is Boxing Day."
+  },
+  {
+   "id": "f541",
+   "category": "festivals & holidays",
+   "text": "Good Friday and Easter Monday are public holidays in Botswana."
+  },
+  {
+   "id": "f542",
+   "category": "festivals & holidays",
+   "text": "The Ascension Day public holiday falls on a Thursday in Botswana."
+  },
+  {
+   "id": "f543",
+   "category": "festivals & holidays",
+   "text": "New Year's Day is followed by a second public holiday on 2 January."
+  },
+  {
+   "id": "f544",
+   "category": "festivals & holidays",
+   "text": "Botswana's Independence anniversary celebrations take place at the National Stadium in Gaborone."
+  },
+  {
+   "id": "f545",
+   "category": "diamonds & economy",
+   "text": "Botswana is one of the world's largest diamond producers by value."
+  },
+  {
+   "id": "f546",
+   "category": "diamonds & economy",
+   "text": "Debswana is a 50-50 partnership between the Botswana government and De Beers."
+  },
+  {
+   "id": "f547",
+   "category": "diamonds & economy",
+   "text": "Jwaneng is often called the world's richest diamond mine by value."
+  },
+  {
+   "id": "f548",
+   "category": "diamonds & economy",
+   "text": "Jwaneng diamond mine opened in 1982."
+  },
+  {
+   "id": "f549",
+   "category": "diamonds & economy",
+   "text": "Orapa is one of the largest diamond mines in the world by area."
+  },
+  {
+   "id": "f550",
+   "category": "diamonds & economy",
+   "text": "Orapa is a closed town run by the mining company."
+  },
+  {
+   "id": "f551",
+   "category": "diamonds & economy",
+   "text": "Letlhakane mine, near Orapa, began production in 1977."
+  },
+  {
+   "id": "f552",
+   "category": "diamonds & economy",
+   "text": "The Karowe mine found the 1,111-carat Lesedi La Rona diamond in 2015."
+  },
+  {
+   "id": "f553",
+   "category": "diamonds & economy",
+   "text": "Lesedi La Rona means \"our light\" in Setswana."
+  },
+  {
+   "id": "f554",
+   "category": "diamonds & economy",
+   "text": "The 1,758-carat Sewelô diamond was found at Karowe in 2019."
+  },
+  {
+   "id": "f555",
+   "category": "diamonds & economy",
+   "text": "A 2,492-carat diamond, the second largest ever found, was found at Karowe in 2024."
+  },
+  {
+   "id": "f556",
+   "category": "diamonds & economy",
+   "text": "Sewelô means \"rare find\" in Setswana."
+  },
+  {
+   "id": "f557",
+   "category": "diamonds & economy",
+   "text": "De Beers moved its global diamond sales from London to Gaborone in 2013."
+  },
+  {
+   "id": "f558",
+   "category": "diamonds & economy",
+   "text": "The Okavango Diamond Company sells a share of Botswana's diamonds."
+  },
+  {
+   "id": "f559",
+   "category": "diamonds & economy",
+   "text": "Diamonds paid for much of Botswana's schools, roads and hospitals."
+  },
+  {
+   "id": "f560",
+   "category": "diamonds & economy",
+   "text": "Botswana grew from one of the poorest countries to upper-middle-income status."
+  },
+  {
+   "id": "f561",
+   "category": "diamonds & economy",
+   "text": "Botswana's economy grew very fast for decades after independence."
+  },
+  {
+   "id": "f562",
+   "category": "diamonds & economy",
+   "text": "The Pula Fund is Botswana's sovereign wealth fund, built from diamond income."
+  },
+  {
+   "id": "f563",
+   "category": "diamonds & economy",
+   "text": "The Bank of Botswana was founded in 1975."
+  },
+  {
+   "id": "f564",
+   "category": "diamonds & economy",
+   "text": "The Botswana Stock Exchange in Gaborone traces its roots to 1989."
+  },
+  {
+   "id": "f565",
+   "category": "diamonds & economy",
+   "text": "Copper is mined in Botswana's Kalahari Copperbelt around Ghanzi."
+  },
+  {
+   "id": "f566",
+   "category": "diamonds & economy",
+   "text": "Selebi-Phikwe's copper-nickel mine closed in 2016."
+  },
+  {
+   "id": "f567",
+   "category": "diamonds & economy",
+   "text": "Morupule, near Palapye, is Botswana's coal mine and power station."
+  },
+  {
+   "id": "f568",
+   "category": "diamonds & economy",
+   "text": "Botswana has huge coal reserves, much of them still untouched."
+  },
+  {
+   "id": "f569",
+   "category": "diamonds & economy",
+   "text": "Tourism is one of Botswana's biggest earners after diamonds."
+  },
+  {
+   "id": "f570",
+   "category": "diamonds & economy",
+   "text": "Botswana's tourism focuses on high-value, low-volume safaris."
+  },
+  {
+   "id": "f571",
+   "category": "diamonds & economy",
+   "text": "Cattle ranching is an important part of Botswana's rural economy."
+  },
+  {
+   "id": "f572",
+   "category": "diamonds & economy",
+   "text": "Botswana's beef is traceable thanks to cattle ear tags and boluses."
+  },
+  {
+   "id": "f573",
+   "category": "diamonds & economy",
+   "text": "Air Botswana, the national airline, was founded in 1972."
+  },
+  {
+   "id": "f574",
+   "category": "diamonds & economy",
+   "text": "Botswana Railways runs the line from Ramatlabama to Francistown and beyond."
+  },
+  {
+   "id": "f575",
+   "category": "diamonds & economy",
+   "text": "The Trans-Kalahari Highway links Botswana with Namibia's coast."
+  },
+  {
+   "id": "f576",
+   "category": "diamonds & economy",
+   "text": "Botswana's pula notes show animals, people and the national coat of arms."
+  },
+  {
+   "id": "f577",
+   "category": "diamonds & economy",
+   "text": "The 5 thebe coin once showed a toko (hornbill)."
+  },
+  {
+   "id": "f578",
+   "category": "diamonds & economy",
+   "text": "The pula is pegged to a basket of currencies, including the rand."
+  },
+  {
+   "id": "f579",
+   "category": "diamonds & economy",
+   "text": "Diamond cutting and polishing factories have opened in Gaborone."
+  },
+  {
+   "id": "f580",
+   "category": "diamonds & economy",
+   "text": "The Diamond Technology Park in Gaborone hosts diamond cutting firms."
+  },
+  {
+   "id": "f581",
+   "category": "diamonds & economy",
+   "text": "Solar power is expanding thanks to Botswana's strong sunshine."
+  },
+  {
+   "id": "f582",
+   "category": "towns & places",
+   "text": "Gaborone is Botswana's capital and largest city."
+  },
+  {
+   "id": "f583",
+   "category": "towns & places",
+   "text": "Gaborone is named after Kgosi Gaborone of the Batlokwa."
+  },
+  {
+   "id": "f584",
+   "category": "towns & places",
+   "text": "Gaborone was once known as Gaberones."
+  },
+  {
+   "id": "f585",
+   "category": "towns & places",
+   "text": "Gaborone's name changed from Gaberones in 1969."
+  },
+  {
+   "id": "f586",
+   "category": "towns & places",
+   "text": "The Three Dikgosi Monument in Gaborone shows Khama III, Sebele I and Bathoen I."
+  },
+  {
+   "id": "f587",
+   "category": "towns & places",
+   "text": "The Three Dikgosi Monument was unveiled in 2005."
+  },
+  {
+   "id": "f588",
+   "category": "towns & places",
+   "text": "Gaborone's Main Mall is one of the city's oldest shopping streets."
+  },
+  {
+   "id": "f589",
+   "category": "towns & places",
+   "text": "Kgale Hill, the \"Sleeping Giant\", overlooks Gaborone."
+  },
+  {
+   "id": "f590",
+   "category": "towns & places",
+   "text": "Mokolodi Nature Reserve lies just south of Gaborone."
+  },
+  {
+   "id": "f591",
+   "category": "towns & places",
+   "text": "Gaborone Game Reserve is a small reserve inside the city."
+  },
+  {
+   "id": "f592",
+   "category": "towns & places",
+   "text": "Francistown is Botswana's second-largest city."
+  },
+  {
+   "id": "f593",
+   "category": "towns & places",
+   "text": "Francistown is sometimes called the Capital of the North."
+  },
+  {
+   "id": "f594",
+   "category": "towns & places",
+   "text": "Maun was founded as the capital of the BaTawana in 1915."
+  },
+  {
+   "id": "f595",
+   "category": "towns & places",
+   "text": "Maun's name comes from a San word meaning \"place of short reeds\"."
+  },
+  {
+   "id": "f596",
+   "category": "towns & places",
+   "text": "Kasane sits where the Chobe River meets the Zambezi."
+  },
+  {
+   "id": "f597",
+   "category": "towns & places",
+   "text": "Serowe is one of Botswana's largest villages and the home of the Bangwato."
+  },
+  {
+   "id": "f598",
+   "category": "towns & places",
+   "text": "Molepolole is the main village of the Bakwena."
+  },
+  {
+   "id": "f599",
+   "category": "towns & places",
+   "text": "Kanye is the main village of the Bangwaketse."
+  },
+  {
+   "id": "f600",
+   "category": "towns & places",
+   "text": "Mochudi is the main village of the Bakgatla."
+  },
+  {
+   "id": "f601",
+   "category": "towns & places",
+   "text": "Ramotswa is the main village of the Balete."
+  },
+  {
+   "id": "f602",
+   "category": "towns & places",
+   "text": "Mogoditshane, beside Gaborone, is one of Botswana's fastest-growing villages."
+  },
+  {
+   "id": "f603",
+   "category": "towns & places",
+   "text": "Tlokweng is the home of the Batlokwa, just east of Gaborone."
+  },
+  {
+   "id": "f604",
+   "category": "towns & places",
+   "text": "Palapye is home to the Botswana International University of Science and Technology."
+  },
+  {
+   "id": "f605",
+   "category": "towns & places",
+   "text": "Mahalapye is a railway town between Gaborone and Francistown."
+  },
+  {
+   "id": "f606",
+   "category": "towns & places",
+   "text": "Selebi-Phikwe was built in the 1970s as a copper-nickel mining town."
+  },
+  {
+   "id": "f607",
+   "category": "towns & places",
+   "text": "Jwaneng means \"a place with small stones\" in Setswana."
+  },
+  {
+   "id": "f608",
+   "category": "towns & places",
+   "text": "Ghanzi is known as the capital of the Kalahari."
+  },
+  {
+   "id": "f609",
+   "category": "towns & places",
+   "text": "Tsabong is the main town of the Kgalagadi District."
+  },
+  {
+   "id": "f610",
+   "category": "towns & places",
+   "text": "Shakawe sits on the Okavango Panhandle near the Namibian border."
+  },
+  {
+   "id": "f611",
+   "category": "towns & places",
+   "text": "Gumare lies on the western edge of the Okavango Delta."
+  },
+  {
+   "id": "f612",
+   "category": "towns & places",
+   "text": "Nata is a crossroads village on the way to Kasane and Maun."
+  },
+  {
+   "id": "f613",
+   "category": "towns & places",
+   "text": "Letlhakane is a mining village near Orapa."
+  },
+  {
+   "id": "f614",
+   "category": "towns & places",
+   "text": "Tonota is a village near Francistown on the Shashe River."
+  },
+  {
+   "id": "f615",
+   "category": "towns & places",
+   "text": "Lobatse was once the seat of the High Court of the Bechuanaland Protectorate."
+  },
+  {
+   "id": "f616",
+   "category": "towns & places",
+   "text": "Mmamashia, north of Gaborone, has water treatment works for the capital."
+  },
+  {
+   "id": "f617",
+   "category": "towns & places",
+   "text": "Ramatlabama is a border post between Botswana and South Africa."
+  },
+  {
+   "id": "f618",
+   "category": "towns & places",
+   "text": "Tlokweng border post is one of the busiest crossings between Gaborone and South Africa."
+  },
+  {
+   "id": "f619",
+   "category": "towns & places",
+   "text": "Martin's Drift is a border crossing over the Limpopo."
+  },
+  {
+   "id": "f620",
+   "category": "towns & places",
+   "text": "Kazungula is a border crossing to Zambia, now with a road and rail bridge."
+  },
+  {
+   "id": "f621",
+   "category": "towns & places",
+   "text": "Mamuno is the main border post with Namibia on the Trans-Kalahari Highway."
+  },
+  {
+   "id": "f622",
+   "category": "towns & places",
+   "text": "Ngoma Bridge crosses the Chobe River into Namibia."
+  },
+  {
+   "id": "f623",
+   "category": "towns & places",
+   "text": "Gaborone's Parliament buildings were built in the 1960s."
+  },
+  {
+   "id": "f624",
+   "category": "towns & places",
+   "text": "Old Palapye's ruins include the church built by Khama III."
+  },
+  {
+   "id": "f625",
+   "category": "heritage sites",
+   "text": "Botswana has two UNESCO World Heritage Sites: the Tsodilo Hills and the Okavango Delta."
+  },
+  {
+   "id": "f626",
+   "category": "heritage sites",
+   "text": "The Tsodilo Hills were listed as a UNESCO World Heritage Site in 2001."
+  },
+  {
+   "id": "f627",
+   "category": "heritage sites",
+   "text": "The Tsodilo Hills have over 4,500 rock paintings in about 10 km²."
+  },
+  {
+   "id": "f628",
+   "category": "heritage sites",
+   "text": "The Tsodilo Hills are called the \"Louvre of the Desert\"."
+  },
+  {
+   "id": "f629",
+   "category": "heritage sites",
+   "text": "The San call Tsodilo's main hills the Male, the Female and the Child."
+  },
+  {
+   "id": "f630",
+   "category": "heritage sites",
+   "text": "Tsodilo is a sacred place for the San and Hambukushu peoples."
+  },
+  {
+   "id": "f631",
+   "category": "heritage sites",
+   "text": "A rock at Tsodilo has been described as looking like a python, and some see it as a very old ritual site."
+  },
+  {
+   "id": "f632",
+   "category": "heritage sites",
+   "text": "Tsodilo's paintings include eland, giraffe, rhino and human figures."
+  },
+  {
+   "id": "f633",
+   "category": "heritage sites",
+   "text": "Domboshaba ruins near Francistown date from the time of the Zimbabwe culture."
+  },
+  {
+   "id": "f634",
+   "category": "heritage sites",
+   "text": "Matsieng, near Rasesa, has rock carvings of footprints said to be from the first human."
+  },
+  {
+   "id": "f635",
+   "category": "heritage sites",
+   "text": "The Matsieng footprints are a national monument."
+  },
+  {
+   "id": "f636",
+   "category": "heritage sites",
+   "text": "Kgosi Sechele I Museum in Molepolole celebrates the Bakwena leader."
+  },
+  {
+   "id": "f637",
+   "category": "heritage sites",
+   "text": "Khama III's grave is on the royal hill in Serowe."
+  },
+  {
+   "id": "f638",
+   "category": "heritage sites",
+   "text": "The ruins of Old Palapye are a national monument."
+  },
+  {
+   "id": "f639",
+   "category": "heritage sites",
+   "text": "The Gcwihaba Caves are a national monument."
+  },
+  {
+   "id": "f640",
+   "category": "heritage sites",
+   "text": "The Manyana rock paintings are a national monument."
+  },
+  {
+   "id": "f641",
+   "category": "heritage sites",
+   "text": "The Tsodilo Hills are on the edge of the Okavango Panhandle in the Ngamiland District."
+  },
+  {
+   "id": "f642",
+   "category": "sport",
+   "text": "Football is Botswana's most popular sport."
+  },
+  {
+   "id": "f643",
+   "category": "sport",
+   "text": "Botswana's national football team is nicknamed the Zebras."
+  },
+  {
+   "id": "f644",
+   "category": "sport",
+   "text": "The Zebras first qualified for the Africa Cup of Nations in 2012."
+  },
+  {
+   "id": "f645",
+   "category": "sport",
+   "text": "The Zebras qualified for the 2025 Africa Cup of Nations in Morocco, their second appearance."
+  },
+  {
+   "id": "f646",
+   "category": "sport",
+   "text": "Botswana's women's football team is nicknamed the Mares."
+  },
+  {
+   "id": "f647",
+   "category": "sport",
+   "text": "Letsile Tebogo won 200 m gold at the 2024 Paris Olympics, Botswana's first Olympic gold."
+  },
+  {
+   "id": "f648",
+   "category": "sport",
+   "text": "Letsile Tebogo won 100 m silver at the 2023 World Championships."
+  },
+  {
+   "id": "f649",
+   "category": "sport",
+   "text": "Botswana's men won 4x400 m relay silver at the 2024 Paris Olympics."
+  },
+  {
+   "id": "f650",
+   "category": "sport",
+   "text": "Nijel Amos won 800 m silver at the 2012 London Olympics, Botswana's first Olympic medal."
+  },
+  {
+   "id": "f651",
+   "category": "sport",
+   "text": "Amantle Montsho became 400 m world champion in 2011."
+  },
+  {
+   "id": "f652",
+   "category": "sport",
+   "text": "Isaac Makwala won 400 m gold at the 2018 Commonwealth Games."
+  },
+  {
+   "id": "f653",
+   "category": "sport",
+   "text": "Gaborone hosted the African Youth Games in 2014."
+  },
+  {
+   "id": "f654",
+   "category": "sport",
+   "text": "Township Rollers is one of Botswana's most successful football clubs."
+  },
+  {
+   "id": "f655",
+   "category": "sport",
+   "text": "The National Stadium in Gaborone is Botswana's main sports venue."
+  },
+  {
+   "id": "f656",
+   "category": "sport",
+   "text": "Botswana's athletics team has become one of Africa's strongest in sprints."
+  },
+  {
+   "id": "f657",
+   "category": "sport",
+   "text": "Netball is a popular sport for girls in Botswana."
+  },
+  {
+   "id": "f658",
+   "category": "sport",
+   "text": "Softball is played widely in Botswana schools."
+  },
+  {
+   "id": "f659",
+   "category": "sport",
+   "text": "Basketball and volleyball are growing sports in Botswana."
+  },
+  {
+   "id": "f660",
+   "category": "sport",
+   "text": "Morabaraba is recognised as a sport by Mind Sports South Africa."
+  },
+  {
+   "id": "f661",
+   "category": "sport",
+   "text": "Desert racing and quad biking are popular in the Kalahari."
+  },
+  {
+   "id": "f662",
+   "category": "sport",
+   "text": "The Botswana Premier League is the top football league."
+  },
+  {
+   "id": "f663",
+   "category": "sport",
+   "text": "Botswana's Olympic team first competed at the 1980 Moscow Games."
+  },
+  {
+   "id": "f664",
+   "category": "sport",
+   "text": "Letsile Tebogo was the 2022 World U20 100 m champion."
+  },
+  {
+   "id": "f665",
+   "category": "sport",
+   "text": "Collen Kebinatshipi became 400 m world champion in Tokyo in 2025, Botswana's first men's world title."
+  },
+  {
+   "id": "f666",
+   "category": "records & superlatives",
+   "text": "The African elephant, common in Botswana, is the largest land animal."
+  },
+  {
+   "id": "f667",
+   "category": "records & superlatives",
+   "text": "The giraffe is the world's tallest animal."
+  },
+  {
+   "id": "f668",
+   "category": "records & superlatives",
+   "text": "Lesedi La Rona was the largest diamond found in more than a century when it was discovered."
+  },
+  {
+   "id": "f669",
+   "category": "records & superlatives",
+   "text": "The Kgalagadi Transfrontier Park is one of the largest protected areas in southern Africa."
+  },
+  {
+   "id": "f670",
+   "category": "records & superlatives",
+   "text": "The Central Kalahari Game Reserve is one of the largest game reserves in the world."
+  },
+  {
+   "id": "f671",
+   "category": "records & superlatives",
+   "text": "The Tsodilo Hills hold one of the highest concentrations of rock art in the world."
+  },
+  {
+   "id": "f672",
+   "category": "records & superlatives",
+   "text": "Botswana is one of the longest continuous multi-party democracies in Africa."
+  }
+ ]
+}

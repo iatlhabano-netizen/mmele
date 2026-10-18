@@ -311,4 +311,24 @@
     <string name="illegal_step_or_jump">Step to a connected empty point, or jump over the middle cow into the empty end.</string>
     <string name="illegal_stuck">That cow is boxed in. Try another one.</string>
     <string name="illegal_remill">You can\'t move straight back to remake the mill you just broke.</string>
+    <string name="home_moruba">Moruba</string>
+    <string name="home_moruba_sub">Four-row mancala · vs Computer or Pass &amp; Play</string>
+    <string name="moruba_title">Moruba</string>
+    <string name="moruba_rules_short">Sow counter-clockwise round your own two rows, one stone per pit. Land in a full pit to pick it up and keep sowing; land in an empty inner pit to capture the two enemy pits facing it. Leave your opponent without a move to win.</string>
+    <string name="moruba_opponent">Opponent</string>
+    <string name="moruba_holes">Holes per row</string>
+    <string name="moruba_stones">Stones per pit</string>
+    <string name="moruba_computer">Computer</string>
+    <string name="moruba_you">You</string>
+    <string name="moruba_south">South</string>
+    <string name="moruba_north">North</string>
+    <string name="moruba_stones_on_board">%1$d stones</string>
+    <string name="moruba_sowing">Sowing… %1$d in hand</string>
+    <string name="moruba_thinking">Computer is thinking…</string>
+    <string name="moruba_your_turn">Your turn: tap a pit with 2 or more stones</string>
+    <string name="moruba_side_turn">%1$s to play</string>
+    <string name="moruba_board_desc">Moruba board: four rows of pits; yours are the bottom two rows</string>
+    <string name="fact_did_you_know">Did you know?</string>
+    <string name="about_photo_credits">Photo credits</string>
+    <string name="about_photo_credits_body">Photos from Wikimedia Commons, used under the licences shown (CC0, public domain, CC BY, CC BY-SA). Tap a photo to open its source page.</string>
 </resources>

@@ -1,7 +1,8 @@
 package bw.mmele.feedback
 
 /** Discrete game events that produce sound and/or haptic feedback. */
-enum class FeedbackEvent { SELECT, PLACE, SLIDE, FLY, MILL, SHOOT, INVALID, WIN, END }
+/** [DROP] is one Moruba stone landing in a pit (played with a slight random pitch). */
+enum class FeedbackEvent { SELECT, PLACE, SLIDE, FLY, MILL, SHOOT, INVALID, WIN, END, DROP }
 
 /** Plays the matching sound + haptic for an event, honouring the user's toggles. */
 class FeedbackController(
@@ -11,8 +12,8 @@ class FeedbackController(
     var soundEnabled = true
     var hapticsEnabled = true
 
-    fun play(event: FeedbackEvent) {
-        if (soundEnabled) sounds?.play(event)
+    fun play(event: FeedbackEvent, rate: Float = 1f) {
+        if (soundEnabled) sounds?.play(event, rate)
         if (hapticsEnabled) haptics?.perform(event)
     }
 

@@ -535,4 +535,44 @@
     <string name="illegal_stuck">Kgomo eo e tswaletswe. Leka e nngwe.</string>
     <!-- confidence: low -->
     <string name="illegal_remill">Ga o kgone go boela kwa morago ka bonako go dira gape mola o o sa tswang go o thuba.</string>
+    <!-- confidence: high -->
+    <string name="home_moruba">Moruba</string>
+    <!-- confidence: medium -->
+    <string name="home_moruba_sub">Moruba wa mela e mene · le khomputara kgotsa Fetisa o tshameke</string>
+    <!-- confidence: high -->
+    <string name="moruba_title">Moruba</string>
+    <!-- confidence: low -->
+    <string name="moruba_rules_short">Jala o dikologa kgatlhanong le tsamaiso ya oura mo melelong ya gago e mebedi, leje le le lengwe mo khuting nngwe le nngwe. Fa o wela mo khuting e e nang le majana, a tsee o tswelele o jala; fa o wela mo khuting e e se nang sepe ya mo teng, o tsaya dikhuti tse pedi tsa mophenyisani tse di lebaganeng le yone. Tlogela mophenyisani a sena motsamao gore o fenye.</string>
+    <!-- confidence: high -->
+    <string name="moruba_opponent">Mophenyisani</string>
+    <!-- confidence: medium -->
+    <string name="moruba_holes">Dikhuti mo moleng</string>
+    <!-- confidence: medium -->
+    <string name="moruba_stones">Majana mo khuting</string>
+    <!-- confidence: high -->
+    <string name="moruba_computer">Khomputara</string>
+    <!-- confidence: high -->
+    <string name="moruba_you">Wena</string>
+    <!-- confidence: high -->
+    <string name="moruba_south">Borwa</string>
+    <!-- confidence: high -->
+    <string name="moruba_north">Bokone</string>
+    <!-- confidence: medium -->
+    <string name="moruba_stones_on_board">Majana a le %1$d</string>
+    <!-- confidence: low -->
+    <string name="moruba_sowing">Go jala… %1$d mo seatleng</string>
+    <!-- confidence: high -->
+    <string name="moruba_thinking">Khomputara e a akanya…</string>
+    <!-- confidence: medium -->
+    <string name="moruba_your_turn">Ke nako ya gago: tobetsa khuti e e nang le majana a le 2 kgotsa go feta</string>
+    <!-- confidence: medium -->
+    <string name="moruba_side_turn">Ke nako ya %1$s</string>
+    <!-- confidence: low -->
+    <string name="moruba_board_desc">Boto ya Moruba: mela e mene ya dikhuti; tsa gago ke mela e mebedi ya kwa tlase</string>
+    <!-- confidence: high -->
+    <string name="fact_did_you_know">A o ne o itse?</string>
+    <!-- confidence: low -->
+    <string name="about_photo_credits">Ba ba tsereng ditshwantsho</string>
+    <!-- confidence: medium -->
+    <string name="about_photo_credits_body">Ditshwantsho di tswa kwa Wikimedia Commons, di dirisiwa ka dilaesense tse di bontshitsweng (CC0, public domain, CC BY, CC BY-SA). Tobetsa setshwantsho go bula tsebe ya sone.</string>
 </resources>

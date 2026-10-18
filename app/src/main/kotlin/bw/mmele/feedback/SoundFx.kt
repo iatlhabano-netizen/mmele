@@ -33,17 +33,20 @@ class SoundFx(context: Context) {
             FeedbackEvent.INVALID to load(R.raw.invalid),
             FeedbackEvent.WIN to load(R.raw.win),
             FeedbackEvent.END to load(R.raw.end),
+            FeedbackEvent.DROP to load(R.raw.place),
         )
     }
 
-    fun play(event: FeedbackEvent) {
+    /** [rate] is the SoundPool playback rate (pitch), clamped to 0.5-2. */
+    fun play(event: FeedbackEvent, rate: Float = 1f) {
         val id = ids[event] ?: return
         if (synchronized(loaded) { id !in loaded }) return
         val vol = when (event) {
             FeedbackEvent.SELECT, FeedbackEvent.INVALID -> 0.5f
+            FeedbackEvent.DROP -> 0.6f
             else -> 0.9f
         }
-        pool.play(id, vol, vol, 1, 0, 1f)
+        pool.play(id, vol, vol, 1, 0, rate.coerceIn(0.5f, 2f))
     }
 
     fun release() = pool.release()

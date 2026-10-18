@@ -89,6 +89,7 @@ fun HomeScreen(
     lessonsTotal: Int = 5,
     onAcademy: () -> Unit = {},
     onStats: () -> Unit = {},
+    onMoruba: () -> Unit = {},
     onHowToPlay: () -> Unit = {},
     language: AppLanguage = AppLanguage.SYSTEM,
     onLanguage: (AppLanguage) -> Unit = {},
@@ -233,6 +234,8 @@ fun HomeScreen(
                     onClick = onAcademy,
                 )
                 Spacer(Modifier.height(8.dp))
+                NavCard(stringResource(R.string.home_moruba), stringResource(R.string.home_moruba_sub), onMoruba)
+                Spacer(Modifier.height(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     NavCard(stringResource(R.string.home_how_to_play), null, onHowToPlay, Modifier.weight(1f))
                     NavCard(stringResource(R.string.home_stats), null, onStats, Modifier.weight(1f))
@@ -310,7 +313,7 @@ private fun VariantCard(
 }
 
 @Composable
-private fun Segmented(options: List<String>, selectedIndex: Int, onSelect: (Int) -> Unit) {
+internal fun Segmented(options: List<String>, selectedIndex: Int, onSelect: (Int) -> Unit) {
     val shape = RoundedCornerShape(14.dp)
     Row(
         Modifier
