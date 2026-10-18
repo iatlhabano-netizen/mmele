@@ -53,15 +53,27 @@ never initialises and **nothing leaves the device**. Use answer set A. With onli
 - Ephemeral: **No**. **Optional**
 - Purposes: **App functionality**
 
+**3. (1.3.0) Messages → Other in-app messages** (online chat between the two players)
+- Collected: **Yes**. Shared: **No**. Ephemeral: **No** (kept until the room is purged, ≤24 h; reported messages ≤90 days)
+- **Optional** (chat toggle; online only). Purposes: **App functionality**; **Fraud prevention, security, and compliance** (reports)
+
+**4. (1.3.0) App activity → Other actions / In-app search? No — tick "App interactions" (already) and "Other actions"** for ranked results and tournament entries
+- Purposes: **App functionality**
+
+**5. (1.3.0) App info and performance → Crash logs, Diagnostics** (Crashlytics) and **App activity → App interactions** for analytics events
+- Collected: **Yes**. Shared: **No**. **Optional** ("Share usage & crash data" toggle)
+- Purposes: **Analytics**; **App functionality** (crash fixing)
+
+**Device or other IDs** purposes: add **Analytics** (Firebase installation ID used by Analytics/Crashlytics).
+
 ### Do NOT tick
 - **Location (approximate/precise):** Play only requires this if location is *inferred* from IP. Mmele does not
   infer location, and Firebase does not do it for the app. Firebase does receive the IP address; mention that in the
   privacy policy, which the draft does.
-- Personal info (name, email, user IDs that identify a person), Financial, Health, Messages, Photos, Audio,
+- Personal info (name, email, user IDs that identify a person), Financial (points are virtual, no purchases), Health, Photos, Audio,
   Files, Calendar, Contacts, Web browsing, Installed apps, Search history.
-- **App info and performance** (crash logs, diagnostics): not collected; there's no Crashlytics. If you add it later,
-  update this.
-- **"Other user-generated content":** there is no chat or free text. Moves are covered by App interactions.
+- **Advertising ID:** removed from the manifest (`AD_ID` permission `tools:node="remove"`), ad personalisation off.
+- Note: if the Play form asks "Is data encrypted in transit?" — Yes (Firebase uses TLS).
 
 ### Security practices
 - Data encrypted in transit: **Yes**

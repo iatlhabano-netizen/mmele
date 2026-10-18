@@ -1,7 +1,7 @@
 # Setswana translation review
 
 Mmele ships English (default) and a **draft** Setswana (`tn`) translation. Every Setswana string
-below was drafted by the developer's assistant, not by a native speaker, so **all 358 of 358
+below was drafted by the developer's assistant, not by a native speaker, so **all 398 of 398
 strings need review** before the Setswana UI is promoted (the high-confidence ones should be quick).
 
 How to correct: edit `app/src/main/res/values-tn/strings.xml` or `strings_academy.xml` directly
@@ -18,7 +18,7 @@ Conventions in the draft (please confirm or replace):
 - Place names stay as Batswana write them (Okavango, Chobe, Makgadikgadi, Tsodilo, Kgalagadi).
 - Bird names (lapwing, roller) are low confidence: please supply the names you know.
 
-Counts: 86 high, 239 medium, 33 low confidence, 0 reviewed.
+Counts: 89 high, 262 medium, 47 low confidence, 0 reviewed.
 
 | Key | English | Draft Setswana | Confidence |
 |---|---|---|---|
@@ -307,6 +307,46 @@ Counts: 86 high, 239 medium, 33 low confidence, 0 reviewed.
 | `fact_did_you_know` | Did you know? | A o ne o itse? | high |
 | `about_photo_credits` | Photo credits | Ba ba tsereng ditshwantsho | low |
 | `about_photo_credits_body` | Photos from Wikimedia Commons, used under the licences shown (CC0, public domain, CC BY, CC BY-SA). Tap a photo to open its source page. | Ditshwantsho di tswa kwa Wikimedia Commons, di dirisiwa ka dilaesense tse di bontshitsweng (CC0, public domain, CC BY, CC BY-SA). Tobetsa setshwantsho go bula tsebe ya sone. | medium |
+| `chat_title` | Chat | Puisano | medium |
+| `chat_mute` | Mute chat | Tidimatsa puisano | medium |
+| `chat_type_hint` | Type a message | Kwala molaetsa | medium |
+| `chat_remaining` | %1$d left | %1$d tse di setseng | low |
+| `chat_send` | Send | Romela | high |
+| `chat_rules_note` | Be kind. Bad words are hidden. Long-press a message to report or block. | Nna pelonomi. Mafoko a a maswe a a fitlhwa. Tobetsa molaetsa sebaka go o bega kgotsa go thibela. | low |
+| `chat_report` | Report | Bega | medium |
+| `chat_block` | Block player | Thibela motshameki | medium |
+| `chat_reported` | Report sent. Thank you. | Pego e romilwe. Re a leboga. | medium |
+| `chat_blocked` | Player blocked. You won't see their messages. | Motshameki o thibetswe. Ga o kitla o bona melaetsa ya gagwe. | low |
+| `chat_too_fast` | Slow down a little. | Iketle go se kae. | medium |
+| `chat_too_long` | That message is too long. | Molaetsa oo o moleele thata. | medium |
+| `chat_failed` | Message not sent. | Molaetsa ga o a romelwa. | medium |
+| `settings_chat` | In-game chat | Puisano mo motshamekong | medium |
+| `settings_analytics` | Share usage & crash data | Abelana tiriso le diphoso | low |
+| `ranked_toggle` | Ranked match (virtual points) | Motshameko wa maemo (dintlha tsa maitirelo) | low |
+| `points_disclaimer_short` | Points have no cash value. | Dintlha ga di na boleng jwa madi. | low |
+| `points_disclaimer` | Points are virtual only: they have no cash value and cannot be bought, sold or cashed out. | Dintlha ke tsa maitirelo fela: ga di na boleng jwa madi, ga di rekwe, ga di rekisiwe e bile ga di fetolelwe madi. | low |
+| `leaderboard_title` | Leaderboard | Lenaane la baeteledipele | low |
+| `ranked_offline` | Online play is not set up in this build. | Motshameko wa inthanete ga o a baakanngwa mo kgatisong e. | low |
+| `ranked_my_line` | Your rating %1$d · %2$d points · %3$d ranked games | Maemo a gago %1$d · dintlha %2$d · metshameko ya maemo %3$d | low |
+| `ranked_how` | Each ranked match stakes %1$d points; the winner takes them. Results are settled by the server. | Motshameko mongwe le mongwe wa maemo o beela dintlha %1$d; mofenyi o a di tsaya. Dipholo di swetswa ke sefatlhego sa inthanete. | low |
+| `leaderboard_empty` | No ranked games yet. | Ga go ise go nne metshameko ya maemo. | medium |
+| `ranked_points_short` | %1$d pts | dintlha %1$d | low |
+| `tournaments_title` | Tournaments | Dikgaisano | medium |
+| `tournaments_create` | New tournament | Kgaisano e ntšha | medium |
+| `tournaments_create_button` | Create | Tlhama | medium |
+| `tournaments_name` | Name | Leina | high |
+| `tournaments_players` | %1$d players | Batshameki %1$d | medium |
+| `tournaments_entry_line` | Entry %1$d points · 1st %2$d · 2nd %3$d | Go tsena dintlha %1$d · wa ntlha %2$d · wa bobedi %3$d | low |
+| `tournaments_empty` | No tournaments yet. Create one! | Ga go ise go nne dikgaisano. Tlhama e le nngwe! | medium |
+| `tournaments_open` | open | e butswe | medium |
+| `tournaments_running` | playing | go a tshamekwa | medium |
+| `tournaments_finished` | finished | e fedile | medium |
+| `tournaments_rejected` | Entry refused: %1$s | Go tsena go ganetswe: %1$s | low |
+| `tournaments_join` | Join (%1$d points) | Tsena (dintlha %1$d) | medium |
+| `tournaments_leave` | Leave (refund) | Tswa (busediwa) | medium |
+| `tournaments_round` | Round %1$d | Kgaolo %1$d | medium |
+| `tournaments_play` | Play | Tshameka | high |
+| `tournaments_standings` | Standings | Maemo | medium |
 | `academy_title` | Academy | Sekolo | medium |
 | `academy_subtitle` | Five short puzzles that teach the ideas behind Mmele. | Dithaelo tse tlhano tse dikhutshwane tse di rutang dikakanyo tsa Mmele. | medium |
 | `academy_progress` | %1$d of %2$d lessons done | Dithuto di le %1$d go %2$d di weditswe | medium |

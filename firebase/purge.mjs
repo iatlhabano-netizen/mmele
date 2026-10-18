@@ -37,6 +37,13 @@ export async function purge({ db, auth, days = 30, dryRun = false, now = Date.no
 
   // Index entries whose room is gone (after the step above).
   const live = new Set(Object.keys((await db.ref("rooms").get()).val() || {}));
+  // Chat and ranked reports live beside the room (chats/{code}, results/{code}); drop them with it.
+  out.chatsDeleted = 0;
+  for (const node of ["chats", "results"]) {
+    const keys = Object.keys((await db.ref(node).get()).val() || {}).filter((c) => !live.has(c));
+    if (node === "chats") out.chatsDeleted = keys.length;
+    if (!dryRun && keys.length) await db.ref(node).update(Object.fromEntries(keys.map((k) => [k, null])));
+  }
   const idx = (await db.ref("users").get()).val() || {};
   const idxUpdates = {};
   for (const [uid, u] of Object.entries(idx)) {
@@ -66,7 +73,7 @@ export async function purge({ db, auth, days = 30, dryRun = false, now = Date.no
 
   if (!dryRun && Object.keys(idxUpdates).length) await db.ref("users").update(idxUpdates);
   log(`${dryRun ? "[dry run] would delete" : "deleted"}: ${out.roomsDeleted} rooms idle > ${days} days (kept ${out.roomsKept}), ` +
-      `${out.indexEntriesDropped} stale index entries, ${out.usersDeleted} anonymous users inactive > ${days} days (kept ${out.usersKept})`);
+      `${out.indexEntriesDropped} stale index entries, ${out.chatsDeleted} orphan chats, ${out.usersDeleted} anonymous users inactive > ${days} days (kept ${out.usersKept})`);
   return out;
 }
 

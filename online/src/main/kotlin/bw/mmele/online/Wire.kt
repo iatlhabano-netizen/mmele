@@ -81,6 +81,7 @@ object Wire {
         "clockMinutes" to room.config.clockMinutes,
         "styleOne" to room.config.styleOne,
         "styleTwo" to room.config.styleTwo,
+        "ranked" to room.config.ranked.takeIf { it },
         "connected" to mapOf("one" to (Seat.ONE in room.connected), "two" to (Seat.TWO in room.connected)),
         "leftAt" to room.leftAtMs.entries.associate { seatName(it.key) to it.value },
         "resigned" to room.resigned?.let { seatName(it) },
@@ -102,6 +103,7 @@ object Wire {
             clockMinutes = (value["clockMinutes"] as? Number)?.toInt() ?: 0,
             styleOne = value["styleOne"] as? String ?: "obsidian",
             styleTwo = value["styleTwo"] as? String ?: "quartz",
+            ranked = value["ranked"] == true,
         )
         val connected = buildSet {
             val c = value["connected"] as? Map<*, *>

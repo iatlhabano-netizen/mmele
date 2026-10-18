@@ -10,7 +10,10 @@ plugins {
 // google-services.json from their own Firebase project into app/. Without it the app builds and
 // shows "Online play not configured yet". See docs/ONLINE_SETUP.md.
 val firebaseConfigured = file("google-services.json").exists()
-if (firebaseConfigured) apply(plugin = "com.google.gms.google-services")
+if (firebaseConfigured) {
+    apply(plugin = "com.google.gms.google-services")
+    apply(plugin = "com.google.firebase.crashlytics") // uploads the R8 mapping so crash stacks are readable
+}
 
 android {
     namespace = "com.tshipiworks.mmele"
@@ -20,9 +23,11 @@ android {
         applicationId = "com.tshipiworks.mmele"
         minSdk = 26
         targetSdk = 36
-        versionCode = 3
-        versionName = "1.2.0"
+        versionCode = 4
+        versionName = "1.3.0"
         buildConfigField("boolean", "FIREBASE_CONFIGURED", firebaseConfigured.toString())
+        // Single switch for anything involving real money. Must stay false: there is no payment code. See docs/REAL_MONEY.md.
+        buildConfigField("boolean", "REAL_MONEY_ENABLED", "false")
     }
 
     // Upload key lives outside the repo; its path and passwords come from ~/.gradle/gradle.properties
@@ -66,6 +71,8 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.datastore.preferences)

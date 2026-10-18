@@ -53,6 +53,12 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             // DataStore reads on its own IO dispatcher; the main thread only waits on the splash.
             val choice = prefs.load()
+            val settingsPrefs = SettingsPrefs(applicationContext)
+            val settings = settingsPrefs.load()
+            bw.mmele.analytics.FirebaseAnalyticsTracker.createOrNull(applicationContext, BuildConfig.FIREBASE_CONFIGURED)?.let {
+                it.setEnabled(settings.analyticsEnabled)
+                bw.mmele.analytics.Tracker.impl = it
+            }
             val data = store.load()
             val (factState, photoState) = store.loadDecks()
             val cards = withContext(kotlinx.coroutines.Dispatchers.IO) {
@@ -78,6 +84,13 @@ class MainActivity : AppCompatActivity() {
                     drawFactCard = { cards?.draw() },
                     language = AppLanguage.current(),
                     onLanguage = { it.apply() },
+                    settings = settings,
+                    onSettings = { s ->
+                        bw.mmele.analytics.Tracker.impl.setEnabled(s.analyticsEnabled)
+                        lifecycleScope.launch { settingsPrefs.save(s) }
+                    },
+                    chatRepo = { bw.mmele.online.FirebaseOnlineGameRepository.chatOrNull(applicationContext) },
+                    rankedRepo = { bw.mmele.online.FirebaseOnlineGameRepository.rankedOrNull(applicationContext) },
                 )
             }
             ready = true

@@ -54,6 +54,19 @@ by the bot.
 15. **[BOT]** Fill in placeholders in `PRIVACY_POLICY.md`/`TERMS.md` once you give the details, and export them as
     simple HTML pages.
 
+## Phase 1d: version 1.3.0 (BOT, 18 Oct 2026)
+
+> `versionCode 4` / `versionName 1.3.0`, signed AAB/APK at `/workspace/mmele-release-1.3.0.{aab,apk}` (+ mapping).
+- [x] Online chat: quick phrases (EN/TN), emoji, filtered free text (120 chars), mute/block/report, chat toggle.
+- [x] Ranked matches (Elo + virtual points, stake 10) and 4/8/16 tournaments, leaderboard; `REAL_MONEY_ENABLED=false`.
+- [x] Firebase Analytics + Crashlytics with opt-out; privacy policy and Data safety drafts updated.
+- [ ] **[YOU]** Deploy rules: `cd firebase && npx firebase deploy --only database`.
+- [ ] **[YOU]** Upgrade to Blaze and deploy functions (`docs/RANKED.md`); without them ranked/tournaments don't settle.
+- [ ] **[YOU]** Enable Analytics + Crashlytics in the console (`docs/ANALYTICS.md`); add `app/google-services.json` and rebuild.
+- [ ] **[YOU]** Re-publish `site/privacy.html`; update the Play Data safety form (`DATA_SAFETY_ANSWERS.md`).
+- [ ] **[YOU]** Review the Setswana profanity list (`online/src/main/resources/.../profanity.txt`) and new strings.
+- [ ] **[YOU]** Set the admin claim for reading reports; check `reports/` regularly.
+
 ## Phase 1c: version 1.2.0 (BOT, 18 Oct 2026)
 
 > `versionCode 3` / `versionName 1.2.0`, signed AAB/APK at `/workspace/mmele-release-1.2.0.{aab,apk}` (+ mapping).

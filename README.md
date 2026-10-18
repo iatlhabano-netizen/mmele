@@ -99,6 +99,11 @@ without it the app shows "Online play is coming soon". Release prep: [docs/relea
   rebuild after restart, room-code input, piece-style ids/contrast) and 19 Paparazzi screenshot tests.
 * `firebase/` — 40 security-rule checks + replay of 19 real client writes on the Firebase emulator.
 
+## 1.3.0: chat, ranked, analytics
+- Online chat (phrases, emoji, filtered text, mute/block/report): `online/.../chat/`, `ui/chat/`.
+- Ranked play and tournaments with **virtual points only** (no cash value): `docs/RANKED.md`, `docs/REAL_MONEY.md`.
+- Firebase Analytics/Crashlytics with opt-out: `docs/ANALYTICS.md`.
+
 ## Known limitations
 
 * Not yet run on a physical device or emulator (none available in the build environment): haptics,

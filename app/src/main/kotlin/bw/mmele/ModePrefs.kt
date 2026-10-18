@@ -3,6 +3,7 @@ package bw.mmele
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -34,5 +35,24 @@ class ModePrefs(private val context: Context) {
     private companion object {
         val MODE = stringPreferencesKey("mode")
         val DIFFICULTY = stringPreferencesKey("difficulty")
+    }
+}
+
+/** Settings toggles: online chat (on by default) and usage/crash data sharing (on unless opted out). */
+class SettingsPrefs(private val context: Context) {
+    data class Settings(val chatEnabled: Boolean = true, val analyticsEnabled: Boolean = true)
+
+    suspend fun load(): Settings {
+        val p = runCatching { context.homePrefs.data.first() }.getOrNull() ?: return Settings()
+        return Settings(p[CHAT] ?: true, p[ANALYTICS] ?: true)
+    }
+
+    suspend fun save(s: Settings) {
+        context.homePrefs.edit { it[CHAT] = s.chatEnabled; it[ANALYTICS] = s.analyticsEnabled }
+    }
+
+    private companion object {
+        val CHAT = booleanPreferencesKey("chat_enabled")
+        val ANALYTICS = booleanPreferencesKey("analytics_enabled")
     }
 }

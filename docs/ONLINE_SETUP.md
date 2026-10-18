@@ -81,6 +81,12 @@ through the shared `:engine` rules. If one phone sends an illegal move, the othe
 with "The other phone sent a move the rules don't allow". Full server-side legality would need
 Cloud Functions, which requires the paid Blaze plan. See *Known limits* below.
 
+## 5b. Cloud Functions (ranked play, tournaments) — Blaze plan
+
+Chat works with rules alone. Ranked settlement and tournaments need the functions in `firebase/functions`
+(see `docs/RANKED.md`): upgrade to Blaze, then `cd firebase/functions && npm ci && cd .. && npx firebase deploy --only functions`.
+Analytics/Crashlytics: `docs/ANALYTICS.md`.
+
 ## 6. Build and run
 
 ```bash

@@ -1,0 +1,34 @@
+# Mmele chat filter: one word per line, matched as a whole word, case-insensitive
+# (l33t swaps like 0->o, 1->i, @->a and stretched letters are normalised first).
+# Add or remove words freely; ProfanityFilterTest checks the file parses.
+# --- English ---
+fuck
+fucker
+fucking
+motherfucker
+shit
+bullshit
+bitch
+bastard
+asshole
+arsehole
+dick
+dickhead
+cunt
+pussy
+cock
+wanker
+twat
+slut
+whore
+prick
+retard
+nigger
+nigga
+faggot
+fag
+kaffir
+# --- Setswana (draft: please review and extend; only words the developer's assistant was sure of) ---
+nnyo
+masepa
+setlatla

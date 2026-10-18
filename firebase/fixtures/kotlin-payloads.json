@@ -1,6 +1,6 @@
 {
   "code": "MMERE2",
-  "create": {"hostUid": "$HOST", "guestUid": null, "createdAt": "__SERVER_TIME__", "updatedAt": "__SERVER_TIME__", "phase": "lobby", "variant": "classic", "clockMinutes": 0, "styleOne": "diamond-smoky", "styleTwo": "diamond-clear", "connected": {"one": true, "two": false}, "leftAt": {}, "resigned": null, "offers": {"draw": {"one": false, "two": false}, "rematch": {"one": false, "two": false}}, "moves": null, "moveCount": 0, "lastMoveAt": null, "toMove": null},
+  "create": {"hostUid": "$HOST", "guestUid": null, "createdAt": "__SERVER_TIME__", "updatedAt": "__SERVER_TIME__", "phase": "lobby", "variant": "classic", "clockMinutes": 0, "styleOne": "diamond-smoky", "styleTwo": "diamond-clear", "ranked": null, "connected": {"one": true, "two": false}, "leftAt": {}, "resigned": null, "offers": {"draw": {"one": false, "two": false}, "rematch": {"one": false, "two": false}}, "moves": null, "moveCount": 0, "lastMoveAt": null, "toMove": null},
   "steps": [
     {"actor": "guest", "update": {"guestUid": "$GUEST", "connected/two": true, "phase": "playing", "updatedAt": "__SERVER_TIME__", "lastMoveAt": "__SERVER_TIME__", "toMove": "one"}},
     {"actor": "host", "update": {"moves/0": {"by": "one", "m": "P|0"}, "moveCount": 1, "updatedAt": "__SERVER_TIME__", "lastMoveAt": "__SERVER_TIME__", "toMove": "two"}},

@@ -30,6 +30,8 @@ class FirebaseOnlineGameRepository(
 ) : OnlineGameRepository {
 
     private var presence: Pair<DatabaseReference, ValueEventListener>? = null
+    override var lastJoinSeat: Seat = Seat.TWO
+        private set
     private val rooms get() = db.getReference("rooms")
 
     private suspend fun uid(): String =
@@ -57,9 +59,12 @@ class FirebaseOnlineGameRepository(
         if (!snap.exists()) throw RoomNotFoundException(key)
         val guestUid = snap.child("guestUid").getValue(String::class.java)
         val hostUid = snap.child("hostUid").getValue(String::class.java)
+        lastJoinSeat = if (hostUid == me) Seat.ONE else Seat.TWO
         if (guestUid == me) return reconnect(key, Seat.TWO)
         if (hostUid == me) return reconnect(key, Seat.ONE)
         if (guestUid != null) throw RoomFullException(key)
+        val myBlocks = runCatching { db.getReference("users").child(me).child("blocked").get().await().children.mapNotNull { it.key }.toSet() }.getOrDefault(emptySet())
+        if (hostUid in myBlocks) throw RoomBlockedException(key)
         runCatching { rooms.child(key).updateChildren(server(RtdbPayloads.join(me))).await() }
             .onFailure { throw RoomFullException(key) }
         index(me, key)
@@ -159,7 +164,12 @@ class FirebaseOnlineGameRepository(
         runCatching { db.getReference("users").child(uid).child("rooms").child(code).setValue(true).await() }
     }
 
+    override suspend fun reportRankedResult(code: String, seat: Seat, winner: String) {
+        db.getReference("results").child(code).child(Wire.seatName(seat)).setValue(winner).await()
+    }
+
     override suspend fun deleteRoom(code: String) {
+        runCatching { db.getReference("chats").child(code).removeValue().await() } // chat goes with the room
         runCatching { rooms.child(code).removeValue().await() }
         auth.currentUser?.uid?.let { uid ->
             runCatching { db.getReference("users").child(uid).child("rooms").child(code).removeValue().await() }
@@ -201,6 +211,16 @@ class FirebaseOnlineGameRepository(
     }
 
     companion object {
+        private fun app(context: Context): FirebaseApp? = if (!BuildConfig.FIREBASE_CONFIGURED) null else runCatching {
+            FirebaseApp.getApps(context).firstOrNull() ?: FirebaseApp.initializeApp(context)
+        }.getOrNull()
+
+        fun chatOrNull(context: Context): bw.mmele.online.chat.ChatRepository? =
+            app(context)?.let { FirebaseChatRepository(FirebaseDatabase.getInstance(it), FirebaseAuth.getInstance(it)) }
+
+        fun rankedOrNull(context: Context): bw.mmele.online.ranked.RankedRepository? =
+            app(context)?.let { FirebaseRankedRepository(FirebaseDatabase.getInstance(it), FirebaseAuth.getInstance(it)) }
+
         /** Null when the developer has not added google-services.json — the UI then says so. */
         fun createOrNull(context: Context): FirebaseOnlineGameRepository? {
             if (!BuildConfig.FIREBASE_CONFIGURED) return null

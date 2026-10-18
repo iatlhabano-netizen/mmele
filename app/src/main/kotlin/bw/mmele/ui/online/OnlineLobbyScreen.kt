@@ -133,6 +133,7 @@ private fun NotConfiguredCard(onBack: () -> Unit) {
 
 @Composable
 private fun LobbyBody(config: GameConfig, repo: OnlineGameRepository, onSession: (OnlineSession) -> Unit, initialCode: String) {
+    var ranked by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     var busy by remember { mutableStateOf<String?>(null) }
     var error by remember { mutableStateOf<LobbyError?>(null) }
@@ -151,6 +152,8 @@ private fun LobbyBody(config: GameConfig, repo: OnlineGameRepository, onSession:
                 error = LobbyError.NoRoom(code)
             } catch (e: RoomFullException) {
                 error = LobbyError.Full
+            } catch (e: bw.mmele.online.RoomBlockedException) {
+                error = LobbyError.Other(null)
             } catch (e: Exception) {
                 error = LobbyError.Other(e.message)
             } finally {
@@ -172,11 +175,20 @@ private fun LobbyBody(config: GameConfig, repo: OnlineGameRepository, onSession:
                 color = MmeleColors.BoneDim,
             )
         }
-        Spacer(Modifier.height(14.dp))
+        Spacer(Modifier.height(10.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.ranked_toggle), style = MaterialTheme.typography.labelLarge, color = MmeleColors.Bone)
+                Text(stringResource(R.string.points_disclaimer_short), style = MaterialTheme.typography.labelSmall, color = MmeleColors.BoneDim)
+            }
+            androidx.compose.material3.Switch(checked = ranked, onCheckedChange = { ranked = it })
+        }
+        Spacer(Modifier.height(10.dp))
         Button(
             onClick = {
                 run("create") {
-                    val room = repo.createRoom(RoomConfig(config.variant, 0, config.styleOne.id, config.styleTwo.id))
+                    val room = repo.createRoom(RoomConfig(config.variant, 0, config.styleOne.id, config.styleTwo.id, ranked = ranked))
+                    bw.mmele.analytics.Tracker.log(bw.mmele.analytics.Events.ROOM_CREATED, "ranked" to ranked)
                     OnlineSession(repo, room, Seat.ONE)
                 }
             },
@@ -244,7 +256,8 @@ private sealed interface LobbyError {
 
 private suspend fun joinSession(repo: OnlineGameRepository, code: String): OnlineSession {
     val room = repo.joinRoom(code)
-    return OnlineSession(repo, room, Seat.TWO)
+    bw.mmele.analytics.Tracker.log(bw.mmele.analytics.Events.ROOM_JOINED, "ranked" to room.config.ranked)
+    return OnlineSession(repo, room, repo.lastJoinSeat)
 }
 
 private val codeStyle = TextStyle(fontSize = 26.sp, letterSpacing = 6.sp, textAlign = TextAlign.Center)

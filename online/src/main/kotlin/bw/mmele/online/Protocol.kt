@@ -31,6 +31,8 @@ data class RoomConfig(
     val clockMinutes: Int = 0,
     val styleOne: String = "obsidian",
     val styleTwo: String = "quartz",
+    /** Ranked match: settled by the Cloud Function (Elo + fixed virtual stake). */
+    val ranked: Boolean = false,
 ) {
     val rules: RuleSet get() = RuleSet.of(variant)
 }

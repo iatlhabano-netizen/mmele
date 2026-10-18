@@ -12,11 +12,15 @@ POSTAL_ADDRESS_PLACEHOLDER, Gabane, Botswana. Contact: **CONTACT_EMAIL_PLACEHOLD
 
 ## 1. The short version
 
-- Mmele is a free board game. There are **no ads, no in-app purchases, no analytics, no crash reporting and no
-  sign-up**. We never ask for your name, email, phone number, contacts, photos or location.
+- Mmele is a free board game. There are **no ads, no in-app purchases and no sign-up**. Ranked play uses **virtual
+  points only**: they have no cash value and cannot be bought, sold or cashed out. We never ask for your name, email, phone number, contacts, photos or location.
 - **Play vs Computer** and **Pass & Play** work fully offline. Nothing about those games leaves your phone.
 - **Play online** uses Google Firebase to connect two phones. To do that, Firebase gives your app a random
   anonymous ID, stores the game room you play in, and (like any internet server) sees your IP address.
+- **Usage and crash data** (Firebase Analytics and Crashlytics) is sent only while "Share usage & crash data" is
+  on (home screen). Events are anonymous; the advertising ID is not collected.
+- **Chat** in online games is visible only to the two players and is deleted with the room. Mute, block and
+  report are available; a report keeps a copy of the reported message for moderation (up to 90 days).
 - We do not sell or share your data, and we do not use it for advertising or profiling.
 
 ## 2. What is stored only on your phone
@@ -43,6 +47,22 @@ We do **not** use your IP address to work out your location.
 
 **Who can see room data:** the other player in your room, and anyone else who uses the app and enters the same room
 code while it exists (there is no public list of rooms). Rooms contain no names or messages — there is no chat.
+
+## 3a. Chat, ranked play and tournaments
+
+- Chat messages (quick phrases, emoji, or up to 120 characters of filtered text) live under the room, readable only
+  by its two players, and are deleted with the room (within 24 hours). Chat can be switched off.
+- Blocks are stored under your anonymous ID. Reports (room code, both anonymous IDs, the message) are admin-only and
+  kept up to 90 days.
+- Ranked play stores rating, virtual points, games played and a points ledger under your anonymous ID. Points have
+  no cash value.
+
+## 3b. Usage and crash data
+
+With the toggle on, Firebase Analytics receives anonymous events (match started/completed with game, mode and result;
+tutorial steps; online room created/joined; chat sent — type only, never text; ranked match; tournament joined; fact
+shown) and Crashlytics receives crash reports. No advertising ID; ad personalisation disabled. Analytics retention
+2 months, crash data 90 days.
 
 ## 4. Service provider (data processor)
 

@@ -575,4 +575,84 @@
     <string name="about_photo_credits">Ba ba tsereng ditshwantsho</string>
     <!-- confidence: medium -->
     <string name="about_photo_credits_body">Ditshwantsho di tswa kwa Wikimedia Commons, di dirisiwa ka dilaesense tse di bontshitsweng (CC0, public domain, CC BY, CC BY-SA). Tobetsa setshwantsho go bula tsebe ya sone.</string>
+    <!-- confidence: medium -->
+    <string name="chat_title">Puisano</string>
+    <!-- confidence: medium -->
+    <string name="chat_mute">Tidimatsa puisano</string>
+    <!-- confidence: medium -->
+    <string name="chat_type_hint">Kwala molaetsa</string>
+    <!-- confidence: low -->
+    <string name="chat_remaining">%1$d tse di setseng</string>
+    <!-- confidence: high -->
+    <string name="chat_send">Romela</string>
+    <!-- confidence: low -->
+    <string name="chat_rules_note">Nna pelonomi. Mafoko a a maswe a a fitlhwa. Tobetsa molaetsa sebaka go o bega kgotsa go thibela.</string>
+    <!-- confidence: medium -->
+    <string name="chat_report">Bega</string>
+    <!-- confidence: medium -->
+    <string name="chat_block">Thibela motshameki</string>
+    <!-- confidence: medium -->
+    <string name="chat_reported">Pego e romilwe. Re a leboga.</string>
+    <!-- confidence: low -->
+    <string name="chat_blocked">Motshameki o thibetswe. Ga o kitla o bona melaetsa ya gagwe.</string>
+    <!-- confidence: medium -->
+    <string name="chat_too_fast">Iketle go se kae.</string>
+    <!-- confidence: medium -->
+    <string name="chat_too_long">Molaetsa oo o moleele thata.</string>
+    <!-- confidence: medium -->
+    <string name="chat_failed">Molaetsa ga o a romelwa.</string>
+    <!-- confidence: medium -->
+    <string name="settings_chat">Puisano mo motshamekong</string>
+    <!-- confidence: low -->
+    <string name="settings_analytics">Abelana tiriso le diphoso</string>
+    <!-- confidence: low -->
+    <string name="ranked_toggle">Motshameko wa maemo (dintlha tsa maitirelo)</string>
+    <!-- confidence: low -->
+    <string name="points_disclaimer_short">Dintlha ga di na boleng jwa madi.</string>
+    <!-- confidence: low -->
+    <string name="points_disclaimer">Dintlha ke tsa maitirelo fela: ga di na boleng jwa madi, ga di rekwe, ga di rekisiwe e bile ga di fetolelwe madi.</string>
+    <!-- confidence: low -->
+    <string name="leaderboard_title">Lenaane la baeteledipele</string>
+    <!-- confidence: low -->
+    <string name="ranked_offline">Motshameko wa inthanete ga o a baakanngwa mo kgatisong e.</string>
+    <!-- confidence: low -->
+    <string name="ranked_my_line">Maemo a gago %1$d · dintlha %2$d · metshameko ya maemo %3$d</string>
+    <!-- confidence: low -->
+    <string name="ranked_how">Motshameko mongwe le mongwe wa maemo o beela dintlha %1$d; mofenyi o a di tsaya. Dipholo di swetswa ke sefatlhego sa inthanete.</string>
+    <!-- confidence: medium -->
+    <string name="leaderboard_empty">Ga go ise go nne metshameko ya maemo.</string>
+    <!-- confidence: low -->
+    <string name="ranked_points_short">dintlha %1$d</string>
+    <!-- confidence: medium -->
+    <string name="tournaments_title">Dikgaisano</string>
+    <!-- confidence: medium -->
+    <string name="tournaments_create">Kgaisano e ntšha</string>
+    <!-- confidence: medium -->
+    <string name="tournaments_create_button">Tlhama</string>
+    <!-- confidence: high -->
+    <string name="tournaments_name">Leina</string>
+    <!-- confidence: medium -->
+    <string name="tournaments_players">Batshameki %1$d</string>
+    <!-- confidence: low -->
+    <string name="tournaments_entry_line">Go tsena dintlha %1$d · wa ntlha %2$d · wa bobedi %3$d</string>
+    <!-- confidence: medium -->
+    <string name="tournaments_empty">Ga go ise go nne dikgaisano. Tlhama e le nngwe!</string>
+    <!-- confidence: medium -->
+    <string name="tournaments_open">e butswe</string>
+    <!-- confidence: medium -->
+    <string name="tournaments_running">go a tshamekwa</string>
+    <!-- confidence: medium -->
+    <string name="tournaments_finished">e fedile</string>
+    <!-- confidence: low -->
+    <string name="tournaments_rejected">Go tsena go ganetswe: %1$s</string>
+    <!-- confidence: medium -->
+    <string name="tournaments_join">Tsena (dintlha %1$d)</string>
+    <!-- confidence: medium -->
+    <string name="tournaments_leave">Tswa (busediwa)</string>
+    <!-- confidence: medium -->
+    <string name="tournaments_round">Kgaolo %1$d</string>
+    <!-- confidence: high -->
+    <string name="tournaments_play">Tshameka</string>
+    <!-- confidence: medium -->
+    <string name="tournaments_standings">Maemo</string>
 </resources>

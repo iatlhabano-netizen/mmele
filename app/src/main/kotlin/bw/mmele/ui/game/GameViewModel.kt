@@ -117,6 +117,7 @@ class GameViewModel(
     val events: SharedFlow<FeedbackEvent> = _events
 
     init {
+        bw.mmele.analytics.Tracker.log(bw.mmele.analytics.Events.MATCH_STARTED, "game" to "mmele", "mode" to config.mode.name.lowercase())
         if (online == null && resume != null) restore(resume)
         startClock()
         maybeRunAi()
@@ -285,7 +286,16 @@ class GameViewModel(
     private fun onGameOver(g: GameState) {
         clockJob?.cancel()
         val r = g.result
-        if (r != null && !resultReported) { resultReported = true; onResult(config, r) }
+        if (r != null && !resultReported) {
+            resultReported = true; onResult(config, r)
+            val res = when { r is GameResult.Draw -> "draw"; config.mode == GameMode.PASS_AND_PLAY -> "finished"; (r as GameResult.Win).winner == config.human -> "win"; else -> "loss" }
+            bw.mmele.analytics.Tracker.log(bw.mmele.analytics.Events.MATCH_COMPLETED, "game" to "mmele", "mode" to config.mode.name.lowercase(), "result" to res)
+            if (online?.room?.config?.ranked == true) bw.mmele.analytics.Tracker.log(bw.mmele.analytics.Events.RANKED_MATCH, "result" to res)
+            online?.takeIf { it.room.config.ranked }?.let { s ->
+                val w = when (r) { is GameResult.Win -> if (r.winner == Player.ONE) "one" else "two"; is GameResult.Draw -> "draw" }
+                viewModelScope.launch { runCatching { s.repo.reportRankedResult(s.room.code, s.seat, w) } }
+            }
+        }
         persist()
         val humanWon = r is GameResult.Win && (config.mode == GameMode.PASS_AND_PLAY || r.winner == config.human)
         emit(if (humanWon) FeedbackEvent.WIN else FeedbackEvent.END)
@@ -507,7 +517,7 @@ class GameViewModel(
             // Leaving the screen marks you away; the opponent sees it and the abandon timer starts.
             CoroutineScope(Dispatchers.IO).launch(NonCancellable) {
                 // The host removes a finished room; otherwise just mark this seat away.
-                runCatching { s.repo.leaveRoom(s.room.code, s.seat, room?.phase ?: s.room.phase) }
+                runCatching { s.repo.leaveRoom(s.room.code, s.seat, room?.phase ?: s.room.phase, s.room.config.ranked) }
                 s.repo.close()
             }
         }

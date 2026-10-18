@@ -20,6 +20,9 @@ interface OnlineGameRepository {
     /** Join an existing room by code. The caller sits in [Seat.TWO]. */
     suspend fun joinRoom(code: String): RoomSnapshot
 
+    /** Seat of the last [joinRoom]: TWO normally, ONE when you joined a room you host (tournament rooms). */
+    val lastJoinSeat: Seat get() = Seat.TWO
+
     /** Re-attach to a room you already belong to (process death, network drop). */
     suspend fun reconnect(code: String, seat: Seat): RoomSnapshot
 
@@ -48,10 +51,17 @@ interface OnlineGameRepository {
      * finished games don't linger on the server. Unfinished rooms stay so players can reconnect;
      * they're purged after [RoomRules.RETENTION_DAYS] idle days.
      */
-    suspend fun leaveRoom(code: String, seat: Seat, phase: RoomPhase) {
-        if (seat == Seat.ONE && (phase == RoomPhase.FINISHED || phase == RoomPhase.ABANDONED)) deleteRoom(code)
+    suspend fun leaveRoom(code: String, seat: Seat, phase: RoomPhase, ranked: Boolean = false) {
+        // Ranked rooms stay until the Cloud Function has settled them (purge.mjs removes them later).
+        if (!ranked && seat == Seat.ONE && (phase == RoomPhase.FINISHED || phase == RoomPhase.ABANDONED)) deleteRoom(code)
         else disconnect(code, seat)
     }
+
+    /**
+     * Ranked rooms: report the result as this seat saw it ("one", "two" or "draw"). The Cloud
+     * Function settles when both reports agree (or at once after a rules-checked resignation/claim).
+     */
+    suspend fun reportRankedResult(code: String, seat: Seat, winner: String) {}
 
     /** Delete a room you sit in (host or guest). */
     suspend fun deleteRoom(code: String)
@@ -68,3 +78,6 @@ data class DeleteResult(val roomsDeleted: Int, val identityDeleted: Boolean)
 
 class RoomNotFoundException(code: String) : Exception("No room with code $code")
 class RoomFullException(code: String) : Exception("Room $code is full")
+
+/** You blocked this room's host (or they blocked you: the server then refuses the join). */
+class RoomBlockedException(code: String) : Exception("Room $code is with a blocked player")

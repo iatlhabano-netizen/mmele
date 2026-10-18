@@ -36,9 +36,11 @@
 POSTAL_ADDRESS_PLACEHOLDER, Gabane, Botswana. Contact: <strong><a href="mailto:CONTACT_EMAIL_PLACEHOLDER">CONTACT_EMAIL_PLACEHOLDER</a></strong>.</p>
 <h2>1. The short version</h2>
 <ul>
-<li>Mmele is a free board game. There are <strong>no ads, no in-app purchases, no analytics, no crash reporting and no sign-up</strong>. We never ask for your name, email, phone number, contacts, photos or location.</li>
+<li>Mmele is a free board game. There are <strong>no ads, no in-app purchases and no sign-up</strong>. Ranked play uses <strong>virtual points only</strong>: they have no cash value and cannot be bought, sold or cashed out. We never ask for your name, email, phone number, contacts, photos or location.</li>
 <li><strong>Play vs Computer</strong> and <strong>Pass &amp; Play</strong> work fully offline. Nothing about those games leaves your phone.</li>
 <li><strong>Play online</strong> uses Google Firebase to connect two phones. To do that, Firebase gives your app a random anonymous ID, stores the game room you play in, and (like any internet server) sees your IP address.</li>
+<li><strong>Usage and crash data</strong> (Firebase Analytics and Crashlytics): if you leave "Share usage &amp; crash data" on, the app sends anonymous events (for example "match completed: solo, win") and crash reports. No advertising ID is collected. Switch it off at any time on the home screen.</li>
+<li><strong>Chat</strong> in online games is visible only to the two players in that room and is deleted with the room. You can mute, block or report. A report keeps a copy of the reported message for moderation.</li>
 <li>We do not sell or share your data, and we do not use it for advertising or profiling.</li>
 </ul>
 <h2>2. What is stored only on your phone</h2>
@@ -100,6 +102,15 @@ settings are not copied to Google's servers or to a new phone. Uninstalling the 
 <p>We do <strong>not</strong> use your IP address to work out your location.</p>
 <p><strong>Who can see room data:</strong> the other player in your room, and anyone else who uses the app and enters the same room
 code while it exists (there is no public list of rooms). Rooms contain no names or messages — there is no chat.</p>
+<h2>3a. Chat, ranked play and tournaments</h2>
+<ul>
+<li><strong>Chat messages</strong> (quick phrases, emoji or up to 120 characters of text, filtered for bad words on your phone) are stored under the game room and readable only by its two players. They are deleted when the room is cleaned up (within 24 hours). Chat can be turned off on the home screen.</li>
+<li><strong>Blocks</strong> are stored under your anonymous ID so blocked players cannot join your rooms.</li>
+<li><strong>Reports</strong> store the room code, both anonymous IDs and the reported message. Only the developer (admin) can read them; they are kept up to 90 days.</li>
+<li><strong>Ranked play</strong> stores your rating, virtual points balance, number of games and a points ledger under your anonymous ID. The leaderboard shows ratings with anonymous labels only. Points have no cash value.</li>
+</ul>
+<h2>3b. Usage and crash data</h2>
+<p>With "Share usage &amp; crash data" on, Google Firebase Analytics receives anonymous events: app opened for the first time, match started and completed (game, mode, result), tutorial steps, online room created or joined, chat sent (type only, never the text), ranked match, tournament joined and fact shown (category). Firebase Crashlytics receives crash reports (stack trace, device model, OS version). The advertising ID is not collected and ad personalisation is disabled. Analytics data is kept for 2 months; crash data for 90 days. Turning the toggle off stops collection immediately.</p>
 <h2>4. Service provider (data processor)</h2>
 <p>Online play is hosted on <strong>Google Firebase</strong> (Firebase Authentication and Firebase Realtime Database), provided by
 Google LLC / Google Ireland Limited, which processes this data on our behalf under the

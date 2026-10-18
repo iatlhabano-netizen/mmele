@@ -17,3 +17,5 @@ firebase/*-debug.log
 # Signing keys never belong in the repo
 *.jks
 *.keystore
+firebase/functions/node_modules/
+tools/__pycache__/

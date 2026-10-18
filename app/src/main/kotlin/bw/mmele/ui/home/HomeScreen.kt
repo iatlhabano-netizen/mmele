@@ -93,6 +93,10 @@ fun HomeScreen(
     onHowToPlay: () -> Unit = {},
     language: AppLanguage = AppLanguage.SYSTEM,
     onLanguage: (AppLanguage) -> Unit = {},
+    settings: bw.mmele.SettingsPrefs.Settings = bw.mmele.SettingsPrefs.Settings(),
+    onSettings: (bw.mmele.SettingsPrefs.Settings) -> Unit = {},
+    onLeaderboard: () -> Unit = {},
+    onTournaments: () -> Unit = {},
 ) {
     Box(Modifier.fillMaxSize()) {
         // Botswana scene at full strength, with a gradient that only darkens where controls sit.
@@ -211,6 +215,8 @@ fun HomeScreen(
                 Spacer(Modifier.height(16.dp))
                 ToggleRow(stringResource(R.string.home_sound), soundOn, onSoundChange)
                 ToggleRow(stringResource(R.string.home_haptics), hapticsOn, onHapticsChange)
+                ToggleRow(stringResource(R.string.settings_chat), settings.chatEnabled) { onSettings(settings.copy(chatEnabled = it)) }
+                ToggleRow(stringResource(R.string.settings_analytics), settings.analyticsEnabled) { onSettings(settings.copy(analyticsEnabled = it)) }
                 Spacer(Modifier.height(12.dp))
                 SectionLabel(stringResource(R.string.home_section_language))
                 Segmented(
@@ -235,6 +241,13 @@ fun HomeScreen(
                 )
                 Spacer(Modifier.height(8.dp))
                 NavCard(stringResource(R.string.home_moruba), stringResource(R.string.home_moruba_sub), onMoruba)
+                if (onlineConfigured) {
+                    Spacer(Modifier.height(10.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        NavCard(stringResource(R.string.leaderboard_title), null, onLeaderboard, Modifier.weight(1f))
+                        NavCard(stringResource(R.string.tournaments_title), null, onTournaments, Modifier.weight(1f))
+                    }
+                }
                 Spacer(Modifier.height(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     NavCard(stringResource(R.string.home_how_to_play), null, onHowToPlay, Modifier.weight(1f))

@@ -70,7 +70,10 @@ import bw.mmele.ui.theme.MmeleColors
 
 /** Stateful entry point: wires the ViewModel and feedback to the stateless content. */
 @Composable
-fun GameRoute(viewModel: GameViewModel, feedback: FeedbackController?, onHome: () -> Unit, onShareCode: (String) -> Unit = {}, factCard: bw.mmele.data.FactCard? = null) {
+fun GameRoute(
+    viewModel: GameViewModel, feedback: FeedbackController?, onHome: () -> Unit, onShareCode: (String) -> Unit = {}, factCard: bw.mmele.data.FactCard? = null,
+    chatRepo: bw.mmele.online.chat.ChatRepository? = null, chatEnabled: Boolean = true,
+) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(viewModel) { viewModel.events.collect { feedback?.play(it) } }
     // Clocks stop while the app is in the background, and the game is saved.
@@ -85,6 +88,31 @@ fun GameRoute(viewModel: GameViewModel, feedback: FeedbackController?, onHome: (
         ui, viewModel::onIntent, leave, onShareCode = onShareCode, factCard = factCard,
         onReplay = { replay = viewModel.movesSoFar().joinToString(",") { it.encode().toString() } },
     )
+    val online = ui.online
+    if (online != null && chatRepo != null && chatEnabled) {
+        val seat = if (ui.config.human == Player.ONE) bw.mmele.online.Seat.ONE else bw.mmele.online.Seat.TWO
+        val chat: bw.mmele.ui.chat.ChatViewModel = androidx.lifecycle.viewmodel.compose.viewModel(key = "chat-${online.code}") {
+            bw.mmele.ui.chat.ChatViewModel(chatRepo, online.code, seat)
+        }
+        val cs by chat.state.collectAsStateWithLifecycle()
+        val ctx = androidx.compose.ui.platform.LocalContext.current
+        LaunchedEffect(chat) {
+            chat.notices.collect { n ->
+                val res = when (n) {
+                    bw.mmele.ui.chat.ChatNotice.SENT_REPORT -> R.string.chat_reported
+                    bw.mmele.ui.chat.ChatNotice.BLOCKED -> R.string.chat_blocked
+                    bw.mmele.ui.chat.ChatNotice.TOO_FAST -> R.string.chat_too_fast
+                    bw.mmele.ui.chat.ChatNotice.TOO_LONG -> R.string.chat_too_long
+                    bw.mmele.ui.chat.ChatNotice.FAILED -> R.string.chat_failed
+                }
+                android.widget.Toast.makeText(ctx, ctx.getString(res), android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+        Box(Modifier.fillMaxSize().safeDrawingPadding().padding(12.dp)) {
+            bw.mmele.ui.chat.ChatButton(cs, chat::onIntent, Modifier.align(Alignment.BottomStart))
+        }
+        if (cs.open) bw.mmele.ui.chat.ChatDialog(cs, seat, chat::onIntent)
+    }
     replay?.let { enc ->
         val moves = remember(enc) { enc.split(',').filter { it.isNotEmpty() }.map { Action.decode(it.toInt()) } }
         BackHandler { replay = null }

@@ -4,7 +4,7 @@
   "description": "Mmele security rules, emulator tests and the clean-up script",
   "main": "index.js",
   "scripts": {
-    "test:rules": "firebase emulators:exec --only database,auth --project demo-mmele \"node rules.test.mjs && node payloads.test.mjs && node purge.test.mjs\"",
+    "test:rules": "firebase emulators:exec --only database,auth,functions --project demo-mmele \"node rules.test.mjs && node payloads.test.mjs && node purge.test.mjs && node chat_ranked.test.mjs\"",
     "purge": "node purge.mjs"
   },
   "keywords": [],

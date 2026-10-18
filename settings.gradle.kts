@@ -10,6 +10,9 @@ pluginManagement {
             if (requested.id.id == "com.google.gms.google-services") {
                 useModule("com.google.gms:google-services:${requested.version}")
             }
+            if (requested.id.id == "com.google.firebase.crashlytics") {
+                useModule("com.google.firebase:firebase-crashlytics-gradle:${requested.version}")
+            }
         }
     }
 }

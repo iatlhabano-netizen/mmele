@@ -45,7 +45,7 @@ import bw.mmele.ui.scenes.Scene
 import bw.mmele.ui.stats.StatsScreen
 import bw.mmele.ui.theme.MmeleTheme
 
-private enum class Screen { HOME, GAME, LOBBY, ABOUT, ACADEMY, LESSON, STATS, MORUBA_SETUP, MORUBA }
+private enum class Screen { LEADERBOARD, TOURNAMENTS, HOME, GAME, LOBBY, ABOUT, ACADEMY, LESSON, STATS, MORUBA_SETUP, MORUBA }
 
 /** Callbacks that persist app data (DataStore in the app, no-ops in previews/tests). */
 interface AppDataSink {
@@ -78,6 +78,10 @@ fun MmeleApp(
     onLanguage: (AppLanguage) -> Unit = {},
     /** Next non-repeating Botswana fact (+ photo) for a finished game; null in previews/tests. */
     drawFactCard: () -> bw.mmele.data.FactCard? = { null },
+    settings: bw.mmele.SettingsPrefs.Settings = bw.mmele.SettingsPrefs.Settings(),
+    onSettings: (bw.mmele.SettingsPrefs.Settings) -> Unit = {},
+    chatRepo: () -> bw.mmele.online.chat.ChatRepository? = { null },
+    rankedRepo: () -> bw.mmele.online.ranked.RankedRepository? = { null },
 ) {
     MmeleTheme {
         var variant by rememberSaveable { mutableStateOf(Variant.CLASSIC) }
@@ -125,8 +129,12 @@ fun MmeleApp(
         }
         /** The fact card for the game that just finished (one draw per finished game). */
         var factCard by remember { mutableStateOf<bw.mmele.data.FactCard?>(null) }
+        val drawFact: () -> bw.mmele.data.FactCard? = {
+            drawFactCard().also { c -> if (c != null) bw.mmele.analytics.Tracker.log(bw.mmele.analytics.Events.FACT_SHOWN, "category" to c.fact.category.toString()) }
+        }
+        var lobbyCode by rememberSaveable { mutableStateOf("") }
         val onResult: (GameConfig, bw.mmele.engine.GameResult) -> Unit = { c, r ->
-            factCard = drawFactCard()
+            factCard = drawFact()
             val key = StatKey.of(c)
             val o = StatsRules.outcomeOf(c, r)
             stats = stats + (key to (stats[key] ?: Tally()).plus(o))
@@ -143,7 +151,9 @@ fun MmeleApp(
                         if (s != null) GameViewModel(gameConfig, online = s, onResult = onResult)
                         else GameViewModel.create(gameConfig, createSavedStateHandle(), resume, saveGame, onResult).also { resume = null }
                     }
-                    GameRoute(vm, feedback, onHome = { screen = Screen.HOME; onlineSession = null }, onShareCode = onShareCode, factCard = factCard)
+                    val chat = remember(onlineSession) { if (onlineSession != null) chatRepo() else null }
+                    GameRoute(vm, feedback, onHome = { screen = Screen.HOME; onlineSession = null }, onShareCode = onShareCode, factCard = factCard,
+                        chatRepo = chat, chatEnabled = settings.chatEnabled)
                 }
                 Screen.MORUBA_SETUP -> bw.mmele.ui.moruba.MorubaSetupScreen(
                     setup = bw.mmele.ui.moruba.MorubaSetup(morubaHoles, morubaStones, morubaVsComputer, morubaLevel),
@@ -154,16 +164,32 @@ fun MmeleApp(
                 Screen.MORUBA -> {
                     val setup = bw.mmele.ui.moruba.MorubaSetup(morubaHoles, morubaStones, morubaVsComputer, morubaLevel)
                     val vm: bw.mmele.ui.moruba.MorubaViewModel = viewModel(key = "moruba-$session") {
-                        bw.mmele.ui.moruba.MorubaViewModel(setup, onGameOver = { factCard = drawFactCard() })
+                        bw.mmele.analytics.Tracker.log(bw.mmele.analytics.Events.MATCH_STARTED, "game" to "moruba", "mode" to if (setup.vsComputer) "solo" else "pass_and_play")
+                        bw.mmele.ui.moruba.MorubaViewModel(setup, onGameOver = { w ->
+                            factCard = drawFact()
+                            bw.mmele.analytics.Tracker.log(bw.mmele.analytics.Events.MATCH_COMPLETED, "game" to "moruba", "mode" to if (setup.vsComputer) "solo" else "pass_and_play",
+                                "result" to if (!setup.vsComputer) "finished" else if (w == Player.ONE) "win" else "loss")
+                        })
                     }
                     bw.mmele.ui.moruba.MorubaRoute(vm, feedback, onHome = { screen = Screen.HOME }, factCard = factCard)
                 }
                 Screen.LOBBY -> OnlineLobbyScreen(
                     config = config,
                     repo = lobbyRepo,
-                    onSession = { onlineSession = it; session++; screen = Screen.GAME },
-                    onBack = { screen = Screen.HOME },
+                    onSession = { onlineSession = it; session++; lobbyCode = ""; screen = Screen.GAME },
+                    onBack = { lobbyCode = ""; screen = Screen.HOME },
+                    initialCode = lobbyCode,
                 )
+                Screen.LEADERBOARD -> {
+                    val repo = remember { rankedRepo() }
+                    bw.mmele.ui.ranked.LeaderboardScreen(repo, onBack = { screen = Screen.HOME })
+                }
+                Screen.TOURNAMENTS -> {
+                    val repo = remember { rankedRepo() }
+                    bw.mmele.ui.ranked.TournamentsScreen(repo, onBack = { screen = Screen.HOME }, onPlayRoom = { code ->
+                        applyConfig(config.copy(mode = GameMode.ONLINE)); lobbyCode = code; screen = Screen.LOBBY
+                    })
+                }
                 Screen.ABOUT -> {
                     val repo = remember { onlineRepo() }
                     AboutScreen(
@@ -181,7 +207,9 @@ fun MmeleApp(
                 Screen.LESSON -> {
                     val idx = lessonIndex.coerceIn(0, Lessons.ALL.lastIndex)
                     val vm: LessonViewModel = viewModel(key = "lesson-$session-$idx") {
+                        bw.mmele.analytics.Tracker.log(bw.mmele.analytics.Events.TUTORIAL_STEP, "lesson" to idx + 1, "step" to "start")
                         LessonViewModel(Lessons.ALL[idx], onSolved = {
+                            bw.mmele.analytics.Tracker.log(bw.mmele.analytics.Events.TUTORIAL_STEP, "lesson" to idx + 1, "step" to "solved")
                             if (idx + 1 > lessonsDone) { lessonsDone = idx + 1; sink.setLessonsDone(idx + 1) }
                         })
                     }
@@ -230,6 +258,10 @@ fun MmeleApp(
                         onHowToPlay = { howTo = 2 },
                         language = language,
                         onLanguage = onLanguage,
+                        settings = settings,
+                        onSettings = onSettings,
+                        onLeaderboard = { screen = Screen.LEADERBOARD },
+                        onTournaments = { screen = Screen.TOURNAMENTS },
                     )
                 }
             }
